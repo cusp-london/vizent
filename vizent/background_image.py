@@ -13,7 +13,6 @@ arXiv:1907.12879
 
 """
 
-import matplotlib.pyplot as plt
 from PIL import Image
 import os 
 
@@ -22,6 +21,12 @@ x_min = 423000
 x_max = 427000
 y_min = 562000
 y_max = 566000
+
+def get_image_size(image_file):
+    im=Image.open(image_file)
+    aspx = im.size[0]
+    aspy = im.size[1]
+    return aspx, aspy
 
 def get_image(x, y, image_type, image_file):
     lowest_x = min(x)
@@ -42,8 +47,8 @@ def get_image(x, y, image_type, image_file):
             x_part = str(int(lowest_x/1000))
             y_part = str(int(lowest_y/1000))
             image = x_part + y_part + ".png"
-        extent = [int(x_part)*1000, int(x_part)*1000+1000, int(y_part)*1000, 
-                  int(y_part)*1000+1000]
+            extent = [int(x_part)*1000, int(x_part)*1000+1000, 
+                      int(y_part)*1000, int(y_part)*1000+1000]
     elif image_type == "england":
         image="england_map.png"
         extent = [-6, 2, 49.9, 56]
@@ -61,4 +66,3 @@ def add_image_background(filename, ax1, extent):
     im=Image.open(filename)
     asp = (im.size[1]/im.size[0])*((extent[1]-extent[0])/(extent[3]-extent[2]))
     ax1.imshow(im, extent=extent, zorder=0, aspect=asp)
-    return asp
