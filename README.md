@@ -6,7 +6,7 @@
  
 > A python library for bivariate glyphs integrated with matplotlib
 
-This library allows the user to create visualizations using Visual Entropy Glyphs[1]. Vizent glyphs are designed to help when you need to add an extra data variable to a scatter plot, a map or a graph. Vizent glyphs are bivariate, that is they allow you to represent two variables at each point on your plot. A central coloured disc is able to represent a continuous variable, an enclosing shape can represent a continuous interval or categorical variable using increasing levels of visual entropy (shape complexity). 
+This library allows the user to create visualizations using Visual Entropy Glyphs[1]. Vizent glyphs are designed to help when you need to add an extra data variable to a scatter plot, a map or a graph. Vizent glyphs are bivariate, that is they allow you to represent two variables at each point on your plot. A central colored disc is able to represent a continuous variable, an enclosing shape can represent a continuous interval or categorical variable using increasing levels of visual entropy (shape complexity). 
 
 Applications for the Vizent glyphs include: 
 * when you need represent uncertainty, eg a mean and a standard deviation
@@ -52,10 +52,10 @@ Parameters:
 
 *  __x_values__ (list of floats): list of x coordinates
 *  __y_values__ (list of floats): list of y coordinates
-*  __colour_values__ (list of floats): list of values to be represented using colour
+*  __color_values__ (list of floats): list of values to be represented using color
 *  __shape_values__ (list of floats): list of values to be represented using shape
 *  __size_values__ (list of floats): list of values for diameters of glyphs in points.
-*  __colormap__ (colormap or registered colormap name): Optional. Use any matplotlib colormap. See [here](https://matplotlib.org/3.1.1/gallery/color/colormap_reference.html) for full range of options. Alternatively, use "metoffice" to use the MetOffice temperature colour scheme.
+*  __colormap__ (colormap or registered colormap name): Optional. Use any matplotlib colormap. See [here](https://matplotlib.org/3.1.1/gallery/color/colormap_reference.html) for full range of options. Alternatively, use "metoffice" to use the MetOffice temperature color scheme.
 *  __scale_x__ (float): Optional. Defines x size (width) of plot window in inches.
 *  __scale_y__ (float): Optional. Defines y size (height) of plot window in inches. If neither scale_x nor scale_y is specified, the plot will be scaled automatically. If only one is specified, the other will be adjusted to suit the proportions of the plot.
 *  __use_image__ (bool): Optional. If True, plot on an image background. This can be your own image, or certain included image background can be used, see image_type.
@@ -74,15 +74,15 @@ Parameters:
    * "star"
 *  __shape_pos__ (str): Optional. When using divergent scale, glyph shape design to use for positive values. Default is sawtooth. Available designs as above.
 *  __shape_neg__ (str): Optional. When using divergent scale, glyph shape design to use for negative values. Default is sawtooth. Available designs as above.
-*  __colour_max__ (float): Optional. Maximum value to use for colour in key.
-*  __colour_min__ (float): Optional. Minimum value to use for colour in key.
-*  __colour_n__ (int): Optional. Number of colour values to be shown in key.
-*  __colour_spread__ (float): Optional. Total range of colour values in key. Only use if not specifying both max and min.
+*  __color_max__ (float): Optional. Maximum value to use for color in key.
+*  __color_min__ (float): Optional. Minimum value to use for color in key.
+*  __color_n__ (int): Optional. Number of color values to be shown in key.
+*  __color_spread__ (float): Optional. Total range of color values in key. Only use if not specifying both max and min.
 *  __shape_max__ (float): Optional. Maximum value to use for shape in key.
 *  __shape_min__ (float): Optional. Minimum value to use for shape in key.
 *  __shape_n__ (int): Optional. Number of shape values to be shown in key. If using a diverging scale, this is the number of positive values including zero. Negative values will reflect positive values.
 *  __shape_spread__ (float): Optional. Total range of shape values in key. Only use if not specifying max and min.
-*  __colour_label__ (str): Optional. Text label for colour values in key.
+*  __color_label__ (str): Optional. Text label for color values in key.
 *  __shape_label__ (str): Optional. Text label for shape values in key.
 *  __title__ (str): Optional. Title to display at top.
 *  __x_label__ (str): Optional. Label for x axis. Not shown for image plots.
@@ -125,12 +125,12 @@ from vizent import vizent_plot
 
 x_values = [1,2,3,4,5,6,7]
 y_values = [6,3,7,1,4,2,5]
-colour_values = [0,3,6,9,12,15,18]
+color_values = [0,3,6,9,12,15,18]
 shape_values= [0,1,2,3,4,5,6]
 size_values = [30,60,30,45,60,30,45]
 
-vizent_plot(x_values, y_values, colour_values, shape_values, size_values,
-            colour_label="colour", shape_label="shape",
+vizent_plot(x_values, y_values, color_values, shape_values, size_values,
+            color_label="color", shape_label="shape",
             title="A plot with a title", x_label="This is the x axis",
             y_label="This is the y axis")
 ```
@@ -152,7 +152,7 @@ size = [30]*len(x)
 extent = [-6, 2, 49.9, 56]
 
 vizent_plot(x, y, cases, accel, size, shape_label="Acceleration", 
-            colour_label="Daily cases", use_cartopy=True, extent=extent, 
+            color_label="Daily cases", use_cartopy=True, extent=extent, 
             title='COVID19 daily case count and one day acceleration \n'
             'English regions, 30th October 2020') 
 ```
@@ -173,7 +173,7 @@ accel = data['accel'].tolist()
 size = [30]*len(x)
 
 vizent_plot(x, y, cases, accel, size, shape_label="Acceleration",
-            colour_label="Daily cases", use_image=True,
+            color_label="Daily cases", use_image=True,
             image_type="england", title="COVID19 daily case count and one "
             "day acceleration \n English regions, 30th October 2020")
 ```
@@ -198,8 +198,8 @@ size = [20]*len(eastings)
 
 vizent_plot(eastings, northings, average, variance, size, 
             "metoffice", shape_label="variance", 
-            colour_label="temperature", use_image=True, 
-            image_type="newcastle", colour_spread=20,
+            color_label="temperature", use_image=True, 
+            image_type="newcastle", color_spread=20,
             title="Newcastle Upon Tyne Temperature Data",
             show_axes=False)
 ```
@@ -215,15 +215,15 @@ import numpy as np
 
 x = [0.05,0.35,0.75,0.9,1.35,1.55,1.85]
 y = [(1 + np.sin(2 * np.pi * i)) for i in x]
-colour_values = [0,3,7,2,-1,10,6]
+color_values = [0,3,7,2,-1,10,6]
 shape_values = [1,2,3,2.3,0,3,2]
 size = [30,30,30,30,30,30,30]
 
 # Assign the output of the function to fig, ax as shown
 
-fig, ax = vizent_plot(x, y, colour_values, shape_values, size, 
+fig, ax = vizent_plot(x, y, color_values, shape_values, size, 
                       colormap="rainbow", shape_label="shape", 
-                      colour_label="colour", return_axes=True, 
+                      color_label="color", return_axes=True, 
                       title="An example of adding to your plot")
 
 # Let's add a line to the plot
