@@ -14,21 +14,22 @@ arXiv:1907.12879
 """
 
 import numpy as np
-from .metofficelimits import *
+from metofficelimits import *
 import matplotlib
 import matplotlib.cm as cm 
 
 def scale_is_negative(values):
     return any(x<0 for x in values) and not any(x>0 for x in values)
 
+
 def scale_is_divergent(values):
     return any(x<0 for x in values) and any(x>0 for x in values)
 
-def get_colour_scale(values, max_val, min_val, n_colours, 
-                     scale_spread, scale_dp):
+
+def get_scale_bounds(values, min_val, max_val, scale_spread):
     if scale_spread is not None and scale_spread < 0:
         scale_spread=abs(scale_spread)
-    # Determine min and max scale values
+
     if max_val==None and min_val==None:
         if scale_spread == None:
             min_val = min(values)
@@ -52,29 +53,40 @@ def get_colour_scale(values, max_val, min_val, n_colours,
             min_val = max_val - scale_spread
     else:
         if min_val>=max_val:
-            raise ValueError("minimum colour scale value must be lower than "
-                             "maximum colour scale value")
+            raise ValueError("minimum color scale value must be lower than "
+                             "maximum color scale value")
         scale_spread = max_val - min_val
+    
     # The user is warned if their specified values exclude data
     if min_val > min(values) or max_val < max(values):
-        print("Warning: specified minimum and maximum colour scale values "
-              "or specified colour scale spread exclude some data")
+        print("Warning: specified minimum and maximum color scale values "
+              "or specified color scale spread exclude some data")
+
+    return min_val, scale_spread
+
+
+def get_color_scale(values, max_val, min_val, n_colors, scale_spread):
+
+    # Determine min and max scale values
+    min_val, scale_spread = get_scale_bounds(values, min_val, max_val, 
+                                             scale_spread)
+
     # Determine intermediate values
     scale_vals = []
-    for i in range(n_colours):
+    for i in range(n_colors):
         try:
-            scale_vals.append(np.round(min_val+scale_spread*(i/(n_colours-1)),
-                                       scale_dp))
+            scale_vals.append(min_val+scale_spread*(i/(n_colors-1)))
         except ZeroDivisionError:
-            scale_vals.append(np.round((min_val), scale_dp))
+            scale_vals.append(min_val)
     return scale_vals
 
-def get_colour_mapping(colour_scale, colormap):
+
+def get_color_mapping(color_scale, colormap):
     if colormap == "metoffice":
         return None
     else:
-        norm = matplotlib.colors.Normalize(vmin=min(colour_scale), 
-                                           vmax=max(colour_scale), clip=True)
+        norm = matplotlib.colors.Normalize(vmin=min(color_scale), 
+                                           vmax=max(color_scale), clip=True)
         try:
             mapping = cm.ScalarMappable(norm=norm, cmap=colormap)
         except ValueError:
@@ -86,7 +98,8 @@ def get_colour_mapping(colour_scale, colormap):
         else:
             return mapping
     
-def get_colour(value, colormap, mapping):
+
+def get_color(value, colormap, mapping):
     if colormap == "metoffice":
         i=0
         try:
@@ -95,12 +108,13 @@ def get_colour(value, colormap, mapping):
         except IndexError:
             raise IndexError("Data is outside of the limits of the metoffice "
                              "scale. Select another colormap for this data.")
-        return metOfficeColours[i] 
+        return metOfficecolors[i] 
     else:
-        return mapping.to_rgba(value)    
+        return mapping.to_rgba(value)
+
 
 def get_shape_scale(values, max_val, min_val, n_shapes, scale_diverges, 
-                    scale_spread, scale_dp):
+                    scale_spread):
     if scale_spread is not None and scale_spread < 0:
         scale_spread=abs(scale_spread)
     if n_shapes is not None and n_shapes > 7:
@@ -140,13 +154,11 @@ def get_shape_scale(values, max_val, min_val, n_shapes, scale_diverges,
         # -ve vals and zero
         scale_spread = 0 - min_val
         for i in reversed(range(n_shapes)):
-            scale_vals.append(np.round(0-scale_spread
-                                       *(i/(n_shapes-1)), scale_dp))
+            scale_vals.append(0 - scale_spread * (i/(n_shapes-1)))
         # +ve values
         scale_spread = max_val
         for i in range(1, n_shapes):
-            scale_vals.append(np.round(0+scale_spread
-                                       *(i/(n_shapes-1)), scale_dp))
+            scale_vals.append(0 + scale_spread * (i/(n_shapes-1)))
     # negative scale
     elif scale_is_negative(values): 
         if max_val==None and min_val==None:
@@ -174,8 +186,7 @@ def get_shape_scale(values, max_val, min_val, n_shapes, scale_diverges,
                                  " maximum shape scale value")
         scale_spread = abs(max_val - min_val)       
         for i in reversed(range(n_shapes)):
-            scale_vals.append(np.round(max_val-scale_spread
-                                       *(i/(n_shapes-1)), scale_dp))
+            scale_vals.append(max_val-scale_spread * (i/(n_shapes-1)))
     # normal scale
     else:
         if max_val==None and min_val==None:
@@ -203,16 +214,16 @@ def get_shape_scale(values, max_val, min_val, n_shapes, scale_diverges,
         scale_spread = max_val - min_val 
         for i in range(n_shapes):
             try:
-                scale_vals.append(np.round(min_val+scale_spread
-                                           *(i/(n_shapes-1)), scale_dp))
+                scale_vals.append(min_val+scale_spread * (i/(n_shapes-1)))
             except ZeroDivisionError:
-                scale_vals.append(np.round((min_val), scale_dp))
+                scale_vals.append(min_val)
 
     # The user is warned if their specified values exclude data
     if min_val > min(values) or max_val < max(values):
         print("Warning: specified minimum and maximum shape scale values "
               "or specified shape scale spread exclude some data")
     return scale_vals
+
 
 def get_frequency_scale(shape_scale, scale_diverges):
     frequency_scale = []
