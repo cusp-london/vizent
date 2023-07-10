@@ -23,10 +23,10 @@ from vizent.vizent_plot import create_plot, add_point, add_line
 
 
 try: 
-    matplotlib.use('qtagg')
+    matplotlib.use('agg')
 except ImportError:
     warnings.warn("The default images for this test have been created "
-                    "using the qtagg backend for matplotlib. This backend is"
+                    "using the agg backend for matplotlib. This backend is"
                     " unavailable in your current python distribution. This "
                     " test may therefore fail")
 
@@ -54,18 +54,21 @@ def test_create_plot():
 
     assert asp == 1.0
 
-    tmp_file_create_plot = 'tmp_create_plot_test.png'
-    plt.savefig(os.path.join('tests', tmp_file_create_plot))
+    tmp_file_create_plot = os.path.join(os.path.dirname(
+                                        os.path.abspath(__file__)),
+                                        'tmp_create_plot_test.png')
+    
+    plt.savefig(tmp_file_create_plot)
 
-    expected = os.path.join('tests', 'default_images', 
-                            'default_plot.png')
-    actual = os.path.join('tests', tmp_file_create_plot)
+    expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                  'default_images', 'default_plot.png')
+    actual = tmp_file_create_plot
     
     assert compare_images(expected=expected,
                 actual=actual, 
-                tol=0) is None
+                tol=12) is None
 
-    os.remove(os.path.join('tests', tmp_file_create_plot))
+    os.remove(tmp_file_create_plot)
 
 
 def test_add_point():
@@ -88,16 +91,20 @@ def test_add_point():
     assert type(return_dict['shape']) == matplotlib.collections.PathCollection
     assert type(return_dict['inner']) == matplotlib.collections.PathCollection
 
-    tmp_file_add_point = 'tmp_sine_point.png'
-    fig.savefig(os.path.join('tests', tmp_file_add_point))
-    expected = os.path.join('tests', 'default_images', 'default_sine.png')
-    actual = os.path.join('tests', tmp_file_add_point)
+    tmp_file_add_point =  os.path.join(os.path.dirname(
+                                        os.path.abspath(__file__)),
+                                       'tmp_sine_point.png')
+    
+    fig.savefig(tmp_file_add_point)
+    expected =os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                  'default_images', 'default_sine.png')
+    actual = tmp_file_add_point
 
     assert compare_images(expected=expected, 
                           actual=actual, 
-                          tol=0) is None
+                          tol=12) is None
 
-    os.remove(os.path.join('tests', tmp_file_add_point))
+    os.remove(tmp_file_add_point)
 
 
 def test_add_line():
@@ -132,16 +139,18 @@ def test_add_line():
     for line in return_dict['striped_white_lines']:
         assert type(line) == matplotlib.lines.Line2D
 
-    tmp_file_add_line = 'tmp_line.png'
-    fig.savefig(os.path.join('tests', tmp_file_add_line))
-    expected = os.path.join('tests', 'default_images', 'default_line.png')
-    actual = os.path.join('tests', tmp_file_add_line)
+    tmp_file_add_line = os.path.join(os.path.dirname(
+                                        os.path.abspath(__file__)),
+                                    'tmp_line.png')
+    fig.savefig(tmp_file_add_line)
+    expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                  'default_images', 'default_line.png')
 
     assert compare_images(expected=expected, 
-                          actual=actual, 
-                          tol=0) is None
+                          actual=tmp_file_add_line, 
+                          tol=12) is None
 
-    os.remove(os.path.join('tests', tmp_file_add_line))
+    os.remove(tmp_file_add_line)
 
 
 

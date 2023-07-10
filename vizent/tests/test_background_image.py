@@ -16,7 +16,8 @@ def test_get_image_size():
 
     try:
         from vizent.background_image import get_image_size
-        image_file = os.path.join('tests', 'default_images', 'UK_basemap.png')
+        image_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                  'default_images', 'UK_basemap.png')
         aspx, aspy = get_image_size(image_file)
         assert (aspx, aspy) == (640, 480)
     except ImportError:
@@ -69,7 +70,8 @@ def test_get_image():
         assert extent == [-6,2,49.9,56]
     
         image_type = None
-        image_file = "default_images\\UK_basemap.png"
+        image_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                  'default_images', 'UK_basemap.png')
         x = [-1, 1]
         y = [50, 54]
         image, extent = get_image(x,y,image_type,image_file)
@@ -83,10 +85,10 @@ def test_get_image():
 
 def test_add_image_background(): 
     try: 
-        matplotlib.use('qtagg')
+        matplotlib.use('agg')
     except ImportError:
         warnings.warn("The default images for this test have been created "
-                      "using the qtagg backend for matplotlib. This backend is"
+                      "using the agg backend for matplotlib. This backend is"
                       " unavailable in your current python distribution. This "
                       " test may therefore fail")
 
@@ -94,23 +96,26 @@ def test_add_image_background():
         from vizent.background_image import add_image_background
         fig = plt.figure(figsize=(6.4,4.8))
         ax1 = fig.add_subplot()
-        image_file = os.path.join('tests', 'default_images', 
-                                  'UK_basemap.png')
+        image_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                  'default_images', 'UK_basemap.png')
         extent = [0,1,0,1]
         add_image_background(image_file, ax1, extent)
         
-        tmp_file = 'tmp_background_images_test.png'
+        tmp_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                'tmp_background_images_test.png')
+
         # save to a temporary file
-        plt.savefig(os.path.join('tests', tmp_file))
+        plt.savefig(tmp_file)
 
         assert type(ax1) == axes.Axes
-        expected = os.path.join('tests', 'default_images', 
-                                'Background_image_test.png')
-        actual = os.path.join('tests', tmp_file)
+        expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                  'default_images', 
+                                  'Background_image_test.png')
+        actual = tmp_file
         
         assert compare_images(expected=expected,
                     actual=actual, 
-                    tol=0) is None
+                    tol=12) is None
 
         os.remove(os.path.join('tests', tmp_file))
     

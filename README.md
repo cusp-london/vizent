@@ -4,6 +4,8 @@
 
 <br/>   
  
+https://github.com/cusp-london/vizent/actions/workflows/unit-tests-minimal.yml/badge.svg
+
 > A python library for bivariate glyphs integrated with matplotlib
 
 This library allows the user to create visualizations using Visual Entropy Glyphs[1]. Vizent glyphs are designed to help when you need to add an extra data variable to a scatter plot, a map or a graph. Vizent glyphs are bivariate, that is they allow you to represent two variables at each point on your plot. A central colored disc is able to represent a continuous variable, an enclosing shape can represent a continuous interval or categorical variable using increasing levels of visual entropy (shape complexity). 

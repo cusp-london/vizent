@@ -18,7 +18,7 @@ setuptools.setup(
     install_requires = ['matplotlib', 'numpy', 'scipy'],
     extras_require = {
         'background_map': ['cartopy'],
-        'background_image': ['pillow']
+        'background_image': ['pillow'] 
     },
     classifiers=[
       'Development Status :: 3 - Alpha',

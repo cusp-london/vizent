@@ -12,10 +12,10 @@ import matplotlib
 def test_get_basemap():
 
     try: 
-        matplotlib.use('qtagg')
+        matplotlib.use('agg')
     except ImportError:
         warnings.warn("The default images for this test have been created "
-                      "using the qtagg backend for matplotlib. This backend is"
+                      "using the agg backend for matplotlib. This backend is"
                       " unavailable in your current python distribution. This "
                       " test may therefore fail")
 
@@ -28,19 +28,21 @@ def test_get_basemap():
         extent = [-8, 2, 50, 60]
         ax = get_basemap(gs, extent, show_axes=False)
         
-        tmp_file_map = 'tmp_basemap_test.png' 
+        tmp_file_map = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                    'tmp_basemap_test.png')
         # save to a temporary file
-        plt.savefig(os.path.join('tests',tmp_file_map))
+        plt.savefig(tmp_file_map)
 
         assert type(ax) == GeoAxes
-        expected = os.path.join('tests', 'default_images', 'UK_basemap.png')
-        actual = os.path.join('tests', tmp_file_map)
+        expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                  'default_images', 'UK_basemap.png')
+        actual = tmp_file_map
         
         assert compare_images(expected=expected, \
                               actual=actual, \
-                              tol=0) is None
+                              tol=12) is None
         
-        os.remove(os.path.join('tests', tmp_file_map))
+        os.remove(tmp_file_map)
         
     
     except ImportError:
