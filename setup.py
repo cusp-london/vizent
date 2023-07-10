@@ -15,14 +15,10 @@ setuptools.setup(
     author_email = 'lucy.mclaughlin@ncl.ac.uk',
     url = 'https://github.com/luyc12/vizent',
     keywords = ['visualization', 'plot', 'bivariate', 'glyphs', 'scatterplot', 'dataviz'],
-    install_requires = [
-            'matplotlib',
-            'numpy',
-            'scipy'
-        ],
+    install_requires = ['matplotlib', 'numpy', 'scipy'],
     extras_require = {
-        'background_map': 'cartopy'
-        'background_image': 'pillow'
+        'background_map': ['cartopy'],
+        'background_image': ['pillow']
     },
     classifiers=[
       'Development Status :: 3 - Alpha',
