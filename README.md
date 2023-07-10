@@ -4,7 +4,7 @@
 
 <br/>   
  
-https://github.com/cusp-london/vizent/actions/workflows/unit-tests-minimal.yml/badge.svg
+![build](https://github.com/cusp-london/vizent/actions/workflows/unit-tests-minimal.yml/badge.svg)
 
 > A python library for bivariate glyphs integrated with matplotlib
 
