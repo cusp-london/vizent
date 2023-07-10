@@ -99,7 +99,7 @@ def test_add_image_background():
         extent = [0,1,0,1]
         add_image_background(image_file, ax1, extent)
         
-        tmp_file = 'tmp_background_images_test.png' #%s.png' % uuid.uuid1()
+        tmp_file = 'tmp_background_images_test.png'
         # save to a temporary file
         plt.savefig(os.path.join('tests', tmp_file))
 

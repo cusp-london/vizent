@@ -66,8 +66,9 @@ Typical usage example:
 import importlib
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
-from glyph_shapes import shapes, get_shape_points
-from scales import *
+
+from vizent.glyph_shapes import shapes, get_shape_points
+from vizent.scales import *
 
 def add_point(x, y, shape, frequency, color, size, ax):
     shape_points = get_shape_points(shape, frequency)

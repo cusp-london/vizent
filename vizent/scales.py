@@ -14,9 +14,10 @@ arXiv:1907.12879
 """
 
 import numpy as np
-from metofficelimits import *
 import matplotlib
 import matplotlib.cm as cm 
+
+from vizent.metofficelimits import *
 
 def scale_is_negative(values):
     return any(x<0 for x in values) and not any(x>0 for x in values)

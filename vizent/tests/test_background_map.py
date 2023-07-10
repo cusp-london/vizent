@@ -4,7 +4,6 @@
 
 import warnings
 import matplotlib.pyplot as plt
-import uuid
 import os
 from matplotlib.testing.compare import compare_images
 from matplotlib import gridspec
@@ -29,7 +28,7 @@ def test_get_basemap():
         extent = [-8, 2, 50, 60]
         ax = get_basemap(gs, extent, show_axes=False)
         
-        tmp_file_map = 'tmp_basemap_test.png' #% uuid.uuid1()
+        tmp_file_map = 'tmp_basemap_test.png' 
         # save to a temporary file
         plt.savefig(os.path.join('tests',tmp_file_map))
 

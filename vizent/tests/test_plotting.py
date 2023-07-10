@@ -17,8 +17,10 @@ import warnings
 import os
 import matplotlib
 from matplotlib.testing.compare import compare_images
-from vizent.vizent_plot import create_plot, add_point, add_line
 import matplotlib.pyplot as plt
+
+from vizent.vizent_plot import create_plot, add_point, add_line
+
 
 try: 
     matplotlib.use('qtagg')

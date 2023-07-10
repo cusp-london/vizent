@@ -12,9 +12,10 @@
 
 
 import pytest
-from vizent import scales
 import numpy as np
 import matplotlib.cm as cm
+
+from vizent import scales
 
 def test_scale_is_negative():
 
