@@ -6,9 +6,7 @@
 
 import os
 import warnings
-import uuid
 import matplotlib
-from matplotlib import gridspec
 import matplotlib.pyplot as plt
 from matplotlib import axes
 from matplotlib.testing.compare import compare_images

@@ -2,7 +2,6 @@
 # ===========================
 # get_basemap()
 
-import pytest
 import warnings
 import matplotlib.pyplot as plt
 import uuid
