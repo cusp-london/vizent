@@ -23,7 +23,7 @@ setuptools.setup(
     extras_require = {
         'background_map': 'cartopy'
         'background_image': 'pillow'
-    }
+    },
     classifiers=[
       'Development Status :: 3 - Alpha',
       'Intended Audience :: End Users/Desktop',
