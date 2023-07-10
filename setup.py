@@ -18,16 +18,12 @@ setuptools.setup(
     install_requires = [
             'matplotlib',
             'numpy',
-            'scipy',
-            'pillow',
-            'Cython',
-            'GEOS',
-            'Shapely',
-            'pyshp',
-            'PROJ',
-            'six',
-            'cartopy'
+            'scipy'
         ],
+    extras_require = {
+        'background_map': 'cartopy'
+        'background_image': 'pillow'
+    }
     classifiers=[
       'Development Status :: 3 - Alpha',
       'Intended Audience :: End Users/Desktop',
