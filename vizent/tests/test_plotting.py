@@ -19,7 +19,10 @@ import matplotlib
 from matplotlib.testing.compare import compare_images
 import matplotlib.pyplot as plt
 
-from vizent.vizent_plot import create_plot, add_point, add_line
+from vizent.vizent_plot import create_plot, add_point, add_line, \
+    add_glyph_legend, add_line_legend
+from vizent.scales import get_color_scale, get_shape_scale, \
+    get_frequency_scale, get_color_mapping
 
 
 try: 
@@ -154,18 +157,145 @@ def test_add_line():
 
 
 
-class TestGlyphPlot():
-    pass
+def test_add_glyph_legend():
+    
+    # Color scale
+    values =  (-2, 0, 1, 3, 5)
+    max_val = 10
+    min_val = -10
+    n_colors = 4
+    scale_spread = None
+    color_scale_vals = get_color_scale(values, max_val, min_val, n_colors, 
+                                 scale_spread)
+    
+    color_mapping = get_color_mapping(color_scale_vals, 'viridis')
 
 
-class TestNetworkPlot():
-    pass
+    # Shape scale
+    values = (-7, -3, 0, 4, 5)
+    max_val = None
+    min_val = None
+    n_shapes = 5
+    scale_diverges = True
+    scale_spread = None
+    shape_scale_vals = get_shape_scale(values, max_val, min_val, n_shapes, 
+                                 scale_diverges, scale_spread)
+    
+    frequency_scale = get_frequency_scale(shape_scale_vals, scale_diverges)
+
+    fig, ax1, ax2, ax3, asp = create_plot(glyphs=True, 
+                                          lines=False, 
+                                          show_legend=True, 
+                                          show_axes=True, 
+                                          use_cartopy=False, 
+                                          use_image=False, 
+                                          image_type=None, 
+                                          image_file=None, 
+                                          extent=None, 
+                                          scale_x=None, 
+                                          scale_y=None)
 
 
-class TestSaveFig():
-    pass
+    scale_x = fig.get_size_inches()[0]
+    scale_y = fig.get_size_inches()[1]
+
+    add_glyph_legend(ax2=ax2, 
+                     color_scale=color_scale_vals, 
+                     colormap='viridis', 
+                     color_mapping=color_mapping,
+                     shape_scale=shape_scale_vals, 
+                     frequency_scale=frequency_scale, 
+                     shape='sine', 
+                     shape_pos='sine', 
+                     shape_neg='square', 
+                     divergent=True, 
+                     scale_x=scale_x, 
+                     scale_y=scale_y, 
+                     color_label='Color', 
+                     shape_label='Shape', 
+                     title='Legend', 
+                     size=None, 
+                     scale_dp=2)
+
+    tmp_file_glyph_legend = os.path.join(os.path.dirname(
+                                         os.path.abspath(__file__)),
+                                         'tmp_glyph_legend.png')
+    fig.savefig(tmp_file_glyph_legend)
+    expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                  'default_images', 'glyph_legend.png')
+    
+    assert compare_images(expected=expected, 
+                          actual=tmp_file_glyph_legend, 
+                          tol=12) is None
+
+    os.remove(tmp_file_glyph_legend)
 
 
-class TestVizentPlot():
-    pass
+def test_add_line_legend():
 
+    fig, ax1, ax2, ax3, asp = create_plot(glyphs=False, 
+                                          lines=True, 
+                                          show_legend=True, 
+                                          show_axes=True, 
+                                          use_cartopy=False, 
+                                          use_image=False, 
+                                          image_type=None, 
+                                          image_file=None, 
+                                          extent=None, 
+                                          scale_x=None, 
+                                          scale_y=None)
+    
+    # Color scale
+    values =  (-2, 0, 1, 3, 5)
+    max_val = None
+    min_val = None
+    n_colors = 5
+    scale_spread = None
+    color_scale_vals = get_color_scale(values, max_val, min_val, n_colors, 
+                                 scale_spread)
+    
+    color_mapping = get_color_mapping(color_scale_vals, 'viridis')
+
+    # Shape scale
+    values = (-7, -3, 0, 4, 5)
+    max_val = 5
+    min_val = -8
+    n_shapes = 5
+    scale_diverges = False
+    scale_spread = None
+    shape_scale_vals = get_shape_scale(values, max_val, min_val, n_shapes, 
+                                 scale_diverges, scale_spread)
+    
+    frequency_scale = get_frequency_scale(shape_scale_vals, scale_diverges)
+
+    scale_x = fig.get_size_inches()[0]
+    scale_y = fig.get_size_inches()[1]
+
+    add_line_legend(ax3=ax3, 
+                    color_scale=color_scale_vals, 
+                    colormap='hot', 
+                    color_mapping=color_mapping, 
+                    shape_scale=shape_scale_vals, 
+                    frequency_scale=frequency_scale,
+                    style="frequency", 
+                    scale_x=scale_x, 
+                    scale_y=scale_y, 
+                    color_label='Color',
+                    shape_label='Shape',
+                    title='Legend',
+                    width=None, 
+                    scale_dp=3)
+    
+    tmp_file_line_legend = os.path.join(os.path.dirname(
+                                         os.path.abspath(__file__)),
+                                         'tmp_line_legend.png')
+    fig.savefig(tmp_file_line_legend, dpi=300)
+    
+    expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                  'default_images', 'line_legend.png')
+    
+    assert compare_images(expected=expected, 
+                          actual=tmp_file_line_legend, 
+                          tol=12) is None
+
+    os.remove(tmp_file_line_legend)
