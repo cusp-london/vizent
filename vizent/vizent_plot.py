@@ -115,6 +115,9 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
                              + (dx*unit_size_x)**2))
             proportion = striped_length / actual_length
             gap = ((actual_length-striped_length) / 2) / actual_length
+        elif length_type == "proportion":
+            proportion = striped_length
+            gap = ((1 - proportion) / 2) 
         else:
             raise ValueError("length_type is invalid")
 
@@ -183,7 +186,7 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
                 y_0 = y0 + stripe_diff_y * i
                 x_1 = x0 + stripe_diff_x * (i+1)
                 y_1 = y0 + stripe_diff_y * (i+1) 
-                
+
                 striped_white_lines.append(                    
                     ax.plot([x_0, x_1], [y_0, y_1], color='white', 
                             linewidth=width, solid_capstyle='butt', 
@@ -214,11 +217,6 @@ def add_glyph_legend(ax2, color_scale, colormap, color_mapping, shape_scale,
                      frequency_scale, shape, shape_pos, shape_neg, divergent, 
                      scale_x, scale_y, color_label, shape_label, title, size, 
                      scale_dp):
-    # TODO: Number of dps should be included in this function as a text 
-    # formatting option within the legend and removed from the color scaling -
-    # otherwise we might run into floating point issues.
-
-
 
     # Fixed positions and limits
     x_positions = [0.75, 3.25]
@@ -280,7 +278,7 @@ def add_glyph_legend(ax2, color_scale, colormap, color_mapping, shape_scale,
                  va='center', size=title_size)
     for i in range(len(shape_y_positions)):
         add_point(x_positions[1], 
-                  color_y_positions[i],
+                  shape_y_positions[i],
                   get_shape(shape_scale[i], shape, divergent, shape_pos, 
                             shape_neg),
                   frequency_scale[i], 
@@ -288,7 +286,7 @@ def add_glyph_legend(ax2, color_scale, colormap, color_mapping, shape_scale,
                   size, 
                   ax2)
         ax2.annotate("{:.{prec}f}".format(shape_scale[i],prec=scale_dp), 
-                     (x_positions[1] + 1.1, color_y_positions[i]), 
+                     (x_positions[1] + 1.1, shape_y_positions[i]), 
                      ha='center', 
                      va='center', 
                      size=label_size)
@@ -359,31 +357,25 @@ def add_line_legend(ax3, color_scale, colormap, color_mapping, shape_scale,
     # Add shape scale
     ax3.annotate(shape_label, (x_positions[1] + 0.5, y_subtitle), ha='center', 
                  va='center', size=title_size)
-    for i in range(len(shape_y_positions)):
-        # Black line
-        ax3.plot([x_positions[1], x_positions[1]],
-                 [shape_y_positions[i] + (shape_length/2), 
-                  shape_y_positions[i] - (shape_length/2)], 
-                 color='black', 
-                 linewidth=width, 
-                 solid_capstyle='butt', 
-                 zorder=0)  
-        # White stripes
-        stripes = 1 + (2*frequency_scale[i])
-        stripe_diff_x = 0
-        stripe_diff_y = shape_length / stripes
     
-        for j in range(int(stripes)):
-            if j%2 != 0:
-                x_0 = x_positions[1] + stripe_diff_x*j
-                y_0 = ((shape_y_positions[i] - (shape_length/2)) 
-                       + stripe_diff_y*j)
-                x_1 = x_positions[1] + stripe_diff_x*(j+1)
-                y_1 = ((shape_y_positions[i] - (shape_length/2)) 
-                       + stripe_diff_y*(j+1))
-
-                ax3.plot([x_0, x_1], [y_0, y_1], color='white', 
-                         linewidth=width, solid_capstyle='butt', zorder=1)
+    for i in range(len(shape_y_positions)):
+        add_line(x_origin=x_positions[1],
+                 y_origin=shape_y_positions[i] + (shape_length/2),
+                 x_end=x_positions[1], 
+                 y_end=shape_y_positions[i] - (shape_length/2),
+                 frequency=frequency_scale[i], 
+                 color=None, 
+                 width=width, 
+                 ax=ax3,
+                 style='set_length', 
+                 freq_n=None, 
+                 color_n=None, 
+                 striped_length=1,
+                 length_type='proportion',
+                 ax_w=scale_x, 
+                 ax_h=scale_y, 
+                 zorder=1
+                 )
         
         ax3.annotate("{:.{prec}f}".format(shape_scale[i],prec=scale_dp), 
                      (x_positions[1] + 1.1, shape_y_positions[i]), 
@@ -907,6 +899,7 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
             the units to be used for stripe length.
                 "units": number of units on the axes.
                 "pixels": number of pixels.
+                "proportion": proportion of line.
         colormap (matplotlib.colors.Colormap, default: "viridis"): 
             the matplotlib colormap to be used.
         style (str, default: "middle"): 
@@ -1112,13 +1105,13 @@ def return_figure(fig, return_type, file_name="vizent_plot_save"):
     plt.close()
 
 
-def vizent_plot(x_values, y_values, color_values, shape_values, size_values, 
+def vizent_plot(x_values, y_values, colour_values, shape_values, size_values, 
                 colormap="viridis", scale_x=None, scale_y=None, 
                 use_image=False, image_type=None, image_file=None, 
                 use_cartopy=False, extent=None, scale_diverges=None, 
                 shape="sine", shape_pos="sine", shape_neg="square", 
-                color_max=None, color_min=None, color_n=None, 
-                color_spread=None, shape_max=None, shape_min=None, 
+                colour_max=None, colour_min=None, colour_n=None, 
+                colour_spread=None, shape_max=None, shape_min=None, 
                 shape_n=None, shape_spread=None, color_label="temperature", 
                 shape_label="variance", title=None, x_label=None, 
                 y_label=None, show_axes=True, save=False, 
@@ -1134,7 +1127,7 @@ def vizent_plot(x_values, y_values, color_values, shape_values, size_values,
     Parameters:
         x_values (list of floats): list of x coordinates
         y_values (list of floats): list of y coordinates
-        color_values (list of floats): list of values to be 
+        colour_values (list of floats): list of values to be 
                                         represented by color
         shape_values (list of floats): list of values to be 
                                        represented by shape
@@ -1178,13 +1171,13 @@ def vizent_plot(x_values, y_values, color_values, shape_values, size_values,
         shape_neg (str): Optional. When using divergent
                          scale, glyph shape design to use
                          for negative values.
-        color_max (float): Optional. Maximum value to use
+        colour_max (float): Optional. Maximum value to use
                             for color in key.
-        color_min (float): Optional. Minimum value to use
+        colour_min (float): Optional. Minimum value to use
                             for color in key.
-        color_n (int): Optional. Number of color values
+        colour_n (int): Optional. Number of color values
                         to be shown in key.
-        color_spread (float): Optional. Total range of 
+        colour_spread (float): Optional. Total range of 
                                color values in key. Only
                                use if not specifying max
                                and min.
@@ -1202,7 +1195,7 @@ def vizent_plot(x_values, y_values, color_values, shape_values, size_values,
                               shape values in key. Only
                               use if not specifying max
                               and min.
-        color_label (str): Optional. Text label for color
+        colour_label (str): Optional. Text label for color
                             values in key.
         shape_label (str): Optional. Text label for shape
                            values in key.
@@ -1243,27 +1236,16 @@ def vizent_plot(x_values, y_values, color_values, shape_values, size_values,
                      image_file=image_file, extent=extent, 
                      scale_x=scale_x, scale_y=scale_y)
 
-    add_glyphs(fig, x_values, y_values, color_values, shape_values, 
+    add_glyphs(fig, x_values, y_values, colour_values, shape_values, 
                size_values, colormap=colormap, scale_diverges=scale_diverges, 
                shape=shape, shape_pos=shape_pos, shape_neg=shape_neg, 
-               color_max=color_max, color_min=color_min, color_n=color_n, 
-               color_spread=color_spread, shape_max=shape_max, 
+               color_max=colour_max, color_min=colour_min, color_n=colour_n, 
+               color_spread=colour_spread, shape_max=shape_max, 
                shape_min=shape_min, shape_n=shape_n, shape_spread=shape_spread,
                color_label=color_label, shape_label=shape_label, 
                scale_dp=scale_dp, interval_type=interval_type, 
                legend_title=None)
 
-    # Do we want to turn this into a proper wrapper function and add in the 
-    # line functionality as well?
-
-    # add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
-    #           freq_values, width_values, striped_length=1, 
-    #           length_type="units", colormap="viridis", style="middle", 
-    #           color_max=None, color_min=None, color_n=4, 
-    #           color_spread=None, freq_max=None, freq_min=None, 
-    #           freq_n=4, freq_spread=None, color_label="color", 
-    #           shape_label="shape", legend_title="lines", scale_dp=2, 
-    #           interval_type="closest", legend_marker_size="auto")
     
     if title is not None:
         delim_title = title.split("\n")
@@ -1282,3 +1264,22 @@ def vizent_plot(x_values, y_values, color_values, shape_values, size_values,
     else:
         return_figure(fig, None, file_name=file_name)
         
+
+
+
+def plot_glyphs_lines():
+
+    pass
+
+
+    # Do we want to turn this into a proper wrapper function and add in the 
+    # line functionality as well?
+
+    # add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
+    #           freq_values, width_values, striped_length=1, 
+    #           length_type="units", colormap="viridis", style="middle", 
+    #           color_max=None, color_min=None, color_n=4, 
+    #           color_spread=None, freq_max=None, freq_min=None, 
+    #           freq_n=4, freq_spread=None, color_label="color", 
+    #           shape_label="shape", legend_title="lines", scale_dp=2, 
+    #           interval_type="closest", legend_marker_size="auto")
