@@ -18,9 +18,12 @@ import os
 import matplotlib
 from matplotlib.testing.compare import compare_images
 import matplotlib.pyplot as plt
+import numpy as np
+import pytest
 
 from vizent.vizent_plot import create_plot, add_point, add_line, \
-    add_glyph_legend, add_line_legend
+    add_glyph_legend, add_line_legend, add_glyphs, add_lines, return_figure, \
+    vizent_plot
 from vizent.scales import get_color_scale, get_shape_scale, \
     get_frequency_scale, get_color_mapping
 
@@ -36,8 +39,8 @@ except ImportError:
 
 def test_create_plot():
 
-    fig, ax1, ax2, ax3, asp = create_plot(glyphs=True, 
-                                          lines=True, 
+    fig, ax1, ax2, ax3, asp = create_plot(use_glyphs=True, 
+                                          use_lines=True, 
                                           show_legend=True, 
                                           show_axes=True, 
                                           use_cartopy=False, 
@@ -134,8 +137,6 @@ def test_add_line():
     
     ax.axis('off')
 
-    print(return_dict['striped_white_lines'])
-    
     assert type(return_dict['main_line']) == matplotlib.lines.Line2D
     for line in return_dict['striped_base_lines']:
         assert type(line) == matplotlib.lines.Line2D
@@ -183,8 +184,8 @@ def test_add_glyph_legend():
     
     frequency_scale = get_frequency_scale(shape_scale_vals, scale_diverges)
 
-    fig, ax1, ax2, ax3, asp = create_plot(glyphs=True, 
-                                          lines=False, 
+    fig, ax1, ax2, ax3, asp = create_plot(use_glyphs=True, 
+                                          use_lines=False, 
                                           show_legend=True, 
                                           show_axes=True, 
                                           use_cartopy=False, 
@@ -233,8 +234,8 @@ def test_add_glyph_legend():
 
 def test_add_line_legend():
 
-    fig, ax1, ax2, ax3, asp = create_plot(glyphs=False, 
-                                          lines=True, 
+    fig, ax1, ax2, ax3, asp = create_plot(use_glyphs=False, 
+                                          use_lines=True, 
                                           show_legend=True, 
                                           show_axes=True, 
                                           use_cartopy=False, 
@@ -290,7 +291,7 @@ def test_add_line_legend():
                                          os.path.abspath(__file__)),
                                          'tmp_line_legend.png')
     fig.savefig(tmp_file_line_legend, dpi=300)
-    
+
     expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
                                   'default_images', 'line_legend.png')
     
@@ -299,3 +300,290 @@ def test_add_line_legend():
                           tol=12) is None
 
     os.remove(tmp_file_line_legend)
+
+
+class TestPlotWrappers:
+
+    def setup_method(self):
+
+        self.axes = create_plot(use_glyphs=True, 
+                                use_lines=True, 
+                                show_legend=True, 
+                                show_axes=True, 
+                                use_cartopy=False, 
+                                use_image=False, 
+                                image_type=None,
+                                image_file=None, 
+                                extent=[-0.1,1.1,-0.1,1.1], 
+                                scale_x=None, 
+                                scale_y=None
+                                )
+
+        self.x_values = [0, 0, 1, 1, 0.5]
+        self.y_values = [0, 1, 0, 1, 0.5]
+
+
+    def test_add_glyphs(self):
+
+        color_values = [-100, -10, 0.01, 100, 1000]
+        shape_values = [2, 1, 0, -2, -1]
+        
+        add_glyphs(ax=self.axes, 
+                   x_values=self.x_values, 
+                   y_values=self.y_values, 
+                   color_values=color_values, 
+                   shape_values=shape_values, 
+                   size_values=[20 for i in range(len(self.x_values))], 
+                   colormap='PuOr', 
+                   scale_diverges=True,
+                   shape='sine', 
+                   shape_pos='sine', 
+                   shape_neg='saw', 
+                   color_max=200, 
+                   color_min=-200, 
+                   color_n=5, 
+                   color_spread=None, 
+                   shape_max=None, 
+                   shape_min=None, 
+                   shape_n=3, 
+                   shape_spread=None, 
+                   color_label='color', 
+                   shape_label='shape', 
+                   legend_title='glyphs', 
+                   scale_dp=0,
+                   interval_type='closest', 
+                   legend_marker_size='auto')
+        
+
+        tmp_file_glyphs = os.path.join(os.path.dirname(
+                                       os.path.abspath(__file__)),
+                                       'glyphs.png')
+        
+        self.axes[0].savefig(tmp_file_glyphs)
+
+        expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                    'default_images', 'glyphs.png')
+    
+        assert compare_images(expected=expected, 
+                              actual=tmp_file_glyphs, 
+                              tol=12) is None
+
+        os.remove(tmp_file_glyphs)
+
+
+    def test_add_lines(self):
+        
+        color_values = [-10, -5, -3, 1, 2, 4]
+        freq_values = range(6)
+
+        x_start = []
+        x_end = []
+        y_start = []
+        y_end = []
+        for x1,y1 in zip(self.x_values, self.y_values):
+            for x2,y2 in zip(self.x_values, self.y_values):
+                if x1 <= x2 and y1 <= y2:
+                    line_distance =  np.sqrt((x1 - x2)**2 + (y1 - y2)**2)
+                    if line_distance <= 1 and line_distance > 10e-5:
+                        x_start.append(x1)
+                        y_start.append(y1)
+                        x_end.append(x2)
+                        y_end.append(y2)
+
+
+        add_lines(ax=self.axes, 
+                  x_starts=x_start,
+                  y_starts=y_start,
+                  x_ends=x_end, 
+                  y_ends=y_end, 
+                  color_values=color_values,
+                  freq_values=freq_values, 
+                  width_values=[10 for i in range(6)], 
+                  color_n=6)
+
+        tmp_file_lines = os.path.join(os.path.dirname(
+                                       os.path.abspath(__file__)),
+                                       'lines.png')
+        
+        self.axes[0].savefig(tmp_file_lines)
+
+        expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                    'default_images', 'lines.png')
+    
+        assert compare_images(expected=expected, 
+                              actual=tmp_file_lines, 
+                              tol=12) is None
+
+        os.remove(tmp_file_lines)
+
+
+    def test_return_figure(self):
+        
+        tmp_file_return = os.path.join(os.path.dirname(
+                                os.path.abspath(__file__)),
+                                'tmp_fig_return.png')
+        
+        fig = return_figure(self.axes, 
+                            return_type='save', 
+                            file_name=tmp_file_return)
+        
+        expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                    'default_images', 'return_fig.png')
+        
+        assert compare_images(expected=expected, 
+                              actual=tmp_file_return, 
+                              tol=12) is None
+        
+        os.remove(tmp_file_return)
+
+
+    def test_vizent_plot_v1_0_1(self):
+        color_values = [-100, -10, 0.01, 100, 1000]
+        shape_values = [2, 1, 0, -2, -1]
+        
+        tmp_vizent_plot = os.path.join(os.path.dirname(
+                                os.path.abspath(__file__)),
+                                'tmp_vizent_plot.png')
+
+        fig = vizent_plot(
+                self.x_values, 
+                self.y_values, 
+                color_values, 
+                shape_values, 
+                [20 for i in range(len(self.x_values))], 
+                colormap="viridis", 
+                scale_x=6.4, 
+                scale_y=4.8, 
+                use_image=False, 
+                image_type=None, 
+                image_file=None, 
+                use_cartopy=False, 
+                extent=None, 
+                scale_diverges=None, 
+                shape="sine", 
+                shape_pos="sine", 
+                shape_neg="square", 
+                colour_max=None, 
+                colour_min=None, 
+                colour_n=None, 
+                colour_spread=None, 
+                shape_max=None, 
+                shape_min=None, 
+                shape_n=None, 
+                shape_spread=None, 
+                colour_label="Color", 
+                shape_label="Shape", 
+                title="Glyphs", 
+                x_label=None, 
+                y_label=None, 
+                show_axes=True,
+                save=True, 
+                file_name=tmp_vizent_plot, 
+                return_axes=False, 
+                scale_dp=1, 
+                interval_type="closest", 
+                show_legend=True
+        )
+        fig.savefig(tmp_vizent_plot)
+
+        expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                    'default_images', 'vizent_plot_test.png')
+        
+        assert compare_images(expected=expected, 
+                              actual=tmp_vizent_plot, 
+                              tol=12) is None
+        
+        os.remove(tmp_vizent_plot)
+
+
+    def test_vizent_plot(self):
+        
+        edge_color_values = [-10, -5, -3, 1, 2, 4]
+        edge_freq_values = range(6)
+        color_values = [-100, -10, 0.01, 100, 1000]
+        shape_values = [2, 1, 0, -2, -1]
+
+        x_start = []
+        x_end = []
+        y_start = []
+        y_end = []
+        for x1,y1 in zip(self.x_values, self.y_values):
+            for x2,y2 in zip(self.x_values, self.y_values):
+                if x1 <= x2 and y1 <= y2:
+                    line_distance =  np.sqrt((x1 - x2)**2 + (y1 - y2)**2)
+                    if line_distance <= 1 and line_distance > 10e-5:
+                        x_start.append(x1)
+                        y_start.append(y1)
+                        x_end.append(x2)
+                        y_end.append(y2)
+
+        fig = vizent_plot(x_values=self.x_values,
+                    y_values=self.y_values, 
+                    colour_values=color_values, 
+                    shape_values=shape_values,
+                    size_values=[20 for i in range(len(self.x_values))],
+                    edge_start_points=[(x,y) for x,y in zip(x_start, y_start)], 
+                    edge_end_points=[(x,y) for x,y in zip(x_end, y_end)], 
+                    edge_colors=edge_color_values,
+                    edge_frequencies=edge_freq_values, 
+                    edge_widths=[5 for i in range(len(x_start))],
+                    edge_color_n=4, 
+                    scale_x=15)
+        
+        tmp_vizent_plot_with_edges = os.path.join(os.path.dirname(
+                                            os.path.abspath(__file__)),
+                                            'tmp_vizent_plot_with_edges.png')
+
+        fig.savefig(tmp_vizent_plot_with_edges)
+
+        expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                'default_images', 
+                                'vizent_plot_with_edges_test.png')
+        
+        assert compare_images(expected=expected, 
+                              actual=tmp_vizent_plot_with_edges, 
+                              tol=12) is None
+        
+        os.remove(tmp_vizent_plot_with_edges)
+
+    
+
+    def test_deprecation_warnings(self):
+
+               
+        edge_color_values = [-10, -5, -3, 1, 2, 4]
+        edge_freq_values = range(6)
+        color_values = [-100, -10, 0.01, 100, 1000]
+        shape_values = [2, 1, 0, -2, -1]
+
+        x_start = []
+        x_end = []
+        y_start = []
+        y_end = []
+        for x1,y1 in zip(self.x_values, self.y_values):
+            for x2,y2 in zip(self.x_values, self.y_values):
+                if x1 <= x2 and y1 <= y2:
+                    line_distance =  np.sqrt((x1 - x2)**2 + (y1 - y2)**2)
+                    if line_distance <= 1 and line_distance > 10e-5:
+                        x_start.append(x1)
+                        y_start.append(y1)
+                        x_end.append(x2)
+                        y_end.append(y2)
+
+        with pytest.warns(Warning) as record:
+
+            fig = vizent_plot(x_values=self.x_values,
+                        y_values=self.y_values, 
+                        colour_values=color_values, 
+                        shape_values=shape_values,
+                        size_values=[20 for i in range(len(self.x_values))],
+                        edge_start_points=[(x,y) for x,y in zip(x_start, y_start)], 
+                        edge_end_points=[(x,y) for x,y in zip(x_end, y_end)], 
+                        edge_colors=edge_color_values,
+                        edge_frequencies=edge_freq_values, 
+                        edge_widths=[5 for i in range(len(x_start))],
+                        scale_x=15)
+            
+            if not record:
+                pytest.fail("Expected a deprecation warning on the use of scale_x argument")
+        
