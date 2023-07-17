@@ -1,76 +1,39 @@
-""" The user accessible functions of the vizent library.
-
-This module contains the user accessible functions of the vizent 
-library. These functions can be used to create a plot in up to four 
-steps: preparing the plot area, adding glyphs, adding lines, and 
-returning the completed plot. 
-
-Functions:
-    create_plot(glyphs=True, lines=True, show_legend=True, 
-                show_axes=True, use_cartopy=False, use_image=False, 
-                image_type=None, image_file=None, extent=None, 
-                scale_x=None, scale_y=None)
-    add_glyphs(ax, x_values, y_values, color_values, shape_values, 
-               size_values, colormap="viridis", scale_diverges=None, 
-               shape="sine", shape_pos="sine", shape_neg="square", 
-               color_max=None, color_min=None, color_n=None, 
-               color_spread=None, shape_max=None, shape_min=None, 
-               shape_n=None, shape_spread=None, color_label="color", 
-               shape_label="shape", legend_title="glyphs", scale_dp=2, 
-               interval_type="closest", legend_marker_size="auto")
-    add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
-              freq_values, width_values, striped_length=1, 
-              length_type="units", colormap="viridis", style="middle", 
-              color_max=None, color_min=None, color_n=4, 
-              color_spread=None, freq_max=None, freq_min=None, 
-              freq_n=4, freq_spread=None, color_label="color", 
-              shape_label="shape", legend_title="lines", scale_dp=2, 
-              interval_type="closest", legend_marker_size="auto")
-    return_figure(fig, return_type, file_name="vizent_plot_save")
-
-Typical usage example:
-    # This library requires several functions to be called sequentially.
-    # First the plot area is prepared. This includes specifications
-    # relating to the axes, plot area background and legends.
-
-    axes=create_plot(use_image=True, image_file="image.jpg", 
-                     extent=[0,6,0,6])
-
-    # Next any glyphs and lines are added. This can be done in any 
-    # order, glyphs will always be placed on top of lines.
-
-    x_values = [1,4,2,3]
-    y_values = [1,5,2,5]
-    color_values = [1,2,3,4]
-    shape_values = [1,2,3,4] 
-    size_values = [30,30,30,30]
-
-    add_glyphs(axes, x_values, y_values, color_values, shape_values, 
-               size_values)
-
-    x_starts = [2,1]
-    y_starts = [2,1]
-    x_ends = [4,3]
-    y_ends = [5,5]
-    color_values = [4,1]
-    shape_values = [4,1] 
-    width_values = [15,15]
-
-    add_lines(axes, x_starts, y_starts, x_ends, y_ends, color_values, 
-              shape_values, width_values)
-
-    # Finally, the created figure is returned in the required manner.
-              
-    return_figure(axes, "display")
+from __future__ import annotations
+""" 
+The user accessible functions of the vizent library.
 """
+
+import warnings
 import importlib
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
+from numpy.typing import ArrayLike
+from collections.abc import Sequence
+
 
 from vizent.glyph_shapes import shapes, get_shape_points
 from vizent.scales import *
 
 def add_point(x, y, shape, frequency, color, size, ax):
+    """
+    Adds a vizent glyph to an axes object
+
+    :param x: position on the x-axis
+    :type x: float
+    :param y: position on the y-axis
+    :type y: float
+    :param shape: glyph shape design 
+    :type shape: "sine", "saw", "reverse_saw", "square", "triangular", \
+    "concave", "star"
+    :param frequency: value to determine frequency of glyph shape
+    :type frequency: float
+    :param color: glyph interior colour given in rgb values between 0 and 1
+    :type color: tuple(3)
+    :param size: the size of the glyph in points**2
+    :type size: float
+    :param ax: matplotlib Axes instance on which to plot the glyph
+    :type ax: matplotlib.axes.Axes
+    """
     shape_points = get_shape_points(shape, frequency)
     # add outer circle
     outer_collection = ax.scatter(x, y, marker='o', s=(size)**2, 
@@ -384,72 +347,70 @@ def add_line_legend(ax3, color_scale, colormap, color_mapping, shape_scale,
                      size=label_size)
 
 
-def create_plot(glyphs=True, lines=True, show_legend=True, show_axes=True,
-                use_cartopy=False, use_image=False, image_type=None, 
-                image_file=None, extent=None, scale_x=None, scale_y=None):
+def create_plot(use_glyphs=True, use_lines=True, show_legend=True, 
+                show_axes=True, use_cartopy=False, use_image=False, 
+                image_type=None, image_file=None, extent=None, scale_x=None, 
+                scale_y=None):
     """
     Create the figure used to plot glyphs and/or lines. This function
     must be executed first, and the output is used as an input to all
     other functions.
 
-    Parameters:
-        glyphs (Boolean, default: True):
-            Set True if glyphs are to be plotted.
-        lines (Boolean, default: True):
-            Set True if lines are to be plotted.
-        show_legend (Boolean, default: True):
-            If True, show legends for glyphs/lines as included. 
-        show_axes (Boolean, default: True):
-            If True, show axis labels.
-        use_cartopy (Boolean, default: False):
-            If True, use Cartopy to generate a map background. Must
-            specify extent if used.
-        use_image (Boolean, default: False):
-            If True, use an image as a background. Must specify extent
-            if used.
-        image_type (str, optional):
-            "newcastle": detailed 3D rendered image of Newcastle Upon
-                Tyne (available for limited coordinates)
-            "england": OpenStreetMap England map
-            otherwise: the specified image file is used
-        image_file (str, optional):
-            Path to the image file to use as the background.
-        extent (list of int, optional):
-            Axis limits or extent of coordinates for Cartopy. A list of
-            four values in the form: [xmin, xmax, ymin, ymax].  
-        scale_x (int, optional):
-            Width of plot window in inches.
-        scale_y (int, optional):
-            Height of plot window in inches.
-
-    Returns:
-        fig (matplotlib.figure):
-            The matplotlib figure object which will contain the axes.
-        ax1 (matplotlib.axes.SubplotBase):
-            The matplotlib axes object for the main plot.
-        ax2 (matplotlib.axes.SubplotBase):
-            The matplotlib axes object used for the glyph legend.
-        ax3 (matplotlib.axes.SubplotBase):
-            The matplotlib axes object used for the line legend.
-        asp (Numerical):
-            The aspect ratio of the main plot area (necessary to ensure
-            the legends display correctly when using image or map
-            backgrounds).
+    :param use_glyphs: Set True if glyphs are to be plotted, defaults to True.
+    :type use_glyphs: boolean, optional
+    :param use_lines: Set True if lines are to be plotted, defaults to True.
+    :type use_lines: boolean, optional
+    :param show_legend: If True, show legends for glyphs/lines as included, \
+        defaults to True.
+    :type show_legend: boolean, optional
+    :param show_axes: If True, show axis labels, defaults to True
+    :type show_axes: boolean, optional
+    :param use_cartopy: If True, use Cartopy to generate a map background. \
+        Must specify extent if used. Defaults to False.
+    :type use_cartopy: boolean, optional
+    :param use_image: If True, use an image as a background. Must specify \
+        extent if used. Defaults to False.
+    :type use_image: boolean, optional
+    :param image_type: Use either pre-packaged images or a user supplied image\
+        as a background, defaults to None. :code:`newcastle` provides a \
+        detailed 3D rendered image of Newcastle Upon Tyne (available for \
+        limited coordinates). :code:`england` provides a map of England from \
+        OpenStreetMap. :code:`filepath` can also be provided for any user \
+        supplied image.
+    :type image_type: str, optional
+    :param extent: Axis limits or extent of coordinates for Cartopy. A list of\
+         four values in the form: :code:`[xmin, xmax, ymin, ymax]`.
+    :type extent: list, optional
+    :param scale_x: Width of plot window in inches
+    :type scale_x: int, optional
+    :param scale_y: Height of plot window in inches
+    :type scale_y: int, optional
+    :return: tuple containing:
+        :code:`fig` Matplotlib figure object which will contain the axes.\
+        :code:`ax1` The matplotlib axes object for the main plot.\
+        :code:`ax2` The matplotlib axes object used for the glyph legend.\
+        :code:`ax3` The matplotlib axes object used for the line legend.\
+        :code:`asp` The aspect ratio of the main plot area (necessary to \
+        ensure the legends display correctly when using image or map\
+        backgrounds).
+    :rtype: (matplotlib.figure, matplotlib.axes.Axes, matplotlib.axes.Axes, \
+        matplotlib.axes.Axes, float)
     """
+
     # input checking
 
     # scale values are numeric
     if not isinstance(scale_x, (int, float)) and not scale_x==None:
-        print("scale_x must be numeric. Default will be used")
+        warnings.warn("scale_x must be numeric. Default will be used")
         scale_x = None
     if not isinstance(scale_y, (int, float)) and not scale_y==None:
-        print("scale_y must be numeric. Default will be used")
+        warnings.warn("scale_y must be numeric. Default will be used")
         scale_y = None
     if scale_x is not None and scale_x <=0:
-        print("scale_x must be a positive value. Default will be used.")
+        warnings.warn("scale_x must be positive. Default will be used.")
         scale_x = None
     if scale_y is not None and scale_y <=0:
-        print("scale_y must be a positive value. Default will be used.")
+        warnings.warn("scale_y must be positive. Default will be used.")
         scale_y = None
     # check extent format 
     if extent is not None:
@@ -490,8 +451,8 @@ def create_plot(glyphs=True, lines=True, show_legend=True, show_axes=True,
             try:
                 aspx, aspy = get_image_size()
             except:
-                print("Image file not found or not valid. Figure will be "
-                      "created without image background.")
+                warnings.warn("Image file not found or not valid. Figure will "
+                              "be created without image background.")
                 use_image = False
                 if extent is not None:
                     aspx = extent[1] - extent[0]
@@ -517,7 +478,7 @@ def create_plot(glyphs=True, lines=True, show_legend=True, show_axes=True,
     # Create the layout for plot and legends
     if not use_image and not use_cartopy and extent == None:
         if scale_x == None or scale_y == None:
-            if glyphs and lines:
+            if use_glyphs and use_lines:
                 if show_legend:
                     gs = gridspec.GridSpec(1, 3, width_ratios=[3, 1, 1]) 
                 else:
@@ -527,10 +488,10 @@ def create_plot(glyphs=True, lines=True, show_legend=True, show_axes=True,
             else:
                 if show_legend:
                     gs = gridspec.GridSpec(1, 3, width_ratios=[3, 1, 0])
-                    if glyphs:
+                    if use_glyphs:
                         ax2 = plt.subplot(gs[1])
                         ax3 = plt.subplot(gs[2])
-                    elif lines:
+                    elif use_lines:
                         ax3 = plt.subplot(gs[1]) 
                         ax2 = plt.subplot(gs[2])
                 else:
@@ -538,7 +499,7 @@ def create_plot(glyphs=True, lines=True, show_legend=True, show_axes=True,
                     ax2 = plt.subplot(gs[1])
                     ax3 = plt.subplot(gs[2]) 
         else:
-            if glyphs and lines:
+            if use_glyphs and use_lines:
                 if show_legend:
                     gs = gridspec.GridSpec(1, 3, 
                                            width_ratios=[scale_x-(2/3)*scale_y,
@@ -553,10 +514,10 @@ def create_plot(glyphs=True, lines=True, show_legend=True, show_axes=True,
                     gs = gridspec.GridSpec(1, 3, 
                                            width_ratios=[scale_x-(1/3)*scale_y,
                                                          (1/3)*scale_y, 0])
-                    if glyphs:
+                    if use_glyphs:
                         ax2 = plt.subplot(gs[1])
                         ax3 = plt.subplot(gs[2])
-                    elif lines:
+                    elif use_lines:
                         ax3 = plt.subplot(gs[1]) 
                         ax2 = plt.subplot(gs[2])
                 else:
@@ -564,7 +525,7 @@ def create_plot(glyphs=True, lines=True, show_legend=True, show_axes=True,
                     ax2 = plt.subplot(gs[1])
                     ax3 = plt.subplot(gs[2]) 
     else:
-        if glyphs and lines:
+        if use_glyphs and use_lines:
             if show_legend:
                 gs = gridspec.GridSpec(1, 3, width_ratios=[(3 / asp), 1, 1]) 
             else:
@@ -574,10 +535,10 @@ def create_plot(glyphs=True, lines=True, show_legend=True, show_axes=True,
         else:
             if show_legend:
                 gs = gridspec.GridSpec(1, 3, width_ratios=[(3 / asp), 1, 0])
-                if glyphs:
+                if use_glyphs:
                     ax2 = plt.subplot(gs[1])
                     ax3 = plt.subplot(gs[2])
-                elif lines:
+                elif use_lines:
                     ax3 = plt.subplot(gs[1]) 
                     ax2 = plt.subplot(gs[2])
             else:
@@ -589,6 +550,8 @@ def create_plot(glyphs=True, lines=True, show_legend=True, show_axes=True,
         ax1 = background_map.get_basemap(gs, extent, show_axes)
     else:
         ax1 = plt.subplot(gs[0])
+        if not show_axes:
+            ax1.axis('off')
                 
     if use_image:
         x_values=[np.average(extent[0:2])]
@@ -599,15 +562,15 @@ def create_plot(glyphs=True, lines=True, show_legend=True, show_axes=True,
             add_image_background(get_image(x_values, y_values, image_type, 
                                            image_file)[0], ax1, extent) 
         except:
-            print("Image file not found or not valid. Figure will be created "
-                  "without image background.")
+            warnings.warn("Image file not found or not valid. Figure will be "
+                          "created without image background.")
             use_image = False
 
     # Work out scaling of plot window 
     if show_legend:
-        if glyphs and not lines or lines and not glyphs: 
+        if use_glyphs and not use_lines or use_lines and not use_glyphs: 
             fig_aspect = aspy / (aspx + (1/3)*aspy)
-        elif glyphs and lines:
+        elif use_glyphs and use_lines:
             fig_aspect = aspy / (aspx + (2/3)*aspy)
     else:
         fig_aspect = asp
@@ -641,9 +604,9 @@ def create_plot(glyphs=True, lines=True, show_legend=True, show_axes=True,
         fig.delaxes(ax2)
         fig.delaxes(ax3)
     else:
-        if lines and not glyphs:
+        if use_lines and not use_glyphs:
             fig.delaxes(ax2)
-        if glyphs and not lines:
+        if use_glyphs and not use_lines:
             fig.delaxes(ax3)
 
     if not use_cartopy and not use_image and extent is not None:
@@ -667,83 +630,87 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
     """
     Add glyphs/nodes to the plot.
 
-    Parameters:
-        ax (tuple (matplotlib.figure, matplotlib.axes.SubplotBase, 
-            matplotlib.axes.SubplotBase, matplotlib.axes.SubplotBase, 
-            Numerical)): 
-            This must be the tuple returned by create_plot().
-        x_values (list of float): 
-            The x coordinate of each glyph.
-        y_values (list of float): 
-            The y coordinate of each glyph.
-        color_values (list of float): 
-            The values to be represented by the color of each
-            glyph.
-        shape_values (list of float): 
-            the list of values to be represented by the outer shape of
-            each glyph.
-        size_values (list of float): 
-            the list of values in points for the diameter of each glyph.
-        colormap (matplotlib.colors.Colormap, default: "viridis"): 
-            the matplotlib colormap to be used.
-        scale_diverges (boolean, optional):
-            If True, diverging sets of glyphs are used for positive and
-            negative values. If not specified, your scale will diverge
-            if both positive and negative values are included for the
-            shape variable.
-        shape (str, default: "sine"):
-            Glyph shape design to use for non-divergent scales.
-                "sine"
-                "saw"
-                "reverse_saw"
-                "square"
-                "triangular"
-                "concave"
-                "star"
-        shape_pos (str, default: "sine"):
-            When using divergent scale, glyph shape design to use for 
-            positive values. Options as for shape.
-        shape_neg (str, default: "square"):
-            When using divergent scale, glyph shape design to use for 
-            negative values. Options as for shape.
-        color_max (float), optional: 
-            The maximum color value in the legend.
-        color_min (float), optional: 
-            The minimum color value in the legend.
-        color_n (int), optional: 
-            The number of color values to show in the legend.
-        color_spread (float), optional: 
-            Range of color values in key. Only used if not specifying
-            both max and min.
-        shape_max (float), optional: 
-            The maximum shape value in the legend.
-        shape_min (int), optional: 
-            The minimum shape value in the legend.
-        shape_n (int), optional: 
-            The number of shape values to show in the legend. 
-        shape_spread (float), optional:
-            Range of shape values in key. Only used if not 
-            specifying both max and min. 
-        color_label (str, default: "color"):
-            The heading for the color component of the legend.
-        shape_label (str, default: "shape"):
-            The heading for the shape component of the legend.
-        legend_title (str, default: "glyphs"):
-            The main title for the glyph legend.
-        scale_dp (int, default: 2):
-            The number of decimal places to round to for legend values.
-        interval_type (str, default: "closest"):
-            This defines how the shape of each glyph is determined:
-                "closest": use the closest scale value.
-                "limit": use the highest scale value that the glyph 
-                    value is greater than or equal to (based on modulus
-                    for negative values).
-        legend_marker_size (str, default: "auto"):
-            This controls the diameter of the legend glyph markers.
-                "auto": diameter is calculated automatically to fit.
-                "mean": use the mean diameter/size value of the plotted
-                    glyphs.
+    :param ax: The tuple of matplotlib figure and axes objects returned by \
+    :code:`create_plot()`.
+    :type ax: tuple (matplotlib.figure, matplotlib.axes.Axes, \
+    matplotlib.axes.Axes, matplotlib.axes.Axes, Numerical)
+    :param x_values:  Positions of glyphs on the x-axis.
+    :type x_values: float or array-like, shape (n,)
+    :param y_values:  Positions of glyphs on the y-axis.
+    :type y_values: float or array-like, shape (n,)
+    :param color_values: The values to be represented by the color of each \
+    glyph.
+    :type color_values: float or array-like, shape (n,)
+    :param shape_values: the list of values to be represented by the outer \
+    shape of each glyph.
+    :type shape_values: float or array-like, shape (n,)
+    :param size_values: the list of values in points for the diameter of each \
+    glyph.
+    :type size_values: float or array-like, shape(n,)
+    :param colormap: the matplotlib colormap to be used. The default is \
+    :code:`viridis`.
+    :type colormap: matplotlib.colors.Colormap or str, optional
+    :param scale_diverges: If :code:`True`, diverging sets of glyphs are used \
+    for positive and negative values. If not specified, your scale will diverge\
+    if both positive and negative values are included for the shape variable.
+    :type scale_diverges: boolean, optional
+    :param shape: Glyph shape design to use for non-divergent scales. Default \
+    :code:`'sine'`.
+    :type shape: :code:`'sine'`, :code:`'saw'`, :code:`'reverse_saw'`, \
+    :code:`'square'`, :code:`'triangular'`, :code:`'concave'`, :code:`'star'`.
+    :param shape_pos: When using divergent scale, glyph shape design to use \
+    for positive values. Options as for shape. Default :code:`'sine'`.
+    :type shape_pos: :code:`'sine'`, :code:`'saw'`, :code:`'reverse_saw'`, \
+    :code:`'square'`, :code:`'triangular'`, :code:`'concave'`, :code:`'star'`     
+    :param shape_neg: When using divergent scale, glyph shape design to use for \
+    negative values. Options as for shape. Default :code:`'square'`.
+    :type shape_neg: :code:`'sine'`, :code:`'saw'`, :code:`'reverse_saw'`, \
+    :code:`'square'`, :code:`'triangular'`, :code:`'concave'`, :code:`'star'`    
+    :param color_max: The maximum color value in the legend.
+    :type color_max: float, optional
+    :param color_min: The minimum color value in the legend.
+    :type color_min: float, optional
+    :param color_n: The number of color values to show in the legend.
+    :type color_n: int, optional
+    :param color_spread: Range of color values in key. Only used if not \
+    specifying both max and min.
+    :type color_spread: float, optional
+    :param shape_max: The maximum shape value in the legend.
+    :type shape_max: float, optional
+    :param shape_min: The minimum shape value in the legend.
+    :type shape_min: float, optional
+    :param shape_n: The number of shape values to show in the legend. 
+    :type shape_n: int, optional
+    :param shape_spread: Range of shape values in key. Only used if not \
+    specifying both max and min. 
+    :type shape_spread: float, optional
+    :param color_label: The title for the color component of the legend. \
+    Defaults to :code:`'color'`.
+    :type color_label: str, optional
+    :param shape_label: The title for the shape component of the legend. \
+    Defaults to :code:`'shape'`. 
+    :type shape_label: str, optional
+    :param legend_title: The main title for the glyph legend. Defaults to \
+    :code:`'glyphs'`.
+    :type legend_title: str, optional
+    :param scale_dp: The number of decimal places to round to for legend \
+    values. Defaults to :code:`2`.
+    :type scale_dp: int, optional
+    :param interval_type: Defines how the shape of each glyph is determined \
+    from its value. :code:`'closest'` uses the closest scale value, \
+    :code:`limit` uses the highest scale value that the glyph value is greater\
+    than or equal to (using absolute values for negative values). Defaults to \
+    :code:`'closest'`.
+    :type interval_type: (:code:`'closest'`, :code:`'limit'`)
+    :param legend_marker_size: This controls the diameter of the legend glyph \
+    markers. :code:`'auto'` means the diameter is calculated automatically to \
+    fit. :code:`'mean'` uses the mean diameter/size value of the plotted glyphs.
+    :type legend_marker_size: (:code:`'auto'`, :code:`'mean'`)
+    :return: List of length n, containing the artist objects that constitute\
+    the plotted glyphs.
+    :rtype: list of artists
     """
+
     # Check and sanitise inputs
     
     # check ax contains the figure
@@ -779,24 +746,28 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
 
     # valid shape is specified
     if not shape in shapes:
-        print("'{0}' is not a supported shape. "
+        warnings.warn("'{0}' is not a supported shape. "
               "Default will be used".format(str(shape)))
         shape="sine"
     if not shape_pos in shapes:
-        print("'{0}' is not a supported shape. "
+        warnings.warn("'{0}' is not a supported shape. "
               "Default will be used".format(str(shape_pos)))
         shape_pos="sine"
     if not shape_neg in shapes:
-        print("'{0}' is not a supported shape. "
+        warnings.warn("'{0}' is not a supported shape. "
               "Default will be used".format(str(shape_neg)))
         shape_neg="square"
 
     if not legend_marker_size == "auto" and not legend_marker_size == "mean":
-        print("legend_marker_size type invalid, auto will be used")
+        warnings.warn("legend_marker_size type invalid, auto will be used")
 
     # Set default values
     if scale_diverges == None:
-        scale_diverges = scale_is_divergent(shape_values)
+        scale_diverges = scale_is_divergent(shape_values) 
+    # zero is the presumed meaningful middle-value.
+    # for non-divergent ordinal scales that span zero (e.g. Farenheit)
+    # scale_diverges needs setting to False.
+
     
     if color_n == None:
         if shape_n == None:
@@ -866,94 +837,105 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
               colormap="viridis", style="middle", color_max=None, 
               color_min=None, color_n=4, color_spread=None, freq_max=None, 
               freq_min=None, freq_n=4, freq_spread=None, color_label="color", 
-              shape_label="shape", legend_title="lines", scale_dp=2, 
+              frequency_label="frequency", legend_title="lines", scale_dp=2, 
               interval_type="closest", legend_marker_size="auto", zorder=0.5):
     """
     Add lines/edges to the plot.
 
-    Parameters:
-        ax (tuple (matplotlib.figure, matplotlib.axes.SubplotBase, 
-            matplotlib.axes.SubplotBase, matplotlib.axes.SubplotBase, 
-            Numerical)): 
-            This must be the tuple returned by create_plot().
-        x_starts (list of float): 
-            The x coordinates of the origin points of each line.
-        y_starts (list of float): 
-            The y coordinates of the origin points of each line.
-        x_ends(list of float): 
-            The x coordinates of the end points of each line.
-        y_ends(list of float): 
-            The y coordinates of the end points of each line.
-        color_values (list of float): 
-            The values to be represented by the color of each
-            line.
-        freq_values (list of float): 
-            the list of values to be represented by the central stripe
-            frequency.
-        width_values (list of float): 
-            the list of values in points for the width of each line.
-        striped_length (float, default: 1): 
-            if using the style "set_length", the length of the central
-            stripe. Units determined by length_type.
-        length_type (str, default: "units"): 
-            the units to be used for stripe length.
-                "units": number of units on the axes.
-                "pixels": number of pixels.
-                "proportion": proportion of line.
-        colormap (matplotlib.colors.Colormap, default: "viridis"): 
-            the matplotlib colormap to be used.
-        style (str, default: "middle"): 
-            the length and positioning style of the striped area.
-                "middle": striped area centred on line/edge, length is
-                    1/3 edge length.
-                "ends": one striped area at each end of the line/edge,
-                    each 1/4 edge length.
-                "source": striped area at line source, 1/2 edge length.
-                "destination": striped area at line destination, 1/2 
-                    edge length.
-                "set_length": striped area at line centre, length 
-                    specified by user.
-                "frequency": striped area at line centre, 1/3 edge 
-                    length. Instead of a set number of stripes, this 
-                    uses number of stripes per unit length, matched to
-                    the legend.
-        color_max (float), optional: 
-            The maximum color value in the legend.
-        color_min (float), optional: 
-            The minimum color value in the legend.
-        color_n (int), optional: 
-            The number of color values to show in the legend.
-        color_spread (float), optional: 
-            Range of color values in key. Only used if not specifying
-            both max and min.
-        freq_max (float), optional: 
-            The maximum frequency value in the legend.
-        freq_min (int), optional: 
-            The minimum frequency value in the legend.
-        freq_n (int), optional: 
-            The number of frequency values to show in the legend. 
-        freq_spread (float), optional:
-            Range of frequency values in key. Only used if not 
-            specifying both max and min. 
-        color_label (str, default: "color"):
-            The heading for the color component of the legend.
-        shape_label (str, default: "shape"):
-            The heading for the shape/frequency component of the legend.
-        legend_title (str, default: "lines"):
-            The main title for the line legend.
-        scale_dp (int, default: 2):
-            The number of decimal places to round to for legend values.
-        interval_type (str, default: "closest"):
-            This defines how the frequency of each line is determined:
-                "closest": use the closest scale value.
-                "limit": use the highest scale value that the frequency 
-                    value is greater than or equal to (based on modulus
-                    for negative values).
-        legend_marker_size (str, default: "auto"):
-            This controls the width of the legend line markers.
-                "auto": width is calculated automatically to fit.
-                "mean": use the mean width value of the plotted lines.
+    :param ax: The tuple of matplotlib figure and axes objects returned by \
+    :code:`create_plot()`.
+    :type ax: tuple (matplotlib.figure, matplotlib.axes.Axes, \
+    matplotlib.axes.Axes, matplotlib.axes.Axes, Numerical)
+    :param x_starts: The x coordinates of the origin points of each line
+    :type x_starts: float or array-like, shape (n,)
+    :param y_starts: The y coordinates of the origin points of each line
+    :type y_starts: float or array-like, shape (n,)
+    :param x_ends: The x coordinates of the end points of each line
+    :type x_ends: float or array-like, shape (n,)
+    :param y_ends: The y coordinates of the end points of each line
+    :type y_ends: float or array-like, shape (n,)
+    :param color_values: The values to be represented by the color of each \
+    line.
+    :type color_values: float or array-like, shape (n,)
+    :param freq_values: The list of values to be represented by the central \
+    stripe frequency.
+    :type freq_values: float or array-like, shape (n,)
+    :param width_values: The list of values in points for the width of each \
+    line.
+    :type width_values: float or array-like, shape(n,)    
+    :param striped_length: if using the style :code:`'set_length'`, the length\
+    of the central stripe. Units determined by :code:`length_type`. \
+    Defaults to :code:`1`.
+    :type striped_length: float, optional
+    :param length_type: The units to be used for stripe length. \
+    :code:`'units'` uses axes units, :code:`'pixels'` uses the number of \
+    pixels and :code:`'proportion'` uses the proportion of the line.
+    :type length_type: (:code:`'units'`, :code:`'pixels'`, \
+    :code:`'proportion'`), optional
+    :param colormap: the matplotlib colormap to be used. Defaults to \
+    :code:`viridis`.
+    :type colormap: matplotlib.colors.Colormap or str, optional
+    :param style: The length and positioning style of the striped area. \
+    :code:`'middle'` generates a striped area centred on the line/edge where \
+    with length of striped area 1/3 of edge length. :code:`'ends'` \
+    generates a striped area at each end of the line/edge with length of \
+    striped area 1/4 of total edge length. :code:`'source'` \
+    generates a striped area at the source of the line, 1/2 of the total edge \
+    length. :code:`'destination'` generates a striped area at the line \
+    destination, where the striped area is 1/2 of the total edge length. \
+    :code:`'set_length'` generates a striped area at the centre of the line, \
+    with the length specified by user via the :code:`striped_length` parameter,\
+    :code:`'frequency'` generates a striped area at the centre of the line, \
+    1/3 edge length. Instead of a set number of stripes, this uses the number \
+    of stripes per unit length, matched to the legend. Defaults to \
+    :code:`'middle'`.
+    :type style: (:code:`'middle'`, :code:`'ends'`, :code:`'source'`, \
+    :code:`'destination'`), optional.   
+    :param color_max: The maximum color value in the legend.
+    :type color_max: float, optional
+    :param color_min: The minimum color value in the legend.
+    :type color_min: float, optional
+    :param color_n: The number of color values to show in the legend.
+    :type color_n: int, optional
+    :param color_spread: Range of color values in key. Only used if not \
+    specifying both max and min.
+    :type color_spread: float, optional    
+    :param freq_max: The maximum frequency value in the legend.
+    :type freq_max: float, optional
+    :param freq_min: The minimum frequency value in the legend.
+    :type freq_min: float, optional
+    :param freq_n: The number of frequency values to show in the legend. 
+    :type freq_n: int, optional
+    :param freq_spread: Range of frequency values in key. Only used if not \
+    specifying both max and min. 
+    :type freq_spread: float, optional
+    :param color_label: The title for the color component of the legend. \
+    Defaults to :code:`'color'`.
+    :type color_label: str, optional
+    :param freq_label: The title for the frequency component of the legend. \
+    Defaults to :code:`'frequency'`. 
+    :type frequency_label: str, optional
+    :param legend_title: The main title for the glyph legend. Defaults to \
+    :code:`'lines'`.
+    :type legend_title: str, optional
+    :param scale_dp: The number of decimal places to round to for legend \
+    values. Defaults to :code:`2`.
+    :type scale_dp: int, optional
+    :param interval_type: Defines how the frequency of each line is determined \
+    from its value. :code:`'closest'` uses the closest scale value, \
+    :code:`limit` uses the highest scale value that the frequency value is greater\
+    than or equal to (using absolute values for negative values). Defaults to \
+    :code:`'closest'`.
+    :type interval_type: (:code:`'closest'`, :code:`'limit'`)
+    :param legend_marker_size: This controls the width of the legend line \
+    markers. :code:`'auto'` means the width is calculated automatically to \
+    fit. :code:`'mean'` uses the mean width value of the plotted lines.
+    :type legend_marker_size: (:code:`'auto'`, :code:`'mean'`)
+    :return: List of length n, containing the artist objects that constitute\
+    the plotted lines.
+    :rtype: list of artists
     """
+
     # Check and sanitise inputs
 
     # check ax contains the figure
@@ -998,7 +980,7 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
         raise TypeError("scale_dp must be int")
 
     if not legend_marker_size == "auto" and not legend_marker_size == "mean":
-        print("legend_marker_size type invalid, auto will be used")
+        warnings.warn("legend_marker_size type invalid, auto will be used")
 
     # Set default values
     if color_max == None:
@@ -1014,8 +996,15 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
     if freq_spread == None:
         freq_spread = freq_max - freq_min
 
+    # Divergent scale is not available with the current edge design
     scale_diverges = False
 
+    if color_n == None:
+        if freq_n == None:
+            color_n = 5
+        else:
+            color_n = freq_n
+    
     # Fetch scale values
     color_scale = get_color_scale(color_values, color_max, color_min, 
                                     color_n, color_spread)
@@ -1068,27 +1057,30 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
 
     add_line_legend(ax[3], color_scale, colormap, color_mapping, shape_scale, 
                     new_freq_scale, style, scale_x, scale_y, color_label, 
-                    shape_label, legend_title, width, scale_dp)
+                    frequency_label, legend_title, width, scale_dp)
+
+    return artists
 
 
 def return_figure(fig, return_type, file_name="vizent_plot_save"):
     """
     Return the created figure by your chosen method 
 
-    Parameters:
-        fig (tuple (matplotlib.figure, matplotlib.axes.SubplotBase, 
-            matplotlib.axes.SubplotBase, matplotlib.axes.SubplotBase, 
-            Numerical)): 
-            This must be the tuple returned by create_plot().
-        return_type (str): 
-            The method for returning the created plot:
-                "show": display the figure immediately
-                "save": save figure without displaying
-                "return": return axes for use with Matplotlib
-        file_name (str, default: "vizent_plot_save"): 
-            if return_type is "save", the file name for your saved file.
-            This can be any format supported by Matplotlib. If no file 
-            extension is included, .png is used by default.
+    :param fig: The tuple of matplotlib figure and axes objects returned by \
+    :code:`create_plot()`.
+    :type ax: tuple (matplotlib.figure, matplotlib.axes.Axes, \
+    matplotlib.axes.Axes, matplotlib.axes.Axes, Numerical)
+    :param return_type: The method for return the created plot. :code:`'show'`\
+    displays the figure, :code:`'save'` saves the figure without displaying, \
+    :code:`'return'` returns the axes for use with Matplotlib.
+    :type return_type: :code:`'show'`, :code:`'save'`, :code:`'return'`
+    :param file_name: if return_type is "save", the file name for your saved \
+    file. This can be any format supported by Matplotlib. If no file \
+    extension is included, .png is used by default. Default is \
+    :code:`'vizent_plot_save'`
+    :type file_name: str, optional
+    :return: Matplotlib figure, if specified
+    :rtype: maptlotlib.figure or None
     """
     if return_type == "return":
         return fig[0]
@@ -1105,181 +1097,403 @@ def return_figure(fig, return_type, file_name="vizent_plot_save"):
     plt.close()
 
 
-def vizent_plot(x_values, y_values, colour_values, shape_values, size_values, 
-                colormap="viridis", scale_x=None, scale_y=None, 
-                use_image=False, image_type=None, image_file=None, 
-                use_cartopy=False, extent=None, scale_diverges=None, 
-                shape="sine", shape_pos="sine", shape_neg="square", 
-                colour_max=None, colour_min=None, colour_n=None, 
-                colour_spread=None, shape_max=None, shape_min=None, 
-                shape_n=None, shape_spread=None, color_label="temperature", 
-                shape_label="variance", title=None, x_label=None, 
-                y_label=None, show_axes=True, save=False, 
-                file_name="saved_plot.png", return_axes=False, 
-                scale_dp=1, interval_type="closest", show_legend=True):
+def vizent_plot(x_values: ArrayLike,
+                y_values: ArrayLike, 
+                colour_values: ArrayLike, 
+                shape_values: ArrayLike, 
+                size_values: ArrayLike,
+                # Introduce edge variables - currently with default values of None
+                edge_start_points: ArrayLike | None=None, 
+                edge_end_points: ArrayLike | None=None, 
+                edge_colors: ArrayLike | None=None, 
+                edge_frequencies: ArrayLike | None=None, 
+                edge_widths: ArrayLike | None=None,
+                # Figure options
+                image_file: str | None=None, 
+                use_cartopy: bool | None=False,
+                extent: list | None=None,
+                # Glyph options
+                colormap: str | matplotlib.colors.Colormap | None="viridis", 
+                scale_diverges: bool | None=None, 
+                shape: str | None='sine', 
+                shape_pos: str | None='sine', 
+                shape_neg: str | None='square', 
+                color_max: float | None=None, 
+                color_min: float | None=None, 
+                color_n: int | None=None, 
+                color_spread: float | None=None,
+                shape_max: float | None=None,
+                shape_min: float | None=None, 
+                shape_n: int | None=None, 
+                shape_spread: float | None=None, 
+                interval_type: str | None="closest",
+                # Glyph legend options
+                color_label: str | None='color',
+                shape_label: str | None='shape', 
+                glyph_legend_title: str | None='glyphs',
+                # Line options
+                edge_striped_length: float | None=1, 
+                edge_length_type: str | None='units', 
+                edge_colormap: str | None='viridis', 
+                edge_style: str | None='middle', 
+                edge_color_max: float | None=None, 
+                edge_color_min: float | None=None, 
+                edge_color_n: float | None=None, 
+                edge_color_spread: float | None=None, 
+                edge_freq_max: float | None=None, 
+                edge_freq_min: float | None=None, 
+                edge_freq_n: float | None=None, 
+                edge_freq_spread: float | None=None, 
+                edge_interval_type: str | None='closest',
+                # Edge legend options
+                edge_color_label: str | None='color', 
+                edge_frequency_label: str | None='frequency', 
+                edge_legend_title: str | None='lines', 
+                scale_dp=1, 
+                # Args to deprecate
+                scale_x=None, # create_plot - deprecate - this should be handled outside the pure plotting function
+                scale_y=None, # create_plot - deprecate - same as above
+                use_image=None, # create_plot - deprecate - can be determined by whether or not an image file is supplied
+                image_type=None, # create_plot - deprecate - the option to use pre-baked images is too narrow for general usage
+                colour_max=None,  # glyphs - deprecate - renamed to color
+                colour_min=None, # glyphs - deprecate - renamed to color
+                colour_n=None,  # glyphs - deprecate - renamed to color
+                colour_spread=None,  # glyphs - deprecate - renamed to color
+                colour_label=None, # deprecate - renamed to color
+                title=None, # deprecate - doesn't work with new spacing and can be added via mpl if needed
+                show_legend=None, # deprecate - I think legends ought to be included by default with this interface
+                x_label=None,  # deprecate - this can be added via the matplotlib interface directly
+                y_label=None,  # deprecate - this can be added via the mpl interface directly
+                show_axes=None,  # deprecate - can be handled via mpl interface directly. We'll turn off axes if images or map backgrounds are used. 
+                save=None,  # deprecate - we'll return the mpl objects and then the user can save via the mpl interface
+                file_name=None,  # deprecate - images can be saved by the user directly.
+                return_axes=None):  # deprecate - axes should be returned and then saved if required.
     """
-    Draws a scatter plot of the provided points. 
-    Each point is displayed as a Visual Entropy glyph. 
+    Convenience function for implementing the vizent pipeline.
 
-    It will continue to work, but will not include new features for example
-    visualisation of node-link diagrams.
-
-    Parameters:
-        x_values (list of floats): list of x coordinates
-        y_values (list of floats): list of y coordinates
-        colour_values (list of floats): list of values to be 
-                                        represented by color
-        shape_values (list of floats): list of values to be 
-                                       represented by shape
-        size_values (list of floats): list of values for 
-                                      diameter of glyphs in 
-                                      points.
-        colormap (colormap or registered colormap name): 
-                             Optional. Default is metoffice 
-                             color scheme. Use any matplotlib 
-                             colormap.        
-        scale_x (float): Optional. Defines x size of plot window
-                         in inches.
-        scale_y (float): Optional. Defines y size of plot window
-                         in inches.       
-        use_image (bool): Optional. If True, plot on an image 
-                          background.        
-        image_type (str): Optional. Use preset image type. 
-                          "newcastle" for detailed 3d render
-                          of newcastle (use eastings and
-                          northings for x and y), "england" 
-                          for OSM england map (use grid ref)
-        image_file (str): Optional. Use any image file. Please
-                          specify absolute path. You must
-                          also specify the extent.
-        use_cartopy (bool): Optional. Plot the points on
-                            Cartopy map. 
-        extent (list of floats): Optional. Axis limits or 
-                                 extent of coordinates for 
-                                 Cartopy. A list of four 
-                                 values: [xmin, xmax, ymin, 
-                                 ymax]   
-        scale_diverges (bool): Optional. If True, diverging 
-                               sets of glyphs are used for 
-                               positive and negative values.
-        shape (str): Optional. Glyph shape design to use.
-                     Use shape_pos and shape_neg for 
-                     divergent scale. Default is sine.
-        shape_pos (str): Optional. When using divergent
-                         scale, glyph shape design to use
-                         for positive values.
-        shape_neg (str): Optional. When using divergent
-                         scale, glyph shape design to use
-                         for negative values.
-        colour_max (float): Optional. Maximum value to use
-                            for color in key.
-        colour_min (float): Optional. Minimum value to use
-                            for color in key.
-        colour_n (int): Optional. Number of color values
-                        to be shown in key.
-        colour_spread (float): Optional. Total range of 
-                               color values in key. Only
-                               use if not specifying max
-                               and min.
-        shape_max (float): Optional. Maximum value to use
-                           for shape in key.
-        shape_min (float): Optional. Minimum value to use
-                           for shape in key.
-        shape_n (int): Optional. Number of shape values
-                       to be shown in key. If using a
-                       diverging scale, this is the 
-                       number of positive values 
-                       including zero. Negative values 
-                       will reflect positive values.
-        shape_spread (float): Optional. Total range of 
-                              shape values in key. Only
-                              use if not specifying max
-                              and min.
-        colour_label (str): Optional. Text label for color
-                            values in key.
-        shape_label (str): Optional. Text label for shape
-                           values in key.
-        title (str): Optional. Title for the plot.
-        x_label (str): Optional. Label for x axis. Not shown 
-                       for image plots.
-        y_label (str): Optional. Label for y axis. Not shown 
-                       for image plots.
-        show_axes (bool): Optional. If axes are not wanted,
-                          e.g. for image plots, set to False.
-        save (bool): Optional. If True, save the plot as png.
-        file_name (str): Optional. If save, name of saved file.
-        return_axes (bool): Optional. If True, the function 
-                            will return fig, ax1. These can be
-                            used to add more MatPlotLib 
-                            elements, such as lines, text 
-                            boxes.
-        scale_dp (int): Optional. The number of decimal places
-                        that scale values should be rounded to. 
-        interval_type (str): Optional. This defines how the 
-                             shape of each glyph is 
-                             classified:
-                                "closest": use the closest 
-                                           scale value
-                                "limit": use the highest scale 
-                                         value that the glyph 
-                                         value is greater than 
-                                         or equal to (based on 
-                                         modulus for negative 
-                                         values)
-        show_legend (bool): Optional. Specify whether or not
-                            to display the legend to the 
-                            right of the plot.
+    :param x_values:  Positions of glyphs on the x-axis.
+    :type x_values: float or array-like, shape (n,)
+    :param y_values:  Positions of glyphs on the y-axis.
+    :type y_values: float or array-like, shape (n,)
+    :param color_values: The values to be represented by the color of each \
+    glyph.
+    :type color_values: float or array-like, shape (n,)
+    :param shape_values: the list of values to be represented by the outer \
+    shape of each glyph.
+    :type shape_values: float or array-like, shape (n,)
+    :param size_values: the list of values in points for the diameter of each \
+    glyph.
+    :type size_values: float or array-like, shape(n,)
+    :param edge_start_points: (x,y) coordinates for each line origin
+    :type edge_start_points: array-like, shape(n,2), optional
+    :param edge_end_points: (x,y) coordinates for each line end point
+    :type edge_end_points: array-like, shape(n,2), optional
+    :param edge_colors: The values to be represented by the color of each \
+    line.
+    :type color: float or array-like, shape (n,), optional
+    :param edge_frequencies: The list of values to be represented by the central \
+    stripe frequency.
+    :type edge_frequencies: float or array-like, shape (n,), optional
+    :param edge_widths: The list of values in points for the width of each \
+    line.
+    :type edge_widths: float or array-like, shape(n,), optional
+    :param image_file: filepath to a user-supplied image-file to be used as a \
+    background image for the plot.
+    :type image_file: str, optional.
+    :param use_cartopy: If True, use Cartopy to generate a map background. \
+    Must specify extent if used. Defaults to False.
+    :type use_cartopy: boolean, optional
+    :param extent: Axis limits or extent of coordinates for Cartopy. A list of\
+    four values in the form: :code:`[xmin, xmax, ymin, ymax]`.
+    :param colormap: the matplotlib colormap to be used for the glyphs. \
+    The default is :code:`viridis`.
+    :type colormap: matplotlib.colors.Colormap or str, optional
+    :param scale_diverges: If :code:`True`, diverging sets of glyphs are used \
+    for positive and negative values. If not specified, your scale will diverge\
+    if both positive and negative values are included for the shape variable.
+    :type scale_diverges: boolean, optional
+    :param shape: Glyph shape design to use for non-divergent scales. Default \
+    :code:`'sine'`.
+    :type shape: :code:`'sine'`, :code:`'saw'`, :code:`'reverse_saw'`, \
+    :code:`'square'`, :code:`'triangular'`, :code:`'concave'`, :code:`'star'`.
+    :param shape_pos: When using divergent scale, glyph shape design to use \
+    for positive values. Options as for shape. Default :code:`'sine'`.
+    :type shape_pos: :code:`'sine'`, :code:`'saw'`, :code:`'reverse_saw'`, \
+    :code:`'square'`, :code:`'triangular'`, :code:`'concave'`, :code:`'star'`     
+    :param shape_neg: When using divergent scale, glyph shape design to use for \
+    negative values. Options as for shape. Default :code:`'square'`.
+    :type shape_neg: :code:`'sine'`, :code:`'saw'`, :code:`'reverse_saw'`, \
+    :code:`'square'`, :code:`'triangular'`, :code:`'concave'`, :code:`'star'`    
+    :param color_max: The maximum color value in the glyph legend.
+    :type color_max: float, optional
+    :param color_min: The minimum color value in the glyph legend.
+    :type color_min: float, optional
+    :param color_n: The number of color values to show in the glyph legend.
+    :type color_n: int, optional
+    :param color_spread: Range of color values in glyph legend. Only used if not \
+    specifying both max and min.
+    :type color_spread: float, optional
+    :param shape_max: The maximum shape value in the glyph legend.
+    :type shape_max: float, optional
+    :param shape_min: The minimum shape value in the glyph legend.
+    :type shape_min: float, optional
+    :param shape_n: The number of shape values to show in the glyph  legend. 
+    :type shape_n: int, optional
+    :param shape_spread: Range of shape values in glyph legend. Only used if not \
+    specifying both max and min. 
+    :type shape_spread: float, optional
+    :param color_label: The title for the color component of the glyph legend. \
+    Defaults to :code:`'color'`.
+    :type color_label: str, optional
+    :param shape_label: The title for the shape component of the glyph legend. \
+    Defaults to :code:`'shape'`. 
+    :type shape_label: str, optional
+    :param glyph_legend_title: The main title for the glyph legend. Defaults to \
+    :code:`'glyphs'`.
+    :type glyph_legend_title: str, optional
+    :param edge_striped_length: if using the style :code:`'set_length'`, the \
+    length of the central stripe. Units determined by :code:`length_type`. \
+    Defaults to :code:`1`.
+    :type edge_striped_length: float, optional
+    :param edge_length_type: The units to be used for stripe length. \
+    :code:`'units'` uses axes units, :code:`'pixels'` uses the number of \
+    pixels and :code:`'proportion'` uses the proportion of the line.
+    :type edge_length_type: (:code:`'units'`, :code:`'pixels'`, \
+    :code:`'proportion'`), optional
+    :param edge_colormap: the matplotlib colormap to be used. Defaults to \
+    :code:`viridis`.
+    :type edge_colormap: matplotlib.colors.Colormap or str, optional
+    :param style: The length and positioning style of the striped area. \
+    :code:`'middle'` generates a striped area centred on the line/edge where \
+    with length of striped area 1/3 of edge length. :code:`'ends'` \
+    generates a striped area at each end of the line/edge with length of \
+    striped area 1/4 of total edge length. :code:`'source'` \
+    generates a striped area at the source of the line, 1/2 of the total edge \
+    length. :code:`'destination'` generates a striped area at the line \
+    destination, where the striped area is 1/2 of the total edge length. \
+    :code:`'set_length'` generates a striped area at the centre of the line, \
+    with the length specified by user via the :code:`striped_length` parameter,\
+    :code:`'frequency'` generates a striped area at the centre of the line, \
+    1/3 edge length. Instead of a set number of stripes, this uses the number \
+    of stripes per unit length, matched to the legend. Defaults to \
+    :code:`'middle'`.
+    :type style: (:code:`'middle'`, :code:`'ends'`, :code:`'source'`, \
+    :code:`'destination'`), optional.   
+    :param edge_color_max: The maximum color value in the legend.
+    :type edge_color_max: float, optional
+    :param edge_color_min: The minimum color value in the legend.
+    :type edge_color_min: float, optional
+    :param edge_color_n: The number of color values to show in the legend.
+    :type edge_color_n: int, optional
+    :param edge_color_spread: Range of color values in key. Only used if not \
+    specifying both max and min.
+    :type edge_color_spread: float, optional    
+    :param edge_freq_max: The maximum frequency value in the legend.
+    :type edge_freq_max: float, optional
+    :param edge_freq_min: The minimum frequency value in the legend.
+    :type edge_freq_min: float, optional
+    :param edge_freq_n: The number of frequency values to show in the legend. 
+    :type edge_freq_n: int, optional
+    :param edge_freq_spread: Range of frequency values in key. Only used if not \
+    specifying both max and min. 
+    :type edge_freq_spread: float, optional
+    :param edge_color_label: The title for the color component of the legend. \
+    Defaults to :code:`'color'`.
+    :type edge_color_label: str, optional
+    :param edge_frequency_label: The title for the frequency component of the legend. \
+    Defaults to :code:`'frequency'`. 
+    :type edge_frequency_label: str, optional
+    :param edge_legend_title: The main title for the glyph legend. Defaults to \
+    :code:`'lines'`.
+    :type edge_legend_title: str, optional
+    :param scale_dp: The number of decimal places to round to for legend \
+    values. Defaults to :code:`2`.
+    :type scale_dp: int, optional
+    :return: Matplotlib figure
+    :rtype: maptlotlib.figure
     """
-    fig = create_plot(glyphs=True, lines=False, show_legend=show_legend, 
-                     show_axes=show_axes, use_cartopy=use_cartopy, 
-                     use_image=use_image, image_type=image_type, 
-                     image_file=image_file, extent=extent, 
-                     scale_x=scale_x, scale_y=scale_y)
 
-    add_glyphs(fig, x_values, y_values, colour_values, shape_values, 
-               size_values, colormap=colormap, scale_diverges=scale_diverges, 
-               shape=shape, shape_pos=shape_pos, shape_neg=shape_neg, 
-               color_max=colour_max, color_min=colour_min, color_n=colour_n, 
-               color_spread=colour_spread, shape_max=shape_max, 
-               shape_min=shape_min, shape_n=shape_n, shape_spread=shape_spread,
-               color_label=color_label, shape_label=shape_label, 
-               scale_dp=scale_dp, interval_type=interval_type, 
-               legend_title=None)
+    # handle deprecation of arguments
 
-    
-    if title is not None:
-        delim_title = title.split("\n")
-        max_length = max(len(line) for line in delim_title)
-        font_size = min(18, 1.5*(scale_x/(max_length*0.014)))
-        plt.suptitle(title, fontsize=font_size, fontweight="bold")
-    
-    
-    fig[1].set_xlabel(x_label)
-    fig[1].set_ylabel(y_label)
-    
-    if return_axes:
-        return_figure(fig, 'return', file_name=file_name)
-    elif save:
-        return_figure(fig, 'save', file_name=file_name)
-    else:
-        return_figure(fig, None, file_name=file_name)
+    if scale_x is not None:
+        msg = 'The argument scale_x is deprecated. Figure' \
+               ' resizing can be accomplished via figure.set_size_inches()' \
+               ' method on the returned matplotlib figure or via the' \
+               ' create_plot() function in the Vizent library'
+        warnings.warn(msg, DeprecationWarning, stacklevel=1)
         
+    if scale_y is not None:
+        msg = 'The argument scale_y is deprecated. Figure ' \
+               'resizing can be accomplished via figure.set_size_inches() ' \
+               'method on the returned matplotlib figure or via the '\
+               'create_plot() function in the Vizent library'
+        warnings.warn(msg, DeprecationWarning,stacklevel=1)
 
+    if use_image is not None:
+        msg = 'The argument use_image is deprecated. An image ' \
+               'background will be used if an image_file is supplied'
+        warnings.warn(msg, DeprecationWarning,stacklevel=1)    
 
+    if image_type is not None:
+        msg = 'Using packaged images as background images is ' \
+              'deprecated and will be removed in a future verison. ' \
+              'The image should be provided via the image_file ' \
+              'argument instead.'
+        warnings.warn(msg, DeprecationWarning,stacklevel=1)
+     
+    colour_args = [colour_max, colour_min, colour_n, colour_spread, colour_label]
+    if sum([arg is not None for arg in colour_args]) > 0:
+        msg = "Arguments with using the word 'colour' are deprecated " \
+              "and will be replaced by the spelling 'color' in a future "\
+              "version"
+        warnings.warn(msg, DeprecationWarning,stacklevel=1)
+        if color_max is None:
+            color_max = colour_max
+        if color_min is None:
+            color_min = colour_min
+        if color_n is None:
+            color_n = colour_n
+        if color_spread is None:
+            color_spread = colour_spread
+        if color_label is None:
+            color_label = colour_label
 
-def plot_glyphs_lines():
+                      
+    if title is not None:        
+        msg = "The title argument is deprecated and will be removed in " \
+              "a future version. Figure titles should be added using " \
+              "the matplotlib fig.suptitle() method."
+        warnings.warn(msg, DeprecationWarning,stacklevel=1)
 
-    pass
+    if show_legend is not None:
+        msg = "The show_legend argument is deprecated and will be removed in " \
+              " a future version. Legends will be shown by default."
+        warnings.warn(msg, DeprecationWarning,stacklevel=1)
 
+    if x_label is not None:
+        msg = "The argument x_label is deprecated and will be removed in a " \
+              "future version. x_labels can be added via the matplotlib " \
+              "interface, using ax.set_xlabel()."
+        warnings.warn(msg, DeprecationWarning,stacklevel=1)
 
-    # Do we want to turn this into a proper wrapper function and add in the 
-    # line functionality as well?
+    if y_label is not None:
+        msg = "The argument y_label is deprecated and will be removed in a " \
+              "future version. y_labels can be added via the matplotlib " \
+              "interface, using ax.set_ylabel()."
+        warnings.warn(msg, DeprecationWarning,stacklevel=1)
+    
+    if show_axes is not None:
+        msg = "The argument show_axes is deprecated and will be removed in a "\
+              "future version. The axes will be shown by default for standard "\
+              "plots and hidden for maps and background images. Axis behaviour "\
+              "can be configured via the matplotlib interface, using ax.axis()"
+        warnings.warn(msg, DeprecationWarning,stacklevel=1)
 
-    # add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
-    #           freq_values, width_values, striped_length=1, 
-    #           length_type="units", colormap="viridis", style="middle", 
-    #           color_max=None, color_min=None, color_n=4, 
-    #           color_spread=None, freq_max=None, freq_min=None, 
-    #           freq_n=4, freq_spread=None, color_label="color", 
-    #           shape_label="shape", legend_title="lines", scale_dp=2, 
-    #           interval_type="closest", legend_marker_size="auto")
+    if save is not None:
+        msg = "The save argument is deprecated and will be removed in a future "\
+              "version. The axes will always be returned and can be saved using "\
+              "fig.savefig() via matplotlib."
+        warnings.warn(msg, DeprecationWarning,stacklevel=1)
+
+    if file_name is not None:
+        msg = "The save functionality is deprecated and the file_name argument "\
+              "will be removed in a future version. The axes will always be "\
+              "returned and can be saved using fig.savefig() via matplotlib."
+        warnings.warn(msg, DeprecationWarning,stacklevel=1)
+
+    if return_axes is not None:
+        msg = "The return_axes argument is deprecated and will be removed in a "\
+              "future version. Axes will always be returned."
+        warnings.warn(msg, DeprecationWarning,stacklevel=1)
+    
+    if len(x_values) > 0:
+        use_glyphs = True
+    use_lines = (edge_start_points is not None)
+    
+    if use_cartopy or image_file is not None:
+        show_axes=False
+    else:
+        show_axes=True
+
+    fig = create_plot(use_glyphs=use_glyphs, 
+                      use_lines=use_lines, 
+                      show_legend=True, 
+                      show_axes=show_axes, 
+                      use_cartopy=use_cartopy, 
+                      use_image=image_file is not None, 
+                      image_type=None, 
+                      image_file=image_file, 
+                      extent=extent)
+
+    add_glyphs(fig, 
+               x_values, 
+               y_values, 
+               colour_values, 
+               shape_values, 
+               size_values, 
+               colormap=colormap, 
+               scale_diverges=scale_diverges, 
+               shape=shape, 
+               shape_pos=shape_pos, 
+               shape_neg=shape_neg, 
+               color_max=color_max, 
+               color_min=color_min, 
+               color_n=color_n, 
+               color_spread=color_spread, 
+               shape_max=shape_max, 
+               shape_min=shape_min, 
+               shape_n=shape_n, 
+               shape_spread=shape_spread,
+               color_label=color_label, 
+               shape_label=shape_label, 
+               scale_dp=scale_dp, 
+               interval_type=interval_type, 
+               legend_title=glyph_legend_title)
+    
+    #Extract line edges
+    if edge_start_points is not None:
+
+        if not (len(edge_start_points)==len(edge_end_points)):
+            #Initial check before we expand the points provided to x,y coords
+            #More detailed input checking is performed in the add_lines function
+            raise ValueError("edge_start_points must be the same length as " \
+                            " edge_end_points")
+
+        if np.ndim(edge_start_points) != 2 or np.ndim(edge_end_points) != 2:
+            raise ValueError("Edge start points and edge end points must be "\
+                             "two-dimensional.")
+
+        x_starts = [i[0] for i in edge_start_points]
+        y_starts = [i[1] for i in edge_start_points]
+        x_ends = [i[0] for i in edge_end_points]
+        y_ends = [i[1] for i in edge_end_points]
+
+        add_lines(ax=fig, 
+                x_starts=x_starts, 
+                y_starts=y_starts, 
+                x_ends=x_ends, 
+                y_ends=y_ends, 
+                color_values=edge_colors,
+                freq_values=edge_frequencies, 
+                width_values=edge_widths, 
+                striped_length=edge_striped_length, 
+                length_type=edge_length_type,               
+                colormap=edge_colormap, 
+                style=edge_style, 
+                color_max=edge_color_max, 
+                color_min=edge_color_min, 
+                color_n=edge_color_n, 
+                color_spread=edge_color_spread, 
+                freq_max=edge_freq_max, 
+                freq_min=edge_freq_min, 
+                freq_n=edge_freq_n, 
+                freq_spread=edge_freq_spread,
+                color_label=edge_color_label, 
+                frequency_label=edge_frequency_label, 
+                legend_title=edge_legend_title, 
+                scale_dp=scale_dp, 
+                interval_type=edge_interval_type, 
+                legend_marker_size="auto", 
+                zorder=0.5)
+
+    return fig[0]
