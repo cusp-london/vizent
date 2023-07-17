@@ -16,6 +16,7 @@ arXiv:1907.12879
 import numpy as np
 import matplotlib
 import matplotlib.cm as cm 
+import warnings
 
 from vizent.metofficelimits import *
 
@@ -60,7 +61,7 @@ def get_scale_bounds(values, min_val, max_val, scale_spread):
     
     # The user is warned if their specified values exclude data
     if min_val > min(values) or max_val < max(values):
-        print("Warning: specified minimum and maximum color scale values "
+        warnings.warn("Specified minimum and maximum color scale values "
               "or specified color scale spread exclude some data")
 
     return min_val, scale_spread
@@ -91,7 +92,8 @@ def get_color_mapping(color_scale, colormap):
         try:
             mapping = cm.ScalarMappable(norm=norm, cmap=colormap)
         except ValueError:
-            print("'{0}' is not a valid colormap. See https://matplotlib"
+            warnings.warn("'{0}' is not a valid colormap. "
+                          "See https://matplotlib"
                   ".org/3.1.1/gallery/color/colormap_reference.html "
                   "for available colormaps. Viridis colormap will "
                   "be used by default".format(colormap))
@@ -120,7 +122,7 @@ def get_shape_scale(values, max_val, min_val, n_shapes, scale_diverges,
         scale_spread=abs(scale_spread)
     if n_shapes is not None and n_shapes > 7:
         n_shapes = 7
-        print("Maximum number of shapes is 7.")
+        warnings.warn("Maximum number of shapes is 7.")
     scale_vals = []
     if n_shapes == None:
         if scale_diverges:
@@ -221,7 +223,7 @@ def get_shape_scale(values, max_val, min_val, n_shapes, scale_diverges,
 
     # The user is warned if their specified values exclude data
     if min_val > min(values) or max_val < max(values):
-        print("Warning: specified minimum and maximum shape scale values "
+        warnings.warn("Specified minimum and maximum shape scale values "
               "or specified shape scale spread exclude some data")
     return scale_vals
 
