@@ -2,9 +2,9 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature 
 import matplotlib.pyplot as plt
 
-def get_basemap(gs, extent, show_axes):
+def get_basemap(gs, extent, show_axes, projection=ccrs.PlateCarree()):
 
-    ax1 = plt.subplot(gs[0], projection=ccrs.PlateCarree())
+    ax1 = plt.subplot(gs[0], projection=projection)
     ax1.coastlines('50m', zorder=0)
     try:
         ax1.set_extent(extent)
@@ -27,3 +27,21 @@ def get_basemap(gs, extent, show_axes):
     gl.top_labels=False
     gl.right_labels=False
     return ax1
+
+
+
+def get_projected_aspects(extent, projection):
+    lowerleft_projected_coords = projection.transform_point(
+                                    x=extent[0], 
+                                    y=extent[2],
+                                    src_crs=ccrs.PlateCarree())
+
+    upperright_projected_coords = projection.transform_point(
+                                    x=extent[1], 
+                                    y=extent[3], 
+                                    src_crs=ccrs.PlateCarree())
+    
+    aspx = upperright_projected_coords[0] - lowerleft_projected_coords[0]
+    aspy = upperright_projected_coords[1] - lowerleft_projected_coords[1]
+
+    return aspx, aspy

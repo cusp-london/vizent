@@ -10,7 +10,6 @@ from matplotlib import gridspec
 from numpy.typing import ArrayLike
 from collections.abc import Sequence
 
-
 from vizent.glyph_shapes import shapes, get_shape_points
 from vizent.scales import *
 
@@ -213,8 +212,8 @@ def add_glyph_legend(ax2, color_scale, colormap, color_mapping, shape_scale,
     heading_size = min((1.5 * (scale_y/3) / (len(str(title))*0.014)), 25)
     title_size = 0.55 * ((scale_y/3) / (max(len(str(color_label)), 
                           len(str(shape_label)))*0.014))
-    label_size = (0.25 * ((scale_y/3) / (max(len(str(max(color_scale))), 
-                          len(str(max(shape_scale))))*0.014)))
+    label_size = (0.25 * ((scale_y/3) / (max(len("{:.{prec}f}".format(max(color_scale),prec=scale_dp)), 
+                          len("{:.{prec}f}".format(max(shape_scale),prec=scale_dp)))*0.014)))
 
     # Add legend title
     ax2.annotate(title, ((x_positions[0]+x_positions[1]+1) / 2, y_title), 
@@ -348,9 +347,9 @@ def add_line_legend(ax3, color_scale, colormap, color_mapping, shape_scale,
 
 
 def create_plot(use_glyphs=True, use_lines=True, show_legend=True, 
-                show_axes=True, use_cartopy=False, use_image=False, 
-                image_type=None, image_file=None, extent=None, scale_x=None, 
-                scale_y=None):
+                show_axes=True, use_cartopy=False, cartopy_projection=None,
+                use_image=False, image_type=None, image_file=None, extent=None, 
+                scale_x=None, scale_y=None):
     """
     Create the figure used to plot glyphs and/or lines. This function
     must be executed first, and the output is used as an input to all
@@ -425,13 +424,14 @@ def create_plot(use_glyphs=True, use_lines=True, show_legend=True,
         if use_cartopy: 
             try:
                 importlib.import_module("cartopy")
-                import background_map     
+                from vizent.background_map import get_basemap, \
+                get_projected_aspects
             except ImportError:
                 raise ImportError("Missing optional dependency cartopy")
         if use_image:
             try:
                 importlib.import_module("PIL")
-                from background_image import get_image, add_image_background, get_image_size
+                from vizent.background_image import get_image, add_image_background, get_image_size
             except ImportError:
                 raise ImportError("Missing optional dependency PIL")
 
@@ -461,8 +461,11 @@ def create_plot(use_glyphs=True, use_lines=True, show_legend=True,
                     aspx = 1
                     aspy = 1
     elif use_cartopy:
-        aspx = extent[1] - extent[0]
-        aspy = extent[3] - extent[2]
+        if cartopy_projection is not None:
+            aspx, aspy = get_projected_aspects(extent, cartopy_projection)
+        else:
+            aspx = extent[1] - extent[0]
+            aspy = extent[3] - extent[2]
     else:
         if extent is not None:
             aspx = extent[1] - extent[0]
@@ -547,7 +550,7 @@ def create_plot(use_glyphs=True, use_lines=True, show_legend=True,
                 ax3 = plt.subplot(gs[2])
 
     if use_cartopy:
-        ax1 = background_map.get_basemap(gs, extent, show_axes)
+        ax1 = get_basemap(gs, extent, show_axes, projection=cartopy_projection)
     else:
         ax1 = plt.subplot(gs[0])
         if not show_axes:
@@ -614,7 +617,7 @@ def create_plot(use_glyphs=True, use_lines=True, show_legend=True,
         ax1.set_ylim(extent[2], extent[3])
         ax1.set_aspect('equal', 'box')
 
-    plt.tight_layout()
+    #plt.tight_layout()
     
     return fig, ax1, ax2, ax3, asp              
 
@@ -802,6 +805,14 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
                                   scale_diverges, shape_spread) 
     frequency_scale = get_frequency_scale(shape_scale, scale_diverges)
 
+    
+    # Apply a ravel in the event dataframe columns (for example) are passed
+    x_values = np.ravel(x_values)
+    y_values = np.ravel(y_values)
+    shape_values = np.ravel(shape_values)
+    color_values = np.ravel(color_values)
+    size_values = np.ravel(size_values)
+    
     artists = []
     for i in range(len(x_values)):
         artists.append(
@@ -1111,6 +1122,7 @@ def vizent_plot(x_values: ArrayLike,
                 # Figure options
                 image_file: str | None=None, 
                 use_cartopy: bool | None=False,
+                cartopy_projection=None,
                 extent: list | None=None,
                 # Glyph options
                 colormap: str | matplotlib.colors.Colormap | None="viridis", 
@@ -1420,6 +1432,7 @@ def vizent_plot(x_values: ArrayLike,
                       show_legend=True, 
                       show_axes=show_axes, 
                       use_cartopy=use_cartopy, 
+                      cartopy_projection=cartopy_projection,
                       use_image=image_file is not None, 
                       image_type=None, 
                       image_file=image_file, 
