@@ -621,7 +621,7 @@ def create_plot(use_glyphs=True, use_lines=True, show_legend=True,
         ax1.set_ylim(extent[2], extent[3])
         ax1.set_aspect('equal', 'box')
 
-    #plt.tight_layout()
+    plt.tight_layout()
     
     return fig, ax1, ax2, ax3, asp              
 
