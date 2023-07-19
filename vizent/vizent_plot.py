@@ -209,9 +209,13 @@ def add_glyph_legend(ax2, color_scale, colormap, color_mapping, shape_scale,
     if size == None:
         size = (min(x_size, y_size) / 0.014)
 
-    heading_size = min((1.5 * (scale_y/3) / (len(str(title))*0.014)), 25)
-    title_size = 0.55 * ((scale_y/3) / (max(len(str(color_label)), 
-                          len(str(shape_label)))*0.014))
+    heading_length = max([len(i) for i in title.split('\n')])
+    heading_size = min((1.5 * (scale_y/3) / (len(str(heading_length))*0.014)), 25)
+    
+    title_length = max([len(i) for i in color_label.split('\n')] + \
+                       [len(i) for i in shape_label.split('\n')])
+    title_size = 0.55 * ((scale_y/3) / (title_length*0.014))
+
     label_size = (0.25 * ((scale_y/3) / (max(len("{:.{prec}f}".format(max(color_scale),prec=scale_dp)), 
                           len("{:.{prec}f}".format(max(shape_scale),prec=scale_dp)))*0.014)))
 
