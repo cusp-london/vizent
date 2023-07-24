@@ -69,18 +69,21 @@ def get_scale_bounds(values, min_val, max_val, scale_spread):
 
 def get_color_scale(values, max_val, min_val, n_colors, scale_spread):
 
-    # Determine min and max scale values
-    min_val, scale_spread = get_scale_bounds(values, min_val, max_val, 
-                                             scale_spread)
+    if n_colors is None:
+        return [min_val, max_val]
+    else:
+        # Determine min and max scale values
+        min_val, scale_spread = get_scale_bounds(values, min_val, max_val, 
+                                                scale_spread)
 
-    # Determine intermediate values
-    scale_vals = []
-    for i in range(n_colors):
-        try:
-            scale_vals.append(min_val+scale_spread*(i/(n_colors-1)))
-        except ZeroDivisionError:
-            scale_vals.append(min_val)
-    return scale_vals
+        # Determine intermediate values
+        scale_vals = []
+        for i in range(n_colors):
+            try:
+                scale_vals.append(min_val+scale_spread*(i/(n_colors-1)))
+            except ZeroDivisionError:
+                scale_vals.append(min_val)
+        return scale_vals
 
 
 def get_color_mapping(color_scale, colormap):
