@@ -158,7 +158,82 @@ def test_add_line():
 
 
 
-def test_add_glyph_legend():
+def test_add_glyph_legend_continuous():
+    
+    # Color scale
+    values =  (-2, 0, 1, 3, 5)
+    max_val = 10
+    min_val = -10
+    n_colors = 4
+    scale_spread = None
+    color_scale_vals = [-2, 5]
+    
+    color_mapping = get_color_mapping(color_scale_vals, 'viridis')
+
+    # Shape scale
+    values = (-7, -3, 0, 4, 5)
+    max_val = None
+    min_val = None
+    n_shapes = 5
+    scale_diverges = True
+    scale_spread = None
+    shape_scale_vals = get_shape_scale(values, max_val, min_val, n_shapes, 
+                                 scale_diverges, scale_spread)
+    
+    frequency_scale = get_frequency_scale(shape_scale_vals, scale_diverges)
+
+    fig, ax1, ax2, ax3, asp = create_plot(use_glyphs=True, 
+                                          use_lines=False, 
+                                          show_legend=True, 
+                                          show_axes=True, 
+                                          use_cartopy=False, 
+                                          use_image=False, 
+                                          image_type=None, 
+                                          image_file=None, 
+                                          extent=None, 
+                                          scale_x=None, 
+                                          scale_y=None)
+
+    scale_x = fig.get_size_inches()[0]
+    scale_y = fig.get_size_inches()[1]
+
+    add_glyph_legend(ax2=ax2, 
+                     color_scale=color_scale_vals, 
+                     colormap='viridis', 
+                     color_mapping=color_mapping,
+                     shape_scale=shape_scale_vals, 
+                     frequency_scale=frequency_scale, 
+                     shape='sine', 
+                     shape_pos='sine', 
+                     shape_neg='square', 
+                     divergent=True, 
+                     scale_x=scale_x, 
+                     scale_y=scale_y, 
+                     color_label='Color', 
+                     shape_label='Shape', 
+                     title='Legend', 
+                     size=None, 
+                     scale_dp=2, 
+                     label_fontsize=None)
+
+    tmp_file_glyph_legend = os.path.join(os.path.dirname(
+                                         os.path.abspath(__file__)),
+                                         'tmp_glyph_legend_continuous.png')
+    fig.savefig(tmp_file_glyph_legend)
+    expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                  'default_images', 
+                                  'glyph_legend_continuous.png')
+    
+    assert compare_images(expected=expected, 
+                          actual=tmp_file_glyph_legend, 
+                          tol=12) is None
+
+    os.remove(tmp_file_glyph_legend)
+
+
+
+
+def test_add_glyph_legend_discrete():
     
     # Color scale
     values =  (-2, 0, 1, 3, 5)
@@ -170,7 +245,6 @@ def test_add_glyph_legend():
                                  scale_spread)
     
     color_mapping = get_color_mapping(color_scale_vals, 'viridis')
-
 
     # Shape scale
     values = (-7, -3, 0, 4, 5)
@@ -216,20 +290,27 @@ def test_add_glyph_legend():
                      shape_label='Shape', 
                      title='Legend', 
                      size=None, 
-                     scale_dp=2)
+                     scale_dp=2, 
+                     label_fontsize=None, 
+                     categorical=True)
 
     tmp_file_glyph_legend = os.path.join(os.path.dirname(
                                          os.path.abspath(__file__)),
-                                         'tmp_glyph_legend.png')
+                                         'tmp_glyph_legend_discrete.png')
     fig.savefig(tmp_file_glyph_legend)
     expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
-                                  'default_images', 'glyph_legend.png')
+                                  'default_images', 
+                                  'glyph_legend_discrete.png')
     
     assert compare_images(expected=expected, 
                           actual=tmp_file_glyph_legend, 
                           tol=12) is None
 
     os.remove(tmp_file_glyph_legend)
+
+
+
+
 
 
 def test_add_line_legend():
@@ -285,7 +366,9 @@ def test_add_line_legend():
                     shape_label='Shape',
                     title='Legend',
                     width=None, 
-                    scale_dp=3)
+                    scale_dp=3, 
+                    label_fontsize=None, 
+                    categorical=True)
     
     tmp_file_line_legend = os.path.join(os.path.dirname(
                                          os.path.abspath(__file__)),
@@ -341,7 +424,7 @@ class TestPlotWrappers:
                    shape_neg='saw', 
                    color_max=200, 
                    color_min=-200, 
-                   color_n=5, 
+                   color_n=None, 
                    color_spread=None, 
                    shape_max=None, 
                    shape_min=None, 
@@ -399,7 +482,7 @@ class TestPlotWrappers:
                   color_values=color_values,
                   freq_values=freq_values, 
                   width_values=[10 for i in range(6)], 
-                  color_n=6)
+                  color_n=None)
 
         tmp_file_lines = os.path.join(os.path.dirname(
                                        os.path.abspath(__file__)),

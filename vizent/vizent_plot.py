@@ -12,6 +12,7 @@ from collections.abc import Sequence
 
 from vizent.glyph_shapes import shapes, get_shape_points
 from vizent.scales import *
+from vizent.legend_utils import add_colorbar, format_legend
 
 def add_point(x, y, shape, frequency, color, size, ax):
     """
@@ -178,70 +179,51 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
 def add_glyph_legend(ax2, color_scale, colormap, color_mapping, shape_scale, 
                      frequency_scale, shape, shape_pos, shape_neg, divergent, 
                      scale_x, scale_y, color_label, shape_label, title, size, 
-                     scale_dp):
+                     scale_dp, label_fontsize, categorical=False):
+    
+    x_positions, \
+    color_y_positions, \
+    shape_y_positions, \
+    calculated_size,\
+    color_length,\
+    shape_length = format_legend(ax=ax2,
+                                lhs_values=color_scale, 
+                                rhs_values=frequency_scale,
+                                scale_y=scale_y, 
+                                title=title,  
+                                lhs_heading=color_label,
+                                rhs_heading=shape_label, 
+                                label_fontsize=label_fontsize)
 
-    # Fixed positions and limits
-    x_positions = [0.75, 3.25]
-    y_title = 9.5
-    y_subtitle = 8.9
-    ymax = 10
-    ymax_glyphs = 8.75
-    ymin = 0
+    if label_fontsize is None:
+        label_len = max(len("{:.{prec}f}".format(max(color_scale),prec=scale_dp)), 
+                        len("{:.{prec}f}".format(max(shape_scale),prec=scale_dp)))
+        label_fontsize = (0.25 * ((scale_y/3) / (label_len*0.014)))
 
-    # Calculated positions
-    color_y_positions = [(x-0.5) * (ymax_glyphs/(len(color_scale))) 
-                          for x in reversed(range(1, len(color_scale) + 1))]
-    shape_y_positions = [(x-0.5) * (ymax_glyphs/len(frequency_scale)) 
-                         for x in reversed(range(1, len(frequency_scale) + 1))]
-
-    # Axis formatting
-    ax2.set_xlim(0, 5)
-    ax2.set_ylim(ymin, ymax)
-    ax2.axes.xaxis.set_visible(False)
-    ax2.axes.yaxis.set_visible(False)
-
-    # Size calculations for glyphs and text
-    n_glyphs = max(len(color_scale), len(shape_scale))
-
-    y_size = (1 / (3*n_glyphs)) * scale_y
-    x_size = scale_y / 12
 
     if size == None:
-        size = (min(x_size, y_size) / 0.014)
+        size=calculated_size
 
-    heading_length = max([len(i) for i in title.split('\n')])
-    heading_size = min((1.5 * (scale_y/3) / (len(str(heading_length))*0.014)), 25)
-    
-    title_length = max([len(i) for i in color_label.split('\n')] + \
-                       [len(i) for i in shape_label.split('\n')])
-    title_size = 0.55 * ((scale_y/3) / (title_length*0.014))
+    # Add color legend - either colorbar or points
+    if categorical==True: 
+        for i in range(len(color_y_positions)):
+            ax2.scatter(x_positions[0], 
+                        color_y_positions[i], 
+                        marker='o', 
+                        s=(size) ** 2, 
+                        facecolor=get_color(color_scale[i], colormap,
+                                                color_mapping), 
+                        linewidths=0) 
+            ax2.annotate("{:.{prec}f}".format(color_scale[i],prec=scale_dp), 
+                            (x_positions[0] + 1.1, color_y_positions[i]), 
+                            ha='center', 
+                            va='center', 
+                            size=label_fontsize)
+    else:
+        add_colorbar(ax2, color_mapping, label_fontsize)
 
-    label_size = (0.25 * ((scale_y/3) / (max(len("{:.{prec}f}".format(max(color_scale),prec=scale_dp)), 
-                          len("{:.{prec}f}".format(max(shape_scale),prec=scale_dp)))*0.014)))
 
-    # Add legend title
-    ax2.annotate(title, ((x_positions[0]+x_positions[1]+1) / 2, y_title), 
-                 ha='center', va='center', size=heading_size)
-
-    # Add color scale
-    ax2.annotate(color_label, (x_positions[0] + 0.5, y_subtitle), ha='center', 
-                   va='center', size=title_size)
-    for i in range(len(color_y_positions)):
-        ax2.scatter(x_positions[0], 
-                    color_y_positions[i], 
-                    marker='o', 
-                    s=(size) ** 2, 
-                    facecolor=get_color(color_scale[i], colormap,
-                                         color_mapping), 
-                    linewidths=0) 
-        ax2.annotate("{:.{prec}f}".format(color_scale[i],prec=scale_dp), 
-                     (x_positions[0] + 1.1, color_y_positions[i]), 
-                     ha='center', 
-                     va='center', 
-                     size=label_size)
-    # Add shape scale
-    ax2.annotate(shape_label, (x_positions[1] + 0.5, y_subtitle), ha='center', 
-                 va='center', size=title_size)
+    # Add shape legends
     for i in range(len(shape_y_positions)):
         add_point(x_positions[1], 
                   shape_y_positions[i],
@@ -255,75 +237,56 @@ def add_glyph_legend(ax2, color_scale, colormap, color_mapping, shape_scale,
                      (x_positions[1] + 1.1, shape_y_positions[i]), 
                      ha='center', 
                      va='center', 
-                     size=label_size)
+                     size=label_fontsize)
 
 
 def add_line_legend(ax3, color_scale, colormap, color_mapping, shape_scale, 
                     frequency_scale, style, scale_x, scale_y, color_label, 
-                    shape_label, title, width, scale_dp):
+                    shape_label, title, width, scale_dp, label_fontsize, 
+                    categorical=True):
+    
+    x_positions, \
+    color_y_positions, \
+    shape_y_positions, \
+    calculated_size, \
+    color_length, \
+    shape_length = format_legend(ax=ax3,
+                                lhs_values=color_scale, 
+                                rhs_values=shape_scale,
+                                scale_y=scale_y, 
+                                title=title,
+                                lhs_heading=color_label,
+                                rhs_heading=shape_label,
+                                label_fontsize=label_fontsize,
+                                lines=True)
 
-    # Fixed positions and limits
-    x_positions = [0.75, 3.25]
-    y_title = 9.5
-    y_subtitle = 8.9
-    ymax = 10
-    ymax_glyphs = 8.75
-    ymin = 0
-
-    # Calculated positions
-    color_y_positions = [(x-0.5) * (ymax_glyphs/(len(color_scale))) 
-                          for x in reversed(range(1, len(color_scale) + 1))]
-    shape_y_positions = [(x-0.5) * (ymax_glyphs/len(frequency_scale)) 
-                         for x in reversed(range(1, len(frequency_scale) + 1))]
-
-    # Axis formatting
-    ax3.set_xlim(0, 5)
-    ax3.set_ylim(ymin, ymax)
-    ax3.axes.xaxis.set_visible(False)
-    ax3.axes.yaxis.set_visible(False)
-
-    # Size calculations for lines and text
-    color_length = ((ymax_glyphs-ymin) / len(color_scale))*0.7
-    shape_length = ((ymax_glyphs-ymin) / len(frequency_scale))*0.7
-    y_size = (1 / (2*ymax)) * scale_y
-    x_size = scale_y / 12
+    if label_fontsize is None:
+        label_len = max(len("{:.{prec}f}".format(max(color_scale),prec=scale_dp)), 
+                        len("{:.{prec}f}".format(max(shape_scale),prec=scale_dp)))
+        label_fontsize = (0.25 * ((scale_y/3) / (label_len*0.014)))
 
     if width == None:
-        width = 0.5 * (min(x_size, y_size)/0.014)
-
-    heading_size = min((1.5 * (scale_y/3) / (len(str(title))*0.014)), 25)
-    title_size = 0.55 * ((scale_y/3) / (max(len(str(color_label)), 
-                          len(str(shape_label)))*0.014))
-    label_size = (0.25 * ((scale_y/3) / (max(len(str(max(color_scale))), 
-                          len(str(max(shape_scale))))*0.014)))
-
-    # Add legend title
-    ax3.annotate(title, ((x_positions[0]+x_positions[1]+1) / 2, y_title), 
-                 ha='center', va='center', size=heading_size)
-
-    # Add color scale
-    ax3.annotate(color_label, (x_positions[0] + 0.5, y_subtitle), ha='center', 
-                   va='center', size=title_size)
-    for i in range(len(color_y_positions)):
-
-        ax3.plot([x_positions[0], x_positions[0]],
-                 [color_y_positions[i] + (color_length/2), 
-                  color_y_positions[i] - (color_length/2)], 
-                 color=get_color(color_scale[i], colormap, color_mapping), 
-                 linewidth=width, 
-                 solid_capstyle='butt',
-                 zorder=0) 
- 
-        ax3.annotate("{:.{prec}f}".format(color_scale[i],prec=scale_dp), 
-                     (x_positions[0] + 1.1, color_y_positions[i]), 
-                     ha='center', 
-                     va='center', 
-                     size=label_size)
-
-    # Add shape scale
-    ax3.annotate(shape_label, (x_positions[1] + 0.5, y_subtitle), ha='center', 
-                 va='center', size=title_size)
+        width = calculated_size
     
+    if categorical == True:
+        for i in range(len(color_y_positions)):
+
+            ax3.plot([x_positions[0], x_positions[0]],
+                    [color_y_positions[i] + (color_length/2), 
+                    color_y_positions[i] - (color_length/2)], 
+                    color=get_color(color_scale[i], colormap, color_mapping), 
+                    linewidth=width, 
+                    solid_capstyle='butt',
+                    zorder=0)
+
+            ax3.annotate("{:.{prec}f}".format(color_scale[i],prec=scale_dp), 
+                        (x_positions[0] + 1.1, color_y_positions[i]), 
+                        ha='center', 
+                        va='center', 
+                        size=label_fontsize)
+    else:
+        add_colorbar(ax3, color_mapping, label_fontsize)
+
     for i in range(len(shape_y_positions)):
         add_line(x_origin=x_positions[1],
                  y_origin=shape_y_positions[i] + (shape_length/2),
@@ -347,7 +310,7 @@ def add_line_legend(ax3, color_scale, colormap, color_mapping, shape_scale,
                      (x_positions[1] + 1.1, shape_y_positions[i]), 
                      ha='center', 
                      va='center', 
-                     size=label_size)
+                     size=label_fontsize)
 
 
 def create_plot(use_glyphs=True, use_lines=True, show_legend=True, 
@@ -602,11 +565,6 @@ def create_plot(use_glyphs=True, use_lines=True, show_legend=True,
     
     fig.set_size_inches(scale_x, scale_y)
 
-    ax2.axes.xaxis.set_visible(False)
-    ax2.axes.yaxis.set_visible(False)
-    ax3.axes.xaxis.set_visible(False)
-    ax3.axes.yaxis.set_visible(False)
-
     if not show_legend:
         fig.delaxes(ax2)
         fig.delaxes(ax3)
@@ -621,9 +579,7 @@ def create_plot(use_glyphs=True, use_lines=True, show_legend=True,
         ax1.set_ylim(extent[2], extent[3])
         ax1.set_aspect('equal', 'box')
 
-    plt.tight_layout()
-    
-    return fig, ax1, ax2, ax3, asp              
+    return fig, ax1, ax2, ax3, asp
 
 
 def add_glyphs(ax, x_values, y_values, color_values, shape_values, 
@@ -633,7 +589,8 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
                color_spread=None, shape_max=None, shape_min=None, 
                shape_n=None, shape_spread=None, color_label="color", 
                shape_label="shape", legend_title="glyphs", scale_dp=2, 
-               interval_type="closest", legend_marker_size="auto"):
+               interval_type="closest", legend_marker_size="auto", 
+               label_fontsize=None):
     """
     Add glyphs/nodes to the plot.
 
@@ -677,7 +634,8 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
     :type color_max: float, optional
     :param color_min: The minimum color value in the legend.
     :type color_min: float, optional
-    :param color_n: The number of color values to show in the legend.
+    :param color_n: The number of color values to show in the legend. If not \
+    set, a colorbar will be used representing a continuous colour scale.
     :type color_n: int, optional
     :param color_spread: Range of color values in key. Only used if not \
     specifying both max and min.
@@ -713,6 +671,9 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
     markers. :code:`'auto'` means the diameter is calculated automatically to \
     fit. :code:`'mean'` uses the mean diameter/size value of the plotted glyphs.
     :type legend_marker_size: (:code:`'auto'`, :code:`'mean'`)
+    :param label_fontsize: Fontsize for legend labels. If not set, this will \
+    be estimated based on the lengths of the labels.
+    :type label_fontsize: int, optional
     :return: List of length n, containing the artist objects that constitute\
     the plotted glyphs.
     :rtype: list of artists
@@ -774,19 +735,11 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
     # zero is the presumed meaningful middle-value.
     # for non-divergent ordinal scales that span zero (e.g. Farenheit)
     # scale_diverges needs setting to False.
-
     
     if color_n == None:
-        if shape_n == None:
-            if scale_diverges:
-                color_n = 7
-            else:
-                color_n = 5
-        else:
-            if scale_diverges:
-                color_n = (2*shape_n) - 1
-            else:
-                color_n = shape_n     
+        categorical=False
+    else:
+        categorical=True
     
     if color_max == None:
         color_max = max(color_values)
@@ -843,7 +796,9 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
     add_glyph_legend(ax[2], color_scale, colormap, color_mapping, 
                      shape_scale, frequency_scale, shape, shape_pos, shape_neg, 
                      scale_diverges, scale_x, scale_y, color_label, 
-                     shape_label, legend_title, size, scale_dp)
+                     shape_label, legend_title, size, scale_dp, label_fontsize,
+                     categorical)
+
     return artists
 
 
@@ -853,7 +808,8 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
               color_min=None, color_n=4, color_spread=None, freq_max=None, 
               freq_min=None, freq_n=4, freq_spread=None, color_label="color", 
               frequency_label="frequency", legend_title="lines", scale_dp=2, 
-              interval_type="closest", legend_marker_size="auto", zorder=0.5):
+              interval_type="closest", legend_marker_size="auto", zorder=0.5, 
+              label_fontsize=None):
     """
     Add lines/edges to the plot.
 
@@ -1015,11 +971,10 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
     scale_diverges = False
 
     if color_n == None:
-        if freq_n == None:
-            color_n = 5
-        else:
-            color_n = freq_n
-    
+        categorical=False
+    else:
+        categorical=True 
+
     # Fetch scale values
     color_scale = get_color_scale(color_values, color_max, color_min, 
                                     color_n, color_spread)
@@ -1072,7 +1027,8 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
 
     add_line_legend(ax[3], color_scale, colormap, color_mapping, shape_scale, 
                     new_freq_scale, style, scale_x, scale_y, color_label, 
-                    frequency_label, legend_title, width, scale_dp)
+                    frequency_label, legend_title, width, scale_dp, 
+                    label_fontsize, categorical=categorical)
 
     return artists
 
@@ -1165,7 +1121,8 @@ def vizent_plot(x_values: ArrayLike,
                 edge_color_label: str | None='color', 
                 edge_frequency_label: str | None='frequency', 
                 edge_legend_title: str | None='lines', 
-                scale_dp=1, 
+                scale_dp: int | None=1, 
+                label_fontsize: int | None=None,
                 # Args to deprecate
                 scale_x=None, # create_plot - deprecate - this should be handled outside the pure plotting function
                 scale_y=None, # create_plot - deprecate - same as above
@@ -1325,6 +1282,10 @@ def vizent_plot(x_values: ArrayLike,
     :param scale_dp: The number of decimal places to round to for legend \
     values. Defaults to :code:`2`.
     :type scale_dp: int, optional
+    :param label_fontsize: If set, will set all legend labels to this \
+    fontsize. Otherwise, the fontsize will be estimated automatically based on\
+    the length of the labels.
+    :type label_fontize: int, optional
     :return: Matplotlib figure
     :rtype: maptlotlib.figure
     """
@@ -1463,9 +1424,10 @@ def vizent_plot(x_values: ArrayLike,
                shape_spread=shape_spread,
                color_label=color_label, 
                shape_label=shape_label, 
-               scale_dp=scale_dp, 
+               scale_dp=scale_dp,
                interval_type=interval_type, 
-               legend_title=glyph_legend_title)
+               legend_title=glyph_legend_title, 
+               label_fontsize=label_fontsize)
     
     #Extract line edges
     if edge_start_points is not None:
