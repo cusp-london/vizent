@@ -14,6 +14,9 @@ from vizent.glyph_shapes import shapes, get_shape_points
 from vizent.scales import *
 from vizent.legend_utils import add_colorbar, format_legend
 
+
+
+
 def add_point(x, y, shape, frequency, color, size, ax):
     """
     Adds a vizent glyph to an axes object
@@ -564,6 +567,11 @@ def create_plot(use_glyphs=True, use_lines=True, show_legend=True,
         scale_y = fig_aspect * scale_x * f
     
     fig.set_size_inches(scale_x, scale_y)
+
+    ax2.axes.xaxis.set_visible(False)
+    ax2.axes.yaxis.set_visible(False)
+    ax3.axes.xaxis.set_visible(False)
+    ax3.axes.yaxis.set_visible(False)
 
     if not show_legend:
         fig.delaxes(ax2)
