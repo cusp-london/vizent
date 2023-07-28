@@ -435,7 +435,8 @@ class TestPlotWrappers:
                    legend_title='glyphs', 
                    scale_dp=0,
                    interval_type='closest', 
-                   legend_marker_size='auto')
+                   legend_marker_size='auto', 
+                   label_fontsize=7)
         
 
         tmp_file_glyphs = os.path.join(os.path.dirname(
