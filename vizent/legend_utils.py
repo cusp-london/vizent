@@ -13,7 +13,7 @@ def add_colorbar(ax, color_mapping, label_size):
     # Define axes in which to place colorbar
     cax_x0 = ax_bbox.x0 + (ax_bbox.x1 - ax_bbox.x0) / 8
     cax_y0 = 0.15
-    cax = ax.get_figure().add_axes([cax_x0, cax_y0, 0.025, 0.6])
+    cax = ax.get_figure().add_axes([cax_x0, cax_y0, 0.02, 0.6])
     cbar = plt.colorbar(color_mapping, cax=cax)
     cbar.ax.tick_params(labelsize=label_size)
 
@@ -69,8 +69,6 @@ def format_legend(ax, lhs_values, rhs_values, scale_y, title, lhs_heading, rhs_h
     else:
         heading_size = label_fontsize
         title_size = label_fontsize + 2
-
-    print(heading_size)
 
     # Add legend title
     ax.annotate(title, ((x_positions[0]+x_positions[1]+1) / 2, y_title), 

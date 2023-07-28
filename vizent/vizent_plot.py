@@ -246,7 +246,7 @@ def add_glyph_legend(ax2, color_scale, colormap, color_mapping, shape_scale,
 def add_line_legend(ax3, color_scale, colormap, color_mapping, shape_scale, 
                     frequency_scale, style, scale_x, scale_y, color_label, 
                     shape_label, title, width, scale_dp, label_fontsize, 
-                    categorical=True):
+                    categorical=False):
     
     x_positions, \
     color_y_positions, \
@@ -262,7 +262,7 @@ def add_line_legend(ax3, color_scale, colormap, color_mapping, shape_scale,
                                 rhs_heading=shape_label,
                                 label_fontsize=label_fontsize,
                                 lines=True)
-
+    
     if label_fontsize is None:
         label_len = max(len("{:.{prec}f}".format(max(color_scale),prec=scale_dp)), 
                         len("{:.{prec}f}".format(max(shape_scale),prec=scale_dp)))
@@ -813,8 +813,8 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
 def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
               freq_values, width_values, striped_length=1, length_type="units", 
               colormap="viridis", style="middle", color_max=None, 
-              color_min=None, color_n=4, color_spread=None, freq_max=None, 
-              freq_min=None, freq_n=4, freq_spread=None, color_label="color", 
+              color_min=None, color_n=None, color_spread=None, freq_max=None, 
+              freq_min=None, freq_n=None, freq_spread=None, color_label="color", 
               frequency_label="frequency", legend_title="lines", scale_dp=2, 
               interval_type="closest", legend_marker_size="auto", zorder=0.5, 
               label_fontsize=None):
@@ -981,7 +981,7 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
     if color_n == None:
         categorical=False
     else:
-        categorical=True 
+        categorical=True
 
     # Fetch scale values
     color_scale = get_color_scale(color_values, color_max, color_min, 
