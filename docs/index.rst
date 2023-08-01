@@ -1,9 +1,14 @@
+
+
+.. image:: _static/vizent_image.png
+  :height: 400
+  :alt: An image showing a selection of vizent glyphs
+
 ================
 vizent |release|
 ================
 
 *A python library for visualising bivariate data using glyphs and node-link diagrams with matplotlib.*
-
 
 
 This library allows the user to create scatter plots and node-link diagrams using Visual Entropy (*Viz-Ent*) glyphs [1]_ and network edges [2]_. Vizent glyphs and network edges are designed to help when you need to add an extra data variable to a scatter plot, map, or graph. 

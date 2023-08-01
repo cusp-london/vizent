@@ -1,0 +1,25 @@
+Gallery
+=======
+
+.. ### Use detailed background images of Newcastle Upon Tyne:
+
+.. ```python
+.. from vizent import vizent_plot
+.. import pandas as pd
+
+.. data = pd.read_csv("cleaned_temp_data.csv")
+.. eastings = data['easting'].tolist()
+.. northings = data['northing'].tolist()
+.. average = data['Average of Value'].tolist()
+.. variance = data['Variance of Value'].tolist()
+
+.. size = [20]*len(eastings)
+
+.. vizent_plot(eastings, northings, average, variance, size, 
+..             "metoffice", shape_label="variance", 
+..             color_label="temperature", use_image=True, 
+..             image_type="newcastle", color_spread=20,
+..             title="Newcastle Upon Tyne Temperature Data",
+..             show_axes=False)
+.. ```
+.. ![newcastle image](https://github.com/luyc12/vizent/raw/main/vizent/example_images/newcastle_example.png "newcastle image")
