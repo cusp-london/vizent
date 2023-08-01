@@ -603,7 +603,7 @@ class TestPlotWrappers:
 
         fig = vizent_plot(x_values=self.x_values,
                     y_values=self.y_values, 
-                    colour_values=color_values, 
+                    color_values=color_values, 
                     shape_values=shape_values,
                     size_values=[20 for i in range(len(self.x_values))],
                     edge_start_points=[(x,y) for x,y in zip(x_start, y_start)], 
@@ -658,7 +658,7 @@ class TestPlotWrappers:
 
             fig = vizent_plot(x_values=self.x_values,
                         y_values=self.y_values, 
-                        colour_values=color_values, 
+                        color_values=color_values, 
                         shape_values=shape_values,
                         size_values=[20 for i in range(len(self.x_values))],
                         edge_start_points=[(x,y) for x,y in zip(x_start, y_start)], 
