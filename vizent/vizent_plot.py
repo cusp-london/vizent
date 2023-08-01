@@ -419,7 +419,7 @@ def create_plot(use_glyphs=True, use_lines=True, show_legend=True,
             aspy = 754
         else:
             try:
-                aspx, aspy = get_image_size()
+                aspx, aspy = get_image_size(image_file)
             except:
                 warnings.warn("Image file not found or not valid. Figure will "
                               "be created without image background.")
@@ -1078,7 +1078,7 @@ def return_figure(fig, return_type, file_name="vizent_plot_save"):
 
 def vizent_plot(x_values: ArrayLike,
                 y_values: ArrayLike, 
-                colour_values: ArrayLike, 
+                color_values: ArrayLike, 
                 shape_values: ArrayLike, 
                 size_values: ArrayLike,
                 # Introduce edge variables - currently with default values of None
@@ -1136,6 +1136,7 @@ def vizent_plot(x_values: ArrayLike,
                 scale_y=None, # create_plot - deprecate - same as above
                 use_image=None, # create_plot - deprecate - can be determined by whether or not an image file is supplied
                 image_type=None, # create_plot - deprecate - the option to use pre-baked images is too narrow for general usage
+                colour_values=None, # deprecate - renamed to color
                 colour_max=None,  # glyphs - deprecate - renamed to color
                 colour_min=None, # glyphs - deprecate - renamed to color
                 colour_n=None,  # glyphs - deprecate - renamed to color
@@ -1326,12 +1327,14 @@ def vizent_plot(x_values: ArrayLike,
               'argument instead.'
         warnings.warn(msg, DeprecationWarning,stacklevel=1)
      
-    colour_args = [colour_max, colour_min, colour_n, colour_spread, colour_label]
+    colour_args = [colour_values, colour_max, colour_min, colour_n, colour_spread, colour_label]
     if sum([arg is not None for arg in colour_args]) > 0:
         msg = "Arguments with using the word 'colour' are deprecated " \
               "and will be replaced by the spelling 'color' in a future "\
               "version"
         warnings.warn(msg, DeprecationWarning,stacklevel=1)
+        if color_values is None:
+            color_values = colour_values
         if color_max is None:
             color_max = colour_max
         if color_min is None:
@@ -1391,8 +1394,9 @@ def vizent_plot(x_values: ArrayLike,
               "future version. Axes will always be returned."
         warnings.warn(msg, DeprecationWarning,stacklevel=1)
     
-    if len(x_values) > 0:
-        use_glyphs = True
+    if x_values is not None:
+        if len(x_values) > 0:
+            use_glyphs = True
     use_lines = (edge_start_points is not None)
     
     if use_cartopy or image_file is not None:
@@ -1414,7 +1418,7 @@ def vizent_plot(x_values: ArrayLike,
     add_glyphs(fig, 
                x_values, 
                y_values, 
-               colour_values, 
+               color_values, 
                shape_values, 
                size_values, 
                colormap=colormap, 

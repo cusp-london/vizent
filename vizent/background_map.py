@@ -2,7 +2,10 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature 
 import matplotlib.pyplot as plt
 
-def get_basemap(gs, extent, show_axes, projection=ccrs.PlateCarree()):
+def get_basemap(gs, extent, show_axes, projection):
+
+    if projection is None:
+        projection = ccrs.PlateCarree()
 
     ax1 = plt.subplot(gs[0], projection=projection)
     ax1.coastlines('50m', zorder=0, color='0.85')
