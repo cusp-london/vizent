@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib import gridspec
 from numpy.typing import ArrayLike
 from collections.abc import Sequence
+from numbers import Number
 
 from vizent.glyph_shapes import shapes, get_shape_points
 from vizent.scales import *
@@ -369,10 +370,10 @@ def create_plot(use_glyphs=True, use_lines=True, show_legend=True,
     # input checking
 
     # scale values are numeric
-    if not isinstance(scale_x, (int, float)) and not scale_x==None:
+    if not isinstance(scale_x, Number) and not scale_x==None:
         warnings.warn("scale_x must be numeric. Default will be used")
         scale_x = None
-    if not isinstance(scale_y, (int, float)) and not scale_y==None:
+    if not isinstance(scale_y, Number) and not scale_y==None:
         warnings.warn("scale_y must be numeric. Default will be used")
         scale_y = None
     if scale_x is not None and scale_x <=0:
@@ -386,7 +387,7 @@ def create_plot(use_glyphs=True, use_lines=True, show_legend=True,
         if not isinstance(extent, list) or len(extent) != 4:
             raise ValueError("extent must be a list of four values")
         for i in list(extent):
-            if not isinstance(i, (int, float)):
+            if not isinstance(i, Number):
                 raise ValueError("extent values must be numerical")
 
     # Set up the plot area 
@@ -702,19 +703,19 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
     if not len(x_values) > 0:
         raise ValueError("Empty input lists")
     # numerical values only where required
-    if not all(isinstance(i, (int, float)) for i in x_values):
+    if not all(isinstance(i, Number) for i in x_values):
         raise TypeError("x values must be numeric")
-    if not all(isinstance(i, (int, float)) for i in y_values):
+    if not all(isinstance(i, Number) for i in y_values):
         raise TypeError("y values must be numeric")
-    if not all(isinstance(i, (int, float)) for i in color_values):
+    if not all(isinstance(i, Number) for i in color_values):
         raise TypeError("color values must be numeric")
-    if not all(isinstance(i, (int, float)) for i in shape_values):
+    if not all(isinstance(i, Number) for i in shape_values):
         raise TypeError("shape values must be numeric")
-    if not all(isinstance(i, (int, float)) for i in size_values):
+    if not all(isinstance(i, Number) for i in size_values):
         raise TypeError("size values must be numeric")
     for i in [color_min, color_max, color_spread, shape_min, shape_max, 
               shape_spread, color_n, shape_n]:
-        if not isinstance(i, (int, float)) and not i==None:
+        if not isinstance(i, Number) and not i==None:
             raise TypeError("Scale minimum, maximum and spread values and "
                             "number of values per scale must be numerical")
     if not isinstance(scale_dp, int):
@@ -931,28 +932,28 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
     if not len(x_starts) > 0:
         raise ValueError("Empty input lists")
     # numerical values only where required
-    if not all(isinstance(i, (int, float)) for i in x_starts):
+    if not all(isinstance(i, Number) for i in x_starts):
         raise TypeError("x_starts values must be numeric")
-    if not all(isinstance(i, (int, float)) for i in x_ends):
+    if not all(isinstance(i, Number) for i in x_ends):
         raise TypeError("x_ends values must be numeric")
-    if not all(isinstance(i, (int, float)) for i in y_starts):
+    if not all(isinstance(i, Number) for i in y_starts):
         raise TypeError("y_starts values must be numeric")
-    if not all(isinstance(i, (int, float)) for i in y_ends):
+    if not all(isinstance(i, Number) for i in y_ends):
         raise TypeError("y_ends values must be numeric")
-    if not all(isinstance(i, (int, float)) for i in color_values):
+    if not all(isinstance(i, Number) for i in color_values):
         raise TypeError("color values must be numeric")
-    if not all(isinstance(i, (int, float)) for i in freq_values):
+    if not all(isinstance(i, Number) for i in freq_values):
         raise TypeError("freq values must be numeric")
-    if not all(isinstance(i, (int, float)) for i in width_values):
+    if not all(isinstance(i, Number) for i in width_values):
         raise TypeError("width values must be numeric")
     for i in [color_min, color_max, color_spread, freq_min, freq_max, 
               freq_spread, color_n, freq_n]:
-        if not isinstance(i, (int, float)) and not i==None:
+        if not isinstance(i, Number) and not i==None:
             raise TypeError("Scale minimum, maximum and spread values and "
                             "number of values per scale must be numerical")
-    if not isinstance(zorder, (int, float)):
+    if not isinstance(zorder, Number):
         raise TypeError("zorder must be a numerical value")
-    if not isinstance(striped_length, (int, float)):
+    if not isinstance(striped_length, Number):
         raise TypeError("striped_length must be a numerical value")
 
     if not isinstance(scale_dp, int):
@@ -1076,11 +1077,11 @@ def return_figure(fig, return_type, file_name="vizent_plot_save"):
     plt.close()
 
 
-def vizent_plot(x_values: ArrayLike,
-                y_values: ArrayLike, 
-                color_values: ArrayLike, 
-                shape_values: ArrayLike, 
-                size_values: ArrayLike,
+def vizent_plot(x_values: ArrayLike | None=None,
+                y_values: ArrayLike | None=None, 
+                color_values: ArrayLike | None=None, 
+                shape_values: ArrayLike | None=None, 
+                size_values: ArrayLike | None=None,
                 # Introduce edge variables - currently with default values of None
                 edge_start_points: ArrayLike | None=None, 
                 edge_end_points: ArrayLike | None=None, 
@@ -1153,19 +1154,19 @@ def vizent_plot(x_values: ArrayLike,
     """
     Convenience function for implementing the vizent pipeline.
 
-    :param x_values:  Positions of glyphs on the x-axis.
-    :type x_values: float or array-like, shape (n,)
-    :param y_values:  Positions of glyphs on the y-axis.
-    :type y_values: float or array-like, shape (n,)
+    :param x_values:  Positions of glyphs on the x-axis
+    :type x_values: float or array-like, shape (n,), optional
+    :param y_values:  Positions of glyphs on the y-axis
+    :type y_values: float or array-like, shape (n,), optional
     :param color_values: The values to be represented by the color of each \
-    glyph.
-    :type color_values: float or array-like, shape (n,)
+    glyph
+    :type color_values: float or array-like, shape (n,), optional
     :param shape_values: the list of values to be represented by the outer \
-    shape of each glyph.
-    :type shape_values: float or array-like, shape (n,)
+    shape of each glyph
+    :type shape_values: float or array-like, shape (n,), optional
     :param size_values: the list of values in points for the diameter of each \
-    glyph.
-    :type size_values: float or array-like, shape(n,)
+    glyph
+    :type size_values: float or array-like, shape(n,), optional
     :param edge_start_points: (x,y) coordinates for each line origin
     :type edge_start_points: array-like, shape(n,2), optional
     :param edge_end_points: (x,y) coordinates for each line end point
@@ -1394,11 +1395,7 @@ def vizent_plot(x_values: ArrayLike,
               "future version. Axes will always be returned."
         warnings.warn(msg, DeprecationWarning,stacklevel=1)
     
-    if x_values is not None:
-        if len(x_values) > 0:
-            use_glyphs = True
-        else:
-            use_glyphs = False
+    use_glyphs = (x_values is not None)
     use_lines = (edge_start_points is not None)
     
     if use_cartopy or image_file is not None:
@@ -1417,31 +1414,33 @@ def vizent_plot(x_values: ArrayLike,
                       image_file=image_file, 
                       extent=extent)
 
-    add_glyphs(fig, 
-               x_values, 
-               y_values, 
-               color_values, 
-               shape_values, 
-               size_values, 
-               colormap=colormap, 
-               scale_diverges=scale_diverges, 
-               shape=shape, 
-               shape_pos=shape_pos, 
-               shape_neg=shape_neg, 
-               color_max=color_max, 
-               color_min=color_min, 
-               color_n=color_n, 
-               color_spread=color_spread, 
-               shape_max=shape_max, 
-               shape_min=shape_min, 
-               shape_n=shape_n, 
-               shape_spread=shape_spread,
-               color_label=color_label, 
-               shape_label=shape_label, 
-               scale_dp=scale_dp,
-               interval_type=interval_type, 
-               legend_title=glyph_legend_title, 
-               label_fontsize=label_fontsize)
+    if x_values is not None:
+
+        add_glyphs(fig, 
+                    x_values, 
+                    y_values, 
+                    color_values, 
+                    shape_values, 
+                    size_values, 
+                    colormap=colormap, 
+                    scale_diverges=scale_diverges, 
+                    shape=shape, 
+                    shape_pos=shape_pos, 
+                    shape_neg=shape_neg, 
+                    color_max=color_max, 
+                    color_min=color_min, 
+                    color_n=color_n, 
+                    color_spread=color_spread, 
+                    shape_max=shape_max, 
+                    shape_min=shape_min, 
+                    shape_n=shape_n, 
+                    shape_spread=shape_spread,
+                    color_label=color_label, 
+                    shape_label=shape_label, 
+                    scale_dp=scale_dp,
+                    interval_type=interval_type, 
+                    legend_title=glyph_legend_title, 
+                    label_fontsize=label_fontsize)
     
     #Extract line edges
     if edge_start_points is not None:
@@ -1489,4 +1488,4 @@ def vizent_plot(x_values: ArrayLike,
                 legend_marker_size="auto", 
                 zorder=0.5)
 
-    return fig[0]
+    return fig
