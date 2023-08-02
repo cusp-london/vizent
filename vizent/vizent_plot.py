@@ -1488,4 +1488,4 @@ def vizent_plot(x_values: ArrayLike | None=None,
                 legend_marker_size="auto", 
                 zorder=0.5)
 
-    return fig
+    return fig[0]
