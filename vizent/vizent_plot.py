@@ -1397,6 +1397,8 @@ def vizent_plot(x_values: ArrayLike,
     if x_values is not None:
         if len(x_values) > 0:
             use_glyphs = True
+        else:
+            use_glyphs = False
     use_lines = (edge_start_points is not None)
     
     if use_cartopy or image_file is not None:
