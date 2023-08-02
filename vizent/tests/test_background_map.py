@@ -26,7 +26,7 @@ def test_get_basemap():
 
         gs = gridspec.GridSpec(1, 3, width_ratios=[1,0,0])
         extent = [-8, 2, 50, 60]
-        ax = get_basemap(gs, extent, show_axes=False)
+        ax = get_basemap(gs, extent, show_axes=False, projection=None)
         
         tmp_file_map = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
                                     'tmp_basemap_test.png')
