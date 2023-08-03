@@ -31,9 +31,9 @@ def format_legend(ax, lhs_values, rhs_values, scale_y, title, lhs_heading, rhs_h
 
     # Calculated positions
     lhs_y_positions = [(x-0.5) * (ymax_glyphs/(len(lhs_values))) 
-                          for x in reversed(range(1, len(lhs_values) + 1))]
+                          for x in range(1, len(lhs_values) + 1)]
     rhs_y_positions = [(x-0.5) * (ymax_glyphs/len(rhs_values)) 
-                         for x in reversed(range(1, len(rhs_values) + 1))]
+                         for x in range(1, len(rhs_values) + 1)]
 
     # Axis formatting
     ax.set_xlim(0, 5)
@@ -74,11 +74,11 @@ def format_legend(ax, lhs_values, rhs_values, scale_y, title, lhs_heading, rhs_h
     ax.annotate(title, ((x_positions[0]+x_positions[1]+1) / 2, y_title), 
                 ha='center', va='center', size=title_size)
 
-    # Add color scale
+    # Add color title
     ax.annotate(lhs_heading, (x_positions[0] + 0.5, y_subtitle), ha='center', 
                 va='center', size=heading_size)
 
-    # Add shape scale
+    # Add shape title
     ax.annotate(rhs_heading, (x_positions[1] + 0.5, y_subtitle), ha='center', 
                 va='center', size=heading_size)
     
