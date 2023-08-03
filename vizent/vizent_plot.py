@@ -206,7 +206,7 @@ def add_glyph_legend(ax2, color_scale, colormap, color_mapping, shape_scale,
 
 
     if size == None:
-        size=calculated_size
+        size = calculated_size
 
     # Add color legend - either colorbar or points
     if categorical==True: 
