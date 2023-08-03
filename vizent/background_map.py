@@ -10,7 +10,7 @@ def get_basemap(gs, extent, show_axes, projection):
     ax1 = plt.subplot(gs[0], projection=projection)
     ax1.coastlines('50m', zorder=0, color='0.85')
     try:
-        ax1.set_extent(extent)
+        ax1.set_extent(extent, crs=ccrs.PlateCarree())
     except ValueError:
         raise ValueError("The specified extent or values cannot be "
                             "plotted using Cartopy. Please ensure that you "

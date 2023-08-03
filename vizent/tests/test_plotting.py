@@ -310,10 +310,79 @@ def test_add_glyph_legend_discrete():
 
 
 
+def test_add_line_legend_default():
+
+    fig, ax1, ax2, ax3, asp = create_plot(use_glyphs=False, 
+                                          use_lines=True, 
+                                          show_legend=True, 
+                                          show_axes=True, 
+                                          use_cartopy=False, 
+                                          use_image=False, 
+                                          image_type=None, 
+                                          image_file=None, 
+                                          extent=None, 
+                                          scale_x=None, 
+                                          scale_y=None)
+    
+    # Color scale
+    values =  (-2, 0, 1, 3, 5)
+    max_val = None
+    min_val = None
+    n_colors = 5
+    scale_spread = None
+    color_scale_vals = get_color_scale(values, max_val, min_val, n_colors, 
+                                 scale_spread)
+    
+    color_mapping = get_color_mapping(color_scale_vals, 'viridis')
+
+    # Shape scale
+    values = (-7, -3, 0, 4, 5)
+    max_val = 5
+    min_val = -8
+    n_shapes = 5
+    scale_diverges = False
+    scale_spread = None
+    shape_scale_vals = get_shape_scale(values, max_val, min_val, n_shapes, 
+                                 scale_diverges, scale_spread)
+    
+    frequency_scale = get_frequency_scale(shape_scale_vals, scale_diverges)
+
+    scale_x = fig.get_size_inches()[0]
+    scale_y = fig.get_size_inches()[1]
+
+    add_line_legend(ax3=ax3, 
+                    color_scale=color_scale_vals, 
+                    colormap='hot', 
+                    color_mapping=color_mapping, 
+                    shape_scale=shape_scale_vals, 
+                    frequency_scale=frequency_scale,
+                    style="frequency", 
+                    scale_x=scale_x, 
+                    scale_y=scale_y, 
+                    color_label='Color',
+                    shape_label='Shape',
+                    title='Legend',
+                    width=None, 
+                    scale_dp=3, 
+                    label_fontsize=None)
+    
+    tmp_file_line_legend = os.path.join(os.path.dirname(
+                                         os.path.abspath(__file__)),
+                                         'tmp_line_legend_default.png')
+    fig.savefig(tmp_file_line_legend, dpi=300)
+
+    expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                  'default_images', 'line_legend_default.png')
+    
+    assert compare_images(expected=expected, 
+                          actual=tmp_file_line_legend, 
+                          tol=12) is None
+
+    os.remove(tmp_file_line_legend)
 
 
 
-def test_add_line_legend():
+def test_add_line_legend_discrete():
 
     fig, ax1, ax2, ax3, asp = create_plot(use_glyphs=False, 
                                           use_lines=True, 
@@ -383,6 +452,80 @@ def test_add_line_legend():
                           tol=12) is None
 
     os.remove(tmp_file_line_legend)
+
+
+
+def test_add_line_legend_discrete_3_categories():
+
+    fig, ax1, ax2, ax3, asp = create_plot(use_glyphs=False, 
+                                          use_lines=True, 
+                                          show_legend=True, 
+                                          show_axes=True, 
+                                          use_cartopy=False, 
+                                          use_image=False, 
+                                          image_type=None, 
+                                          image_file=None, 
+                                          extent=None, 
+                                          scale_x=None, 
+                                          scale_y=None)
+    
+    # Color scale
+    values =  (-2, 0, 1, 0, -2)
+    max_val = 1
+    min_val = -2
+    n_colors = 3
+    scale_spread = None
+    color_scale_vals = get_color_scale(values, max_val, min_val, n_colors, 
+                                 scale_spread)
+    
+    color_mapping = get_color_mapping(color_scale_vals, 'viridis')
+
+    # Shape scale
+    values = (0, 1, 2 ,1, 2)
+    max_val = 2
+    min_val = 0
+    n_shapes = 3
+    scale_diverges = False
+    scale_spread = None
+    shape_scale_vals = get_shape_scale(values, max_val, min_val, n_shapes, 
+                                 scale_diverges, scale_spread)
+    
+    frequency_scale = get_frequency_scale(shape_scale_vals, scale_diverges)
+
+    scale_x = fig.get_size_inches()[0]
+    scale_y = fig.get_size_inches()[1]
+
+    add_line_legend(ax3=ax3, 
+                    color_scale=color_scale_vals, 
+                    colormap='hot', 
+                    color_mapping=color_mapping, 
+                    shape_scale=shape_scale_vals, 
+                    frequency_scale=frequency_scale,
+                    style="frequency", 
+                    scale_x=scale_x, 
+                    scale_y=scale_y, 
+                    color_label='Color',
+                    shape_label='Shape',
+                    title='Legend',
+                    width=None, 
+                    scale_dp=3, 
+                    label_fontsize=None, 
+                    categorical=True)
+    
+    tmp_file_line_legend = os.path.join(os.path.dirname(
+                                         os.path.abspath(__file__)),
+                                         'tmp_line_legend_3categories.png')
+    fig.savefig(tmp_file_line_legend, dpi=300)
+
+    expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                  'default_images', 'line_legend_3categories.png')
+    
+    assert compare_images(expected=expected, 
+                          actual=tmp_file_line_legend, 
+                          tol=12) is None
+
+    os.remove(tmp_file_line_legend)
+
 
 
 class TestPlotWrappers:
@@ -580,7 +723,7 @@ class TestPlotWrappers:
         os.remove(tmp_vizent_plot)
 
 
-    def test_vizent_plot(self):
+    def test_vizent_plot_default(self):
         
         edge_color_values = [-10, -5, -3, 1, 2, 4]
         edge_freq_values = range(6)
@@ -630,7 +773,6 @@ class TestPlotWrappers:
         
         os.remove(tmp_vizent_plot_with_edges)
 
-    
 
     def test_deprecation_warnings(self):
 
@@ -670,4 +812,44 @@ class TestPlotWrappers:
             
             if not record:
                 pytest.fail("Expected a deprecation warning on the use of scale_x argument")
-        
+    
+
+
+
+def test_vizent_plot_random():
+
+    np.random.seed(10)
+
+    fig = vizent_plot(x_values=np.random.rand(10),
+                y_values=np.random.rand(10), 
+                color_values=np.random.rand(10), 
+                shape_values=np.random.rand(10),
+                size_values=[20 for i in range(10)],
+                edge_start_points=np.random.rand(10,2), 
+                edge_end_points=np.random.rand(10,2), 
+                edge_colors=np.random.rand(10),
+                edge_frequencies=np.random.choice([1,2,3,4], size=10), 
+                edge_widths=[5 for i in range(10)], 
+                colormap='Blues', 
+                color_min=0, 
+                color_max=1, 
+                edge_colormap='YlOrRd', 
+                edge_color_min=0.2, 
+                edge_color_max=0.8, 
+                edge_color_label='Edge label',
+                label_fontsize=7, 
+                scale_dp=2
+                )
+    
+    tmp = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                        'tmp_random_vizent_plot.png')
+
+    fig.savefig(tmp, dpi=300)
+
+    expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                            'default_images', 
+                            'random_vizent_plot.png')
+    
+    assert compare_images(expected=expected, actual=tmp, tol=12) is None
+    
+    os.remove(tmp)
