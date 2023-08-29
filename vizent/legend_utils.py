@@ -1,19 +1,28 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 def add_colorbar(ax, color_mapping, label_size):
+
+
     # Get position of axis in figure coords
     ax_bbox = ax.get_position()
 
+    
     # Coordinates of ax are: 
     # ax_bbox.x0
     # ax_bbox.x1
     # ax_bbox.y0
     # ax_bbox.y1
 
+
+    # if the axis data lim is small, then the colorbar should not be plotted
+    if np.abs(ax_bbox.x1 - ax_bbox.x0) < 10e-5:
+        return
+
     # Define axes in which to place colorbar
-    cax_x0 = ax_bbox.x0 + (ax_bbox.x1 - ax_bbox.x0) / 8
-    cax_y0 = 0.15
-    cax = ax.get_figure().add_axes([cax_x0, cax_y0, 0.02, 0.6])
+    cax_x0 = 1. / 8.
+    cax_y0 = 0.05
+    cax = ax.inset_axes([cax_x0, cax_y0, 0.08, 0.78])
     cbar = plt.colorbar(color_mapping, cax=cax)
     cbar.ax.tick_params(labelsize=label_size)
 
