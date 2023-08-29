@@ -28,6 +28,7 @@ def test_get_basemap():
                       " Basemap functionality not tested")
     else:
         from vizent.background_map import get_basemap
+        fig = plt.clf()
         gs = gridspec.GridSpec(1, 3, width_ratios=[1,0,0])
         extent = [-8, 2, 50, 60]
         ax = get_basemap(gs, extent, show_axes=False, projection=None)
@@ -59,6 +60,7 @@ def test_projected_basemap():
                       " Basemap functionality not tested")
     else:
         from vizent.background_map import get_basemap
+        plt.clf()
         
         gs = gridspec.GridSpec(1, 3, width_ratios=[1,0,0])
         extent = [-8, 2, 50, 60]
