@@ -96,7 +96,8 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
              "source": [1/2, 1, 0],
              "destination": [1/2, 1, 0.5],
              "set_length": [proportion, 1, gap],
-             "frequency": [1/3, 1, 1/3]}
+             "frequency": [1/3, 1, 1/3], 
+             "off": [0, 0, 0]}
     
     try:
         striped_section_length = length * styles[style][0]
@@ -109,14 +110,21 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
                          zorder=zorder)[0]
 
     # Plot the striped section
-    stripes = 1 + (2*frequency)
+    if frequency is np.nan:
+        stripes = 0
+    else:
+        stripes = 1 + (2*frequency)
+
     extra = 0
 
     if style == "frequency":
         actual_length = (np.sqrt((dy*unit_size_y)**2 + (dx*unit_size_x)**2))
         actual_striped_section_length = actual_length * styles[style][0]
 
-        n_glyphs = max(freq_n, color_n)
+        if color_n is not None:
+            n_glyphs = max(freq_n, color_n)
+        else:
+            n_glyphs = freq_n
 
         legend_marker_length = ((0.875/n_glyphs) * 0.7) * ax_h 
         actual_stripes = stripes * (actual_striped_section_length
@@ -247,7 +255,11 @@ def add_glyph_legend(ax2, color_scale, colormap, color_mapping, shape_scale,
 def add_line_legend(ax3, color_scale, colormap, color_mapping, shape_scale, 
                     frequency_scale, style, scale_x, scale_y, color_label, 
                     shape_label, title, width, scale_dp, label_fontsize, 
-                    categorical=False):
+                    categorical=False, include_nan=False):
+    
+    if include_nan:
+        shape_scale = [np.nan] + shape_scale
+        frequency_scale = [np.nan] + frequency_scale
     
     x_positions, \
     color_y_positions, \
@@ -310,12 +322,18 @@ def add_line_legend(ax3, color_scale, colormap, color_mapping, shape_scale,
                  zorder=1
                  )
         
-        ax3.annotate("{:.{prec}f}".format(shape_scale[i],prec=scale_dp), 
-                     (x_positions[1] + 1.1, shape_y_positions[i]), 
-                     ha='center', 
-                     va='center', 
-                     size=label_fontsize)
-
+        if shape_scale[i] is not np.nan:
+            ax3.annotate("{:.{prec}f}".format(shape_scale[i],prec=scale_dp), 
+                        (x_positions[1] + 1.1, shape_y_positions[i]), 
+                        ha='center', 
+                        va='center', 
+                        size=label_fontsize)
+        else: 
+            ax3.annotate("No data", 
+                        (x_positions[1] + 1.1, shape_y_positions[i]), 
+                        ha='center', 
+                        va='center', 
+                        size=label_fontsize)
 
 def create_plot(use_glyphs=True, use_lines=True, show_legend=True, 
                 show_axes=True, use_cartopy=False, cartopy_projection=None,
@@ -867,10 +885,10 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
     with the length specified by user via the :code:`striped_length` parameter,\
     :code:`'frequency'` generates a striped area at the centre of the line, \
     1/3 edge length. Instead of a set number of stripes, this uses the number \
-    of stripes per unit length, matched to the legend. Defaults to \
-    :code:`'middle'`.
+    of stripes per unit length, matched to the legend. :code:`'off'` turns off\
+     the striped area. Defaults to :code:`'middle'`.
     :type style: (:code:`'middle'`, :code:`'ends'`, :code:`'source'`, \
-    :code:`'destination'`), optional.   
+    :code:`'destination'`, :code:`'off'`), optional.   
     :param color_max: The maximum color value in the legend.
     :type color_max: float, optional
     :param color_min: The minimum color value in the legend.
@@ -1034,10 +1052,16 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
     else:
         width = None
 
+    if np.nan in freq_values:
+        include_nan=True
+    else:
+        include_nan=False
+
     add_line_legend(ax[3], color_scale, colormap, color_mapping, shape_scale, 
                     new_freq_scale, style, scale_x, scale_y, color_label, 
                     frequency_label, legend_title, width, scale_dp, 
-                    label_fontsize, categorical=categorical)
+                    label_fontsize, categorical=categorical, 
+                    include_nan=include_nan)
 
     return artists
 
