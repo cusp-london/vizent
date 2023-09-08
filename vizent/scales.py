@@ -263,7 +263,7 @@ def get_shape(value, shape=None, divergent=None, shape_pos=None,
         return shape
 
 def get_frequency(value, shape_scale, frequency_scale, interval_type):
-    if value is np.nan:
+    if np.isnan(value):
         return np.nan
     if len(shape_scale) == 1:
         return frequency_scale[0]

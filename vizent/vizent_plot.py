@@ -110,7 +110,7 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
                          zorder=zorder)[0]
 
     # Plot the striped section
-    if frequency is np.nan:
+    if np.isnan(frequency):
         stripes = 0
     else:
         stripes = 1 + (2*frequency)
@@ -143,7 +143,7 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
         y0 = y_origin + (styles[style][2+i]*length) * np.sin(theta)
         xn = x0 + (styles[style][0]*length) * np.cos(theta)
         yn = y0 + (styles[style][0]*length) * np.sin(theta)
-        
+
         # Plot a black line for the striped section
         striped_base_lines.append(
             ax.plot([x0, xn], [y0, yn], color='black', 
@@ -781,6 +781,13 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
     if shape_spread == None:
         shape_spread = shape_max - shape_min
 
+    # Apply a ravel in the event dataframe columns (for example) are passed
+    x_values = np.ravel(x_values)
+    y_values = np.ravel(y_values)
+    shape_values = np.ravel(shape_values)
+    color_values = np.ravel(color_values)
+    size_values = np.ravel(size_values)
+
     # plot the points
     color_scale = get_color_scale(color_values, color_max, color_min, 
                                     color_n, color_spread)
@@ -789,13 +796,6 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
                                   scale_diverges, shape_spread) 
     frequency_scale = get_frequency_scale(shape_scale, scale_diverges)
 
-    
-    # Apply a ravel in the event dataframe columns (for example) are passed
-    x_values = np.ravel(x_values)
-    y_values = np.ravel(y_values)
-    shape_values = np.ravel(shape_values)
-    color_values = np.ravel(color_values)
-    size_values = np.ravel(size_values)
     
     artists = []
     for i in range(len(x_values)):
@@ -1002,6 +1002,15 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
     else:
         categorical=True
 
+    # Apply a ravel in the event dataframe columns (for example) are passed
+    x_starts = np.ravel(x_starts)
+    x_ends = np.ravel(x_ends)
+    y_starts = np.ravel(y_starts)
+    y_ends = np.ravel(y_ends)
+    color_values = np.ravel(color_values)
+    freq_values = np.ravel(freq_values)
+    width_values = np.ravel(width_values)
+
     # Fetch scale values
     color_scale = get_color_scale(color_values, color_max, color_min, 
                                     color_n, color_spread)
@@ -1018,7 +1027,7 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
 
     # Get proportions of plot area, which may be required for some styles
     ax_h = ax[1].bbox.height
-    ax_w = ax_h / ax[4]
+    ax_w = ax[1].bbox.width
 
     # Add lines
     artists = []
@@ -1052,7 +1061,7 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
     else:
         width = None
 
-    if np.nan in freq_values:
+    if np.isnan(freq_values).any():
         include_nan=True
     else:
         include_nan=False
@@ -1270,7 +1279,7 @@ def vizent_plot(x_values: ArrayLike | None=None,
     :param edge_colormap: the matplotlib colormap to be used. Defaults to \
     :code:`viridis`.
     :type edge_colormap: matplotlib.colors.Colormap or str, optional
-    :param style: The length and positioning style of the striped area. \
+    :param edge_style: The length and positioning style of the striped area. \
     :code:`'middle'` generates a striped area centred on the line/edge where \
     with length of striped area 1/3 of edge length. :code:`'ends'` \
     generates a striped area at each end of the line/edge with length of \
@@ -1279,12 +1288,12 @@ def vizent_plot(x_values: ArrayLike | None=None,
     length. :code:`'destination'` generates a striped area at the line \
     destination, where the striped area is 1/2 of the total edge length. \
     :code:`'set_length'` generates a striped area at the centre of the line, \
-    with the length specified by user via the :code:`striped_length` parameter,\
+    with the length specified by user via the :code:`edge_striped_length` parameter,\
     :code:`'frequency'` generates a striped area at the centre of the line, \
     1/3 edge length. Instead of a set number of stripes, this uses the number \
     of stripes per unit length, matched to the legend. Defaults to \
     :code:`'middle'`.
-    :type style: (:code:`'middle'`, :code:`'ends'`, :code:`'source'`, \
+    :type edge_style: (:code:`'middle'`, :code:`'ends'`, :code:`'source'`, \
     :code:`'destination'`), optional.   
     :param edge_color_max: The maximum color value in the legend.
     :type edge_color_max: float, optional
