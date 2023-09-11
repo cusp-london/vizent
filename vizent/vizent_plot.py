@@ -400,6 +400,11 @@ def create_plot(use_glyphs=True, use_lines=True, show_legend=True,
     if scale_y is not None and scale_y <=0:
         warnings.warn("scale_y must be positive. Default will be used.")
         scale_y = None
+    if 3 * scale_x < 2 * scale_y:
+        warnings.warn("scale_x is too small in comparison to scale_y. Default \
+                       scaling will be used")
+        scale_x = None
+        scale_y = None
     # check extent format 
     if extent is not None:
         if not isinstance(extent, list) or len(extent) != 4:
