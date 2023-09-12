@@ -12,7 +12,7 @@
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [8000],
 
-	"postStartCommand": "python -m sphinx.ext.apidoc -o docs vizent && cp /workspaces/vizent/docs/_templates/mpl_nav_bar.html /usr/local/lib/python3.10/site-packages/mpl_sphinx_theme/mpl_nav_bar.html &&  pip install /workspaces/vizent && sphinx-autobuild docs docs/_build"
+	"postStartCommand": "python -m sphinx.ext.apidoc -o docs vizent && cp /workspaces/vizent/docs/_templates/mpl_nav_bar.html /usr/local/lib/python3.11/site-packages/mpl_sphinx_theme/mpl_nav_bar.html &&  pip install /workspaces/vizent && sphinx-autobuild docs docs/_build"
 
 	// Uncomment the next line to run commands after the container is created - for example installing curl.
 	// "postCreateCommand": ""

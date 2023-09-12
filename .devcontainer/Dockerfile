@@ -20,7 +20,7 @@ RUN pip install nbsphinx mpl_sphinx_theme sphinx-autobuild pandoc
 RUN pip install scipy Pillow cartopy
 
 # Then fix cartopy installation (for some reason)
-RUN pip uninstall shapely && pip install --no-binary :all: shapely
+#RUN pip uninstall shapely && pip install --no-binary :all: shapely
 
 # Install vizent gallery dependencies
 RUN pip install pandas
