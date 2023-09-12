@@ -55,7 +55,7 @@ def format_legend(ax, lhs_values, rhs_values, scale_y, title, lhs_heading, rhs_h
         n_glyphs = max(len(lhs_values), len(rhs_values))
         y_size = (1 / (3*n_glyphs)) * scale_y
         x_size = scale_y / 12
-        calculated_size = (min(x_size, y_size) / 0.014)
+        calculated_size = (min(x_size, y_size) / 0.014) # 0.014 is the size in inches of an object one point wide. I.e. inches per point.
         color_length=None
         shape_length=None
     else:

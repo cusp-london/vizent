@@ -18,7 +18,7 @@ from vizent.legend_utils import add_colorbar, format_legend
 
 
 
-def add_point(x, y, shape, frequency, color, size, ax):
+def add_point(x, y, shape, frequency, color, size, ax, transform_to_figure_coords):
     """
     Adds a vizent glyph to an axes object
 
@@ -38,17 +38,26 @@ def add_point(x, y, shape, frequency, color, size, ax):
     :param ax: matplotlib Axes instance on which to plot the glyph
     :type ax: matplotlib.axes.Axes
     """
+    transform = ax.transData
     shape_points = get_shape_points(shape, frequency)
+    if transform_to_figure_coords:
+        x, y = ax.transData.transform([x, y]) / ax.get_figure().dpi
+        transform = ax.get_figure().dpi_scale_trans
+        
     # add outer circle
     outer_collection = ax.scatter(x, y, marker='o', s=(size)**2, 
-                                  facecolor="black", linewidths=0)
+                                  facecolor="black", linewidths=0,
+                                  transform=transform)
     # add shape
     shape_collection = ax.scatter(x, y, marker=shape_points, 
                                   s=(size * (np.abs(shape_points).max()))**2, 
-                                  facecolor="white", linewidths=0)
+                                  facecolor="white", linewidths=0,
+                                  transform=transform)
     # add inner circle
     inner_collection = ax.scatter(x, y, marker='o', s=(size*0.6)**2, 
-                                  facecolor=color, linewidths=0) 
+                                  facecolor=color, linewidths=0,
+                                  transform=transform)
+                
     # Return a dict of pathcollection objects
     return dict(outer=outer_collection, shape=shape_collection, 
                 inner=inner_collection)
@@ -71,6 +80,10 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
     proportion = 0 
     gap = 0
 
+    # Set default transformations (only required for set_length/pixels options)
+    transform = ax.transData
+    data_transform = lambda x: x
+
     if theta < 0:
         theta = 2*np.pi + theta
     if style == "set_length":
@@ -82,6 +95,9 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
                              + (dx*unit_size_x)**2))
             proportion = striped_length / actual_length
             gap = ((actual_length-striped_length) / 2) / actual_length
+            transform = ax.get_figure().dpi_scale_trans
+            data_transform = lambda x: ax.transData.transform(x) / ax.get_figure().dpi
+            
         elif length_type == "proportion":
             proportion = striped_length
             gap = ((1 - proportion) / 2) 
@@ -92,12 +108,12 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
     # line taken up by the striped section, how many striped sections 
     # are present, and where on the line each striped section starts
     styles = {"middle": [1/3, 1, 1/3],
-             "ends": [1/4, 2, 0, 0.75],
-             "source": [1/2, 1, 0],
-             "destination": [1/2, 1, 0.5],
-             "set_length": [proportion, 1, gap],
-             "frequency": [1/3, 1, 1/3], 
-             "off": [0, 0, 0]}
+              "ends": [1/4, 2, 0, 0.75],
+              "source": [1/2, 1, 0],
+              "destination": [1/2, 1, 0.5],
+              "set_length": [proportion, 1, gap],
+              "frequency": [1/3, 1, 1/3], 
+              "off": [0, 0, 0]}
     
     try:
         striped_section_length = length * styles[style][0]
@@ -105,9 +121,12 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
         raise ValueError("line style invalid")
     
     # Plot main colored line
-    main_line = ax.plot([x_origin, x_end], [y_origin, y_end], color=color, 
-                         linewidth=width, solid_capstyle='butt', 
-                         zorder=zorder)[0]
+    x_origin_t, y_origin_t = data_transform([x_origin, y_origin])
+    x_end_t, y_end_t = data_transform([x_end, y_end])
+
+    main_line = ax.plot([x_origin_t, x_end_t], [y_origin_t, y_end_t],
+                         color=color, linewidth=width, solid_capstyle='butt', 
+                         zorder=zorder, transform=transform)[0]
 
     # Plot the striped section
     if np.isnan(frequency):
@@ -144,11 +163,15 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
         xn = x0 + (styles[style][0]*length) * np.cos(theta)
         yn = y0 + (styles[style][0]*length) * np.sin(theta)
 
+        # transform data
+        x0_t, y0_t = data_transform([x0, y0])
+        xn_t, yn_t = data_transform([xn, yn])
+
         # Plot a black line for the striped section
         striped_base_lines.append(
-            ax.plot([x0, xn], [y0, yn], color='black', 
+            ax.plot([x0_t, xn_t], [y0_t, yn_t], color='black', 
                                linewidth=width, solid_capstyle='butt', 
-                               zorder=zorder)[0]  
+                               zorder=zorder, transform=transform)[0]  
         )
 
         # Plot white stripes
@@ -162,10 +185,13 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
                 x_1 = x0 + stripe_diff_x * (i+1)
                 y_1 = y0 + stripe_diff_y * (i+1) 
 
+                x_0_t, y_0_t = data_transform([x_0, y_0])
+                x_1_t, y_1_t = data_transform([x_1, y_1])
+
                 striped_white_lines.append(                    
-                    ax.plot([x_0, x_1], [y_0, y_1], color='white', 
+                    ax.plot([x_0_t, x_1_t], [y_0_t, y_1_t], color='white', 
                             linewidth=width, solid_capstyle='butt', 
-                            zorder=zorder)[0]
+                            zorder=zorder, transform=transform)[0]
                 )
 
         if style == "frequency":
@@ -178,10 +204,14 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
             y_0 = y0 + stripe_diff_y * np.floor(stripes)
             x_1 = x_0 + extra_dx
             y_1 = y_0 + extra_dy
+
+            x_0_t, y_0_t = data_transform([x_0, y_0])
+            x_1_t, y_1_t = data_transform([x_1, y_1])
             
             striped_white_lines.append(
-                ax.plot([x_0, x_1], [y_0, y_1], color='white', linewidth=width, 
-                        solid_capstyle='butt', zorder=zorder)[0]
+                ax.plot([x_0_t, x_1_t], [y_0_t, y_1_t], color='white', 
+                        linewidth=width, solid_capstyle='butt', 
+                        zorder=zorder, transform=transform)[0]
             )
     # Return the lists of 2DLine objects
     return dict(main_line=main_line, striped_base_lines=striped_base_lines, 
@@ -244,7 +274,8 @@ def add_glyph_legend(ax2, color_scale, colormap, color_mapping, shape_scale,
                   frequency_scale[i], 
                   (0.74902, 0.74902, 0.74902), 
                   size, 
-                  ax2)
+                  ax2, 
+                  transform_to_figure_coords=False)
         ax2.annotate("{:.{prec}f}".format(shape_scale[i],prec=scale_dp), 
                      (x_positions[1] + 1.1, shape_y_positions[i]), 
                      ha='center', 
@@ -400,11 +431,12 @@ def create_plot(use_glyphs=True, use_lines=True, show_legend=True,
     if scale_y is not None and scale_y <=0:
         warnings.warn("scale_y must be positive. Default will be used.")
         scale_y = None
-    if 3 * scale_x < 2 * scale_y:
-        warnings.warn("scale_x is too small in comparison to scale_y. Default \
-                       scaling will be used")
-        scale_x = None
-        scale_y = None
+    if scale_x is not None and scale_y is not None:
+        if 3 * scale_x < 2 * scale_y:
+            warnings.warn("scale_x is too small in comparison to scale_y. \
+                          Default scaling will be used")
+            scale_x = None
+            scale_y = None
     # check extent format 
     if extent is not None:
         if not isinstance(extent, list) or len(extent) != 4:
@@ -622,7 +654,7 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
                shape_n=None, shape_spread=None, color_label="color", 
                shape_label="shape", legend_title="glyphs", scale_dp=2, 
                interval_type="closest", legend_marker_size="auto", 
-               label_fontsize=None):
+               label_fontsize=None, transform_to_figure_coords=False):
     """
     Add glyphs/nodes to the plot.
 
@@ -706,6 +738,10 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
     :param label_fontsize: Fontsize for legend labels. If not set, this will \
     be estimated based on the lengths of the labels.
     :type label_fontsize: int, optional
+    :param transform_to_figure_coords: If :code:`'True'`, will plot glyphs in \
+    figure coords which are insensitive to changes in axes dimensions and \
+    size. Default :code:`'False'`
+    :type transform_to_figure_coords: boolean, optional.
     :return: List of length n, containing the artist objects that constitute\
     the plotted glyphs.
     :rtype: list of artists
@@ -813,7 +849,8 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
                                     frequency_scale, interval_type),
                       get_color(color_values[i], colormap, color_mapping),
                       size_values[i], 
-                      ax[1])
+                      ax[1],
+                      transform_to_figure_coords=transform_to_figure_coords)
         )
 
     # Add the legend
@@ -893,7 +930,8 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
     of stripes per unit length, matched to the legend. :code:`'off'` turns off\
      the striped area. Defaults to :code:`'middle'`.
     :type style: (:code:`'middle'`, :code:`'ends'`, :code:`'source'`, \
-    :code:`'destination'`, :code:`'off'`), optional.   
+    :code:`'destination'`, :code:`'set_length'`, :code:`'frequency'`, \
+    :code:`'off'`), optional.   
     :param color_max: The maximum color value in the legend.
     :type color_max: float, optional
     :param color_min: The minimum color value in the legend.

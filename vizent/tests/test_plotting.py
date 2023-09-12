@@ -88,8 +88,8 @@ def test_add_point():
                             frequency=10,
                             color='y',
                             size=200,
-                            ax=ax
-                            )
+                            ax=ax, 
+                            transform_to_figure_coords=False)
 
     ax.axis('off')
 
@@ -149,6 +149,51 @@ def test_add_line():
     fig.savefig(tmp_file_add_line)
     expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
                                   'default_images', 'default_line.png')
+
+    assert compare_images(expected=expected, 
+                          actual=tmp_file_add_line, 
+                          tol=12) is None
+
+    os.remove(tmp_file_add_line)
+
+
+
+
+def test_add_line_pixel_length():
+
+    fig = plt.Figure(figsize=(4,2))
+    ax = fig.add_subplot(111)
+    ax.axis([-0.2,1.2,-0.2,1.2])
+
+    return_dict = add_line(x_origin=0,
+                           y_origin=0,
+                           x_end=1,
+                           y_end=1,
+                           frequency=2,
+                           color='r',
+                           width=5,
+                           ax=ax,
+                           style='set_length',
+                           freq_n=None,
+                           color_n=None,
+                           striped_length=20,
+                           length_type='pixels',
+                           ax_w=ax.bbox.width,
+                           ax_h=ax.bbox.height,
+                           zorder=1)
+
+    assert type(return_dict['main_line']) == matplotlib.lines.Line2D
+    for line in return_dict['striped_base_lines']:
+        assert type(line) == matplotlib.lines.Line2D
+    for line in return_dict['striped_white_lines']:
+        assert type(line) == matplotlib.lines.Line2D
+
+    tmp_file_add_line = os.path.join(os.path.dirname(
+                                        os.path.abspath(__file__)),
+                                    'tmp_line_pixel_length.png')
+    fig.savefig(tmp_file_add_line)
+    expected = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                  'default_images', 'line_pixel_length.png')
 
     assert compare_images(expected=expected, 
                           actual=tmp_file_add_line, 
