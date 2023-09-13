@@ -121,6 +121,7 @@ def get_color(value, colormap, mapping):
 
 def get_shape_scale(values, max_val, min_val, n_shapes, scale_diverges, 
                     scale_spread):
+    values = [i for i in values if not np.isnan(i)]
     if scale_spread is not None and scale_spread < 0:
         scale_spread=abs(scale_spread)
     if n_shapes is not None and n_shapes > 7:
