@@ -1,0 +1,27 @@
+stop_key,route,direction,stop_order,commonName,naptanId,lat,lon
+1,9,inbound,0,"Hammersmith Bus Station",490007705G,51.4925,-0.223956
+2,9,inbound,1,"Latymer Court",490008990J,51.4934,-0.218624
+3,9,inbound,2,"Brook Green",490004455BB,51.4937,-0.215858
+4,9,inbound,3,"North End Road",490010357F,51.4948,-0.212388
+5,9,inbound,4,"Holland Road",490008287E,51.497,-0.205199
+6,9,inbound,5,"Warwick Gardens",490003106E,51.4974,-0.203798
+7,9,inbound,6,"The Design Museum",490005528Y,51.4986,-0.200815
+8,9,inbound,7,"Phillimore Gardens",490010984U,51.5,-0.196755
+9,9,inbound,8,"High Street Kensington Station",490000110B,51.5007,-0.194246
+10,9,inbound,9,"Kensington Palace",490011761M,51.5024,-0.188244
+11,9,inbound,10,"Palace Gate",490010728E,51.5019,-0.184546
+12,9,inbound,11,"Queen's Gate",490011334E1,51.5015,-0.181305
+13,9,inbound,12,"Royal Albert Hall",490011750E,51.5019,-0.176421
+14,9,inbound,13,"Prince of Wales Gate",490011198E,51.502,-0.171042
+15,9,inbound,14,"Rutland Gardens",490011822E,51.5019,-0.167127
+16,9,inbound,15,"Knightsbridge Station  / Harrods",490008875KH,51.5018,-0.163169
+17,9,inbound,16,"Hyde Park Corner Station",490000119T,51.503,-0.153508
+18,9,inbound,17,"Old Park Lane / Hard Rock Cafe",490010574C,51.5041,-0.148408
+19,9,inbound,18,"Green Park Station",490000093PB,51.507,-0.142554
+20,9,inbound,19,"Old Bond Street / Royal Academy",490011748H,51.5083,-0.13936
+21,9,inbound,20,"Piccadilly Circus",490000179B,51.5093,-0.136235
+22,9,inbound,21,"Haymarket / Jermyn Street",490007960R,51.5097,-0.132732
+23,9,inbound,22,"Trafalgar Square",490013767B,51.5076,-0.129544
+24,9,inbound,23,"Charing Cross Stn / Trafalgar Square",490013766E,51.508,-0.126487
+25,9,inbound,24,"Southampton Street / Covent Garden",490012247A,51.5104,-0.121823
+26,9,inbound,25,"Aldwych / Drury Lane",490019703E,51.5128,-0.118408
