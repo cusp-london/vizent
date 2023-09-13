@@ -60,7 +60,8 @@ def add_point(x, y, shape, frequency, color, size, ax):
 def add_line_frequency(x_origin, y_origin, x_end, y_end, frequency, 
                        width, ax, style, freq_n, color_n, striped_length, 
                        length_type, ax_w, ax_h, zorder):
-
+    
+    ax.apply_aspect()
     # Calculate the actual size of a unit on each axis
     y_min, y_max = ax.get_ylim()
     x_min, x_max = ax.get_xlim()
@@ -1058,7 +1059,6 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
     # are needed for calculating the sizes of the striped sections but these 
     # are not updated from the original figure creation until something is 
     # drawn.
-    plt.draw()
     ax[1].apply_aspect()
 
     # Get proportions of plot area, which may be required for some styles

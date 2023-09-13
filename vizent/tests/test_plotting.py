@@ -166,7 +166,6 @@ def test_add_line_pixel_length():
     ax.set_aspect('equal', 'datalim')
     
     ax.plot([0, 1], [0, 1], color='r', linewidth=5, solid_capstyle='butt', zorder=1)
-    ax.apply_aspect()
     
     return_dict = add_line_frequency(x_origin=0,
                                     y_origin=0,
