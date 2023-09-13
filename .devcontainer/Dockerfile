@@ -2,6 +2,8 @@ FROM sphinxdoc/sphinx
 
 WORKDIR /docs
 
+COPY .env /docs
+
 # Install pandoc
 RUN apt-get update \
     && apt-get install -y wget \
@@ -17,16 +19,10 @@ RUN apt -y install libgeos-dev \
 RUN pip install nbsphinx mpl_sphinx_theme sphinx-autobuild pandoc
 
 # Install vizent depdendencies
-RUN pip install scipy Pillow cartopy
-
-# Then fix cartopy installation (for some reason)
-#RUN pip uninstall shapely && pip install --no-binary :all: shapely
+RUN pip install scipy Pillow cartopy 
 
 # Install vizent gallery dependencies
-RUN pip install pandas
-
-# Install vizent itself
-# RUN pip install .
+RUN pip install pandas python-dotenv
 
 # Install jupyter ipykernel
 RUN pip install ipykernel
