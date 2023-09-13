@@ -18,7 +18,7 @@ from vizent.legend_utils import add_colorbar, format_legend
 
 
 
-def add_point(x, y, shape, frequency, color, size, ax, transform_to_figure_coords):
+def add_point(x, y, shape, frequency, color, size, ax):
     """
     Adds a vizent glyph to an axes object
 
@@ -38,34 +38,29 @@ def add_point(x, y, shape, frequency, color, size, ax, transform_to_figure_coord
     :param ax: matplotlib Axes instance on which to plot the glyph
     :type ax: matplotlib.axes.Axes
     """
-    transform = ax.transData
     shape_points = get_shape_points(shape, frequency)
-    if transform_to_figure_coords:
-        x, y = ax.transData.transform([x, y]) / ax.get_figure().dpi
-        transform = ax.get_figure().dpi_scale_trans
+
         
     # add outer circle
     outer_collection = ax.scatter(x, y, marker='o', s=(size)**2, 
-                                  facecolor="black", linewidths=0,
-                                  transform=transform)
+                                  facecolor="black", linewidths=0)
     # add shape
     shape_collection = ax.scatter(x, y, marker=shape_points, 
                                   s=(size * (np.abs(shape_points).max()))**2, 
-                                  facecolor="white", linewidths=0,
-                                  transform=transform)
+                                  facecolor="white", linewidths=0)
     # add inner circle
     inner_collection = ax.scatter(x, y, marker='o', s=(size*0.6)**2, 
-                                  facecolor=color, linewidths=0,
-                                  transform=transform)
+                                  facecolor=color, linewidths=0)
                 
     # Return a dict of pathcollection objects
     return dict(outer=outer_collection, shape=shape_collection, 
                 inner=inner_collection)
 
 
-def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax, 
-             style, freq_n, color_n, striped_length, length_type, ax_w, ax_h, 
-             zorder):
+def add_line_frequency(x_origin, y_origin, x_end, y_end, frequency, 
+                       width, ax, style, freq_n, color_n, striped_length, 
+                       length_type, ax_w, ax_h, zorder):
+
     # Calculate the actual size of a unit on each axis
     y_min, y_max = ax.get_ylim()
     x_min, x_max = ax.get_xlim()
@@ -80,10 +75,6 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
     proportion = 0 
     gap = 0
 
-    # Set default transformations (only required for set_length/pixels options)
-    transform = ax.transData
-    data_transform = lambda x: x
-
     if theta < 0:
         theta = 2*np.pi + theta
     if style == "set_length":
@@ -95,9 +86,6 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
                              + (dx*unit_size_x)**2))
             proportion = striped_length / actual_length
             gap = ((actual_length-striped_length) / 2) / actual_length
-            transform = ax.get_figure().dpi_scale_trans
-            data_transform = lambda x: ax.transData.transform(x) / ax.get_figure().dpi
-            
         elif length_type == "proportion":
             proportion = striped_length
             gap = ((1 - proportion) / 2) 
@@ -120,13 +108,7 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
     except:
         raise ValueError("line style invalid")
     
-    # Plot main colored line
-    x_origin_t, y_origin_t = data_transform([x_origin, y_origin])
-    x_end_t, y_end_t = data_transform([x_end, y_end])
 
-    main_line = ax.plot([x_origin_t, x_end_t], [y_origin_t, y_end_t],
-                         color=color, linewidth=width, solid_capstyle='butt', 
-                         zorder=zorder, transform=transform)[0]
 
     # Plot the striped section
     if np.isnan(frequency):
@@ -163,15 +145,11 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
         xn = x0 + (styles[style][0]*length) * np.cos(theta)
         yn = y0 + (styles[style][0]*length) * np.sin(theta)
 
-        # transform data
-        x0_t, y0_t = data_transform([x0, y0])
-        xn_t, yn_t = data_transform([xn, yn])
-
         # Plot a black line for the striped section
         striped_base_lines.append(
-            ax.plot([x0_t, xn_t], [y0_t, yn_t], color='black', 
+            ax.plot([x0, xn], [y0, yn], color='black', 
                                linewidth=width, solid_capstyle='butt', 
-                               zorder=zorder, transform=transform)[0]  
+                               zorder=zorder)[0]  
         )
 
         # Plot white stripes
@@ -185,13 +163,10 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
                 x_1 = x0 + stripe_diff_x * (i+1)
                 y_1 = y0 + stripe_diff_y * (i+1) 
 
-                x_0_t, y_0_t = data_transform([x_0, y_0])
-                x_1_t, y_1_t = data_transform([x_1, y_1])
-
                 striped_white_lines.append(                    
-                    ax.plot([x_0_t, x_1_t], [y_0_t, y_1_t], color='white', 
+                    ax.plot([x_0, x_1], [y_0, y_1], color='white', 
                             linewidth=width, solid_capstyle='butt', 
-                            zorder=zorder, transform=transform)[0]
+                            zorder=zorder)[0]
                 )
 
         if style == "frequency":
@@ -205,16 +180,13 @@ def add_line(x_origin, y_origin, x_end, y_end, frequency, color, width, ax,
             x_1 = x_0 + extra_dx
             y_1 = y_0 + extra_dy
 
-            x_0_t, y_0_t = data_transform([x_0, y_0])
-            x_1_t, y_1_t = data_transform([x_1, y_1])
-            
             striped_white_lines.append(
-                ax.plot([x_0_t, x_1_t], [y_0_t, y_1_t], color='white', 
+                ax.plot([x_0, x_1], [y_0, y_1], color='white', 
                         linewidth=width, solid_capstyle='butt', 
-                        zorder=zorder, transform=transform)[0]
+                        zorder=zorder)[0]
             )
     # Return the lists of 2DLine objects
-    return dict(main_line=main_line, striped_base_lines=striped_base_lines, 
+    return dict(striped_base_lines=striped_base_lines, 
                 striped_white_lines=striped_white_lines)
 
 
@@ -274,8 +246,7 @@ def add_glyph_legend(ax2, color_scale, colormap, color_mapping, shape_scale,
                   frequency_scale[i], 
                   (0.74902, 0.74902, 0.74902), 
                   size, 
-                  ax2, 
-                  transform_to_figure_coords=False)
+                  ax2)
         ax2.annotate("{:.{prec}f}".format(shape_scale[i],prec=scale_dp), 
                      (x_positions[1] + 1.1, shape_y_positions[i]), 
                      ha='center', 
@@ -335,23 +306,22 @@ def add_line_legend(ax3, color_scale, colormap, color_mapping, shape_scale,
         add_colorbar(ax3, color_mapping, label_fontsize)
 
     for i in range(len(shape_y_positions)):
-        add_line(x_origin=x_positions[1],
-                 y_origin=shape_y_positions[i] + (shape_length/2),
-                 x_end=x_positions[1], 
-                 y_end=shape_y_positions[i] - (shape_length/2),
-                 frequency=frequency_scale[i], 
-                 color=None, 
-                 width=width, 
-                 ax=ax3,
-                 style='set_length', 
-                 freq_n=None, 
-                 color_n=None, 
-                 striped_length=1,
-                 length_type='proportion',
-                 ax_w=scale_x, 
-                 ax_h=scale_y, 
-                 zorder=1
-                 )
+        add_line_frequency(x_origin=x_positions[1],
+                           y_origin=shape_y_positions[i] + (shape_length/2),
+                           x_end=x_positions[1], 
+                           y_end=shape_y_positions[i] - (shape_length/2),
+                           frequency=frequency_scale[i], 
+                           width=width, 
+                           ax=ax3,
+                           style='set_length', 
+                           freq_n=None, 
+                           color_n=None, 
+                           striped_length=1,
+                           length_type='proportion',
+                           ax_w=scale_x, 
+                           ax_h=scale_y, 
+                           zorder=1
+                           )
         
         if shape_scale[i] is not np.nan:
             ax3.annotate("{:.{prec}f}".format(shape_scale[i],prec=scale_dp), 
@@ -505,7 +475,7 @@ def create_plot(use_glyphs=True, use_lines=True, show_legend=True,
     fig = plt.figure()
     
     # Create the layout for plot and legends
-    if not use_image and not use_cartopy and extent == None:
+    if not use_image and not use_cartopy and extent == None:       
         if scale_x == None or scale_y == None:
             if use_glyphs and use_lines:
                 if show_legend:
@@ -581,7 +551,10 @@ def create_plot(use_glyphs=True, use_lines=True, show_legend=True,
         ax1 = plt.subplot(gs[0])
         if not show_axes:
             ax1.axis('off')
-                
+            fig.subplots_adjust(left=0.01, bottom=0.05, right=0.99, top=0.9, wspace=0.01)
+        else:
+            fig.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.9, wspace=0.01)
+            
     if use_image:
         x_values=[np.average(extent[0:2])]
         y_values=[np.average(extent[2:4])]
@@ -642,6 +615,10 @@ def create_plot(use_glyphs=True, use_lines=True, show_legend=True,
         ax1.set_xlim(extent[0], extent[1])
         ax1.set_ylim(extent[2], extent[3])
         ax1.set_aspect('equal', 'box')
+    elif not use_cartopy and not use_image and use_lines:
+        # This ensures that the lengths of any frequency components of the 
+        # lines don't vary with line orientation.
+        ax1.set_aspect('equal', 'datalim')
 
     return fig, ax1, ax2, ax3, asp
 
@@ -654,7 +631,7 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
                shape_n=None, shape_spread=None, color_label="color", 
                shape_label="shape", legend_title="glyphs", scale_dp=2, 
                interval_type="closest", legend_marker_size="auto", 
-               label_fontsize=None, transform_to_figure_coords=False):
+               label_fontsize=None):
     """
     Add glyphs/nodes to the plot.
 
@@ -738,10 +715,6 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
     :param label_fontsize: Fontsize for legend labels. If not set, this will \
     be estimated based on the lengths of the labels.
     :type label_fontsize: int, optional
-    :param transform_to_figure_coords: If :code:`'True'`, will plot glyphs in \
-    figure coords which are insensitive to changes in axes dimensions and \
-    size. Default :code:`'False'`
-    :type transform_to_figure_coords: boolean, optional.
     :return: List of length n, containing the artist objects that constitute\
     the plotted glyphs.
     :rtype: list of artists
@@ -849,8 +822,7 @@ def add_glyphs(ax, x_values, y_values, color_values, shape_values,
                                     frequency_scale, interval_type),
                       get_color(color_values[i], colormap, color_mapping),
                       size_values[i], 
-                      ax[1],
-                      transform_to_figure_coords=transform_to_figure_coords)
+                      ax[1])
         )
 
     # Add the legend
@@ -1029,9 +1001,9 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
     if color_min == None:
         color_min = min(color_values)   
     if freq_max == None:
-        freq_max = max(freq_values)
+        freq_max = np.nanmax(freq_values)
     if freq_min == None:
-        freq_min = min(freq_values) 
+        freq_min = np.nanmin(freq_values) 
     if color_spread == None:
         color_spread = color_max - color_min
     if freq_spread == None:
@@ -1067,22 +1039,40 @@ def add_lines(ax, x_starts, y_starts, x_ends, y_ends, color_values,
             new_freq_scale.append(1)
         else:
             new_freq_scale.append((i/3) * 2)
+    
+    # Add lines
+    artists = []
+    main_lines = []
+    for i in range(len(x_starts)):
+
+        main_line = ax[1].plot([x_starts[i], x_ends[i]], [y_starts[i], y_ends[i]],
+                    color=get_color(color_values[i], colormap, color_mapping), 
+                    linewidth=width_values[i], solid_capstyle='butt', 
+                    zorder=zorder)[0]
+        main_lines.append(main_line)
+    
+    # Store the artist object
+    artists.append(dict(main_lines=main_lines))
+
+    # This is critical for drawing with pixel length type - the aspect ratios
+    # are needed for calculating the sizes of the striped sections but these 
+    # are not updated from the original figure creation until something is 
+    # drawn.
+    plt.draw()
+    ax[1].apply_aspect()
 
     # Get proportions of plot area, which may be required for some styles
     ax_h = ax[1].bbox.height
     ax_w = ax[1].bbox.width
 
-    # Add lines
-    artists = []
     for i in range(len(x_starts)):
         artists.append(
-            add_line(x_starts[i], 
+            add_line_frequency(x_starts[i], 
                  y_starts[i],
                  x_ends[i], 
                  y_ends[i], 
                  get_frequency(freq_values[i], shape_scale, new_freq_scale, 
                                "closest"),
-                 get_color(color_values[i], colormap, color_mapping), 
                  width_values[i], 
                  ax[1], 
                  style, 
