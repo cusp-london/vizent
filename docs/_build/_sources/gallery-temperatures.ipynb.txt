@@ -1,0 +1,86 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Projected Cartopy Map"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "from vizent import vizent_plot\n",
+    "import matplotlib.text as text\n",
+    "import matplotlib.pyplot as plt\n",
+    "import cartopy.crs as ccrs\n",
+    "import warnings\n",
+    "warnings.filterwarnings('ignore')\n",
+    "\n",
+    "df = pd.read_csv('sample-data/temperatures.csv')\n",
+    "\n",
+    "# Use cartopy projection to web mercator\n",
+    "crs = ccrs.epsg(3857)\n",
+    "projected_points = crs.transform_points(x=df['longitude'], y=df['latitude'], src_crs=4326)\n",
+    "x = projected_points[:, 0]\n",
+    "y = projected_points[:, 1]\n",
+    "\n",
+    "fig = vizent_plot(x, y, df['temperature_2m_max'], df['diff'], [21] * df.shape[0], use_cartopy=True,\n",
+    "                  cartopy_projection = crs, extent=[-15, 30, 30, 60], shape_max=10, shape_min=-10, shape_n=4,\n",
+    "                  interval_type='limit',color_min=10, color_max=50, colormap='YlOrRd', \n",
+    "                  color_label='Temperature\\n(daily max, $^\\circ C$)', \n",
+    "                  shape_label='Difference from\\n20-year mean\\non this date ($^\\circ C$)',\n",
+    "                  glyph_legend_title='Map Legend', label_fontsize=7)\n",
+    "\n",
+    "# Add inequalities to shape legend to emphasise limit/threshold approach to intervals.\n",
+    "for child in fig.axes[0].get_children():\n",
+    "    if type(child)==text.Annotation:\n",
+    "        if child.get_text()[0] == '-':\n",
+    "            child.set_text('$<$' + child.get_text())\n",
+    "        else:\n",
+    "            try: \n",
+    "                value = int(child.get_text()[0])\n",
+    "                if value != 0:\n",
+    "                    child.set_text('$\\geq$' + child.get_text())\n",
+    "            except:\n",
+    "                pass\n",
+    "\n",
+    "fig.suptitle('Maximum daily temperatures in cities with at least 1M residents on 15th July 2023', y=0.92)\n",
+    "\n",
+    "plt.text(x=0.145,\n",
+    "        y=0.07, \n",
+    "        s=\"Weather data from open-meteo.com (10.5281/zenodo.8112599) - City data from geonames.org - Visualisation by CUSP London\", \n",
+    "        transform=fig.transFigure, \n",
+    "        fontsize=8)\n",
+    "\n",
+    "fig.set_size_inches(10, 6.5)\n"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "vizent-env",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.3"
+  },
+  "orig_nbformat": 4
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

@@ -1,0 +1,75 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Vizent glyphs with Matplotlib elements"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from vizent import vizent_plot\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "\n",
+    "# Let's take an example of a vizent plot and add to it\n",
+    "\n",
+    "x = [0.05,0.35,0.75,0.9,1.35,1.55,1.85]\n",
+    "y = [(1 + np.sin(2 * np.pi * i)) for i in x]\n",
+    "color_values = [0,3,7,2,-1,10,6]\n",
+    "shape_values = [1,2,3,2.3,0,3,2]\n",
+    "size = [30,30,30,30,30,30,30]\n",
+    "\n",
+    "# Assign the output of the function to fig, ax as shown\n",
+    "\n",
+    "fig = vizent_plot(x, y, color_values, shape_values, size, \n",
+    "                  colormap=\"rainbow\", shape_label=\"shape\", \n",
+    "                  color_label=\"color\", return_axes=True, \n",
+    "                  title=\"An example of adding to your plot\")\n",
+    "\n",
+    "# Let's add a line to the plot\n",
+    "\n",
+    "t = np.arange(0.0, 2.0, 0.01)\n",
+    "s = 1 + np.sin(2 * np.pi * t)\n",
+    "\n",
+    "# Adjust zorder to control whether line is behind or in front of points, \n",
+    "# background image etc. In this case, zorder=0 places the line behind the \n",
+    "# points while zorder=1 would place it in front. If using a background\n",
+    "# image, zorder=0.5 places the line in front of the background image, \n",
+    "# but behind the points.\n",
+    "\n",
+    "ax = fig.axes[1]\n",
+    "ax.plot(t, s, zorder=0)\n",
+    "\n",
+    "# Let's also add a text box with some additional information, such as the \n",
+    "# data source\n",
+    "\n",
+    "props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)\n",
+    "text = \"Source: Some Official Data Source\"\n",
+    "\n",
+    "# Text box position can be adjusted\n",
+    "\n",
+    "ax.text(0.05, -0.1, text, transform=ax.transAxes, fontsize=14,\n",
+    "        verticalalignment='top', bbox=props)\n",
+    "\n",
+    "# And you can adjust the space around the subplot to ensure the text box\n",
+    "# is shown if it is outside of the axes\n",
+    "\n",
+    "plt.subplots_adjust(bottom=0.15)"
+   ]
+  }
+ ],
+ "metadata": {
+  "language_info": {
+   "name": "python"
+  },
+  "orig_nbformat": 4
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

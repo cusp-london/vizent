@@ -1,0 +1,644 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>API reference &#8212; vizent 1.1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/css/style.css?v=86e00652" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=52b0a0d4"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'vizent';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Using Mapbox for background map tiles for a bus route" href="gallery-bus-routes.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/vizent_logo_thumbnail.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/vizent_logo_thumbnail.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="index.html">Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="getting_started.html">Getting Started</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="user_guide.html">User Guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="vizent.html">Reference</a>
+  </li>
+</ul></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cusp-london/vizent" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-github-square fa-xl"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/cusplondon" title="Twitter" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-twitter-square fa-xl"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="index.html">Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="getting_started.html">Getting Started</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="user_guide.html">User Guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="vizent.html">Reference</a>
+  </li>
+</ul></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cusp-london/vizent" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-github-square fa-xl"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/cusplondon" title="Twitter" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-twitter-square fa-xl"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">API reference</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="module-vizent">
+<span id="api-reference"></span><h1>API reference<a class="headerlink" href="#module-vizent" title="Permalink to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="vizent.add_glyphs">
+<span class="sig-prename descclassname"><span class="pre">vizent.</span></span><span class="sig-name descname"><span class="pre">add_glyphs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colormap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_diverges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sine'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sine'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_neg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'square'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_spread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_spread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'color'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shape'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'glyphs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_dp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'closest'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_marker_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_fontsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vizent.add_glyphs" title="Permalink to this definition">#</a></dt>
+<dd><p>Add glyphs/nodes to the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>tuple</em><em> (</em><em>matplotlib.figure</em><em>, </em><em>matplotlib.axes.Axes</em><em>,     </em><em>matplotlib.axes.Axes</em><em>, </em><em>matplotlib.axes.Axes</em><em>, </em><em>Numerical</em><em>)</em>) – The tuple of matplotlib figure and axes objects returned by     <code class="code docutils literal notranslate"><span class="pre">create_plot()</span></code>.</p></li>
+<li><p><strong>x_values</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Positions of glyphs on the x-axis.</p></li>
+<li><p><strong>y_values</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Positions of glyphs on the y-axis.</p></li>
+<li><p><strong>color_values</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – The values to be represented by the color of each     glyph.</p></li>
+<li><p><strong>shape_values</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – the list of values to be represented by the outer     shape of each glyph.</p></li>
+<li><p><strong>size_values</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em>(</em><em>n</em><em>,</em><em>)</em>) – the list of values in points for the diameter of each     glyph.</p></li>
+<li><p><strong>colormap</strong> (<em>matplotlib.colors.Colormap</em><em> or </em><em>str</em><em>, </em><em>optional</em>) – the matplotlib colormap to be used. The default is     <code class="code docutils literal notranslate"><span class="pre">viridis</span></code>.</p></li>
+<li><p><strong>scale_diverges</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If <code class="code docutils literal notranslate"><span class="pre">True</span></code>, diverging sets of glyphs are used     for positive and negative values. If not specified, your scale will diverge    if both positive and negative values are included for the shape variable.</p></li>
+<li><p><strong>shape</strong> (<code class="code docutils literal notranslate"><span class="pre">'sine'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'saw'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'reverse_saw'</span></code>,     <code class="code docutils literal notranslate"><span class="pre">'square'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'triangular'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'concave'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'star'</span></code>.) – Glyph shape design to use for non-divergent scales. Default     <code class="code docutils literal notranslate"><span class="pre">'sine'</span></code>.</p></li>
+<li><p><strong>shape_pos</strong> (<code class="code docutils literal notranslate"><span class="pre">'sine'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'saw'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'reverse_saw'</span></code>,     <code class="code docutils literal notranslate"><span class="pre">'square'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'triangular'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'concave'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'star'</span></code>) – When using divergent scale, glyph shape design to use     for positive values. Options as for shape. Default <code class="code docutils literal notranslate"><span class="pre">'sine'</span></code>.</p></li>
+<li><p><strong>shape_neg</strong> (<code class="code docutils literal notranslate"><span class="pre">'sine'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'saw'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'reverse_saw'</span></code>,     <code class="code docutils literal notranslate"><span class="pre">'square'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'triangular'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'concave'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'star'</span></code>) – When using divergent scale, glyph shape design to use for     negative values. Options as for shape. Default <code class="code docutils literal notranslate"><span class="pre">'square'</span></code>.</p></li>
+<li><p><strong>color_max</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum color value in the legend.</p></li>
+<li><p><strong>color_min</strong> (<em>float</em><em>, </em><em>optional</em>) – The minimum color value in the legend.</p></li>
+<li><p><strong>color_n</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of color values to show in the legend. If not     set, a colorbar will be used representing a continuous colour scale.</p></li>
+<li><p><strong>color_spread</strong> (<em>float</em><em>, </em><em>optional</em>) – Range of color values in key. Only used if not     specifying both max and min.</p></li>
+<li><p><strong>shape_max</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum shape value in the legend.</p></li>
+<li><p><strong>shape_min</strong> (<em>float</em><em>, </em><em>optional</em>) – The minimum shape value in the legend.</p></li>
+<li><p><strong>shape_n</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of shape values to show in the legend.</p></li>
+<li><p><strong>shape_spread</strong> (<em>float</em><em>, </em><em>optional</em>) – Range of shape values in key. Only used if not     specifying both max and min.</p></li>
+<li><p><strong>color_label</strong> (<em>str</em><em>, </em><em>optional</em>) – The title for the color component of the legend.     Defaults to <code class="code docutils literal notranslate"><span class="pre">'color'</span></code>.</p></li>
+<li><p><strong>shape_label</strong> (<em>str</em><em>, </em><em>optional</em>) – The title for the shape component of the legend.     Defaults to <code class="code docutils literal notranslate"><span class="pre">'shape'</span></code>.</p></li>
+<li><p><strong>legend_title</strong> (<em>str</em><em>, </em><em>optional</em>) – The main title for the glyph legend. Defaults to     <code class="code docutils literal notranslate"><span class="pre">'glyphs'</span></code>.</p></li>
+<li><p><strong>scale_dp</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of decimal places to round to for legend     values. Defaults to <code class="code docutils literal notranslate"><span class="pre">2</span></code>.</p></li>
+<li><p><strong>interval_type</strong> ((<code class="code docutils literal notranslate"><span class="pre">'closest'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'limit'</span></code>)) – Defines how the shape of each glyph is determined     from its value. <code class="code docutils literal notranslate"><span class="pre">'closest'</span></code> uses the closest scale value,     <code class="code docutils literal notranslate"><span class="pre">limit</span></code> uses the highest scale value that the glyph value is greater    than or equal to (using absolute values for negative values). Defaults to     <code class="code docutils literal notranslate"><span class="pre">'closest'</span></code>.</p></li>
+<li><p><strong>legend_marker_size</strong> ((<code class="code docutils literal notranslate"><span class="pre">'auto'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'mean'</span></code>)) – This controls the diameter of the legend glyph     markers. <code class="code docutils literal notranslate"><span class="pre">'auto'</span></code> means the diameter is calculated automatically to     fit. <code class="code docutils literal notranslate"><span class="pre">'mean'</span></code> uses the mean diameter/size value of the plotted glyphs.</p></li>
+<li><p><strong>label_fontsize</strong> (<em>int</em><em>, </em><em>optional</em>) – Fontsize for legend labels. If not set, this will     be estimated based on the lengths of the labels.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of length n, containing the artist objects that constitute    the plotted glyphs.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of artists</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="vizent.add_lines">
+<span class="sig-prename descclassname"><span class="pre">vizent.</span></span><span class="sig-name descname"><span class="pre">add_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_starts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_starts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_ends</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_ends</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">striped_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'units'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colormap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'middle'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_spread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq_n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq_spread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'color'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'frequency'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lines'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_dp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'closest'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_marker_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zorder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_fontsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vizent.add_lines" title="Permalink to this definition">#</a></dt>
+<dd><p>Add lines/edges to the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>tuple</em><em> (</em><em>matplotlib.figure</em><em>, </em><em>matplotlib.axes.Axes</em><em>,     </em><em>matplotlib.axes.Axes</em><em>, </em><em>matplotlib.axes.Axes</em><em>, </em><em>Numerical</em><em>)</em>) – The tuple of matplotlib figure and axes objects returned by     <code class="code docutils literal notranslate"><span class="pre">create_plot()</span></code>.</p></li>
+<li><p><strong>x_starts</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – The x coordinates of the origin points of each line</p></li>
+<li><p><strong>y_starts</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – The y coordinates of the origin points of each line</p></li>
+<li><p><strong>x_ends</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – The x coordinates of the end points of each line</p></li>
+<li><p><strong>y_ends</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – The y coordinates of the end points of each line</p></li>
+<li><p><strong>color_values</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – The values to be represented by the color of each     line.</p></li>
+<li><p><strong>freq_values</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – The list of values to be represented by the central     stripe frequency.</p></li>
+<li><p><strong>width_values</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em>(</em><em>n</em><em>,</em><em>)</em>) – The list of values in points for the width of each     line.</p></li>
+<li><p><strong>striped_length</strong> (<em>float</em><em>, </em><em>optional</em>) – if using the style <code class="code docutils literal notranslate"><span class="pre">'set_length'</span></code>, the length    of the central stripe. Units determined by <code class="code docutils literal notranslate"><span class="pre">length_type</span></code>.     Defaults to <code class="code docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+<li><p><strong>length_type</strong> ((<code class="code docutils literal notranslate"><span class="pre">'units'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'pixels'</span></code>,     <code class="code docutils literal notranslate"><span class="pre">'proportion'</span></code>), optional) – The units to be used for stripe length.     <code class="code docutils literal notranslate"><span class="pre">'units'</span></code> uses axes units, <code class="code docutils literal notranslate"><span class="pre">'pixels'</span></code> uses the number of     pixels and <code class="code docutils literal notranslate"><span class="pre">'proportion'</span></code> uses the proportion of the line.</p></li>
+<li><p><strong>colormap</strong> (<em>matplotlib.colors.Colormap</em><em> or </em><em>str</em><em>, </em><em>optional</em>) – the matplotlib colormap to be used. Defaults to     <code class="code docutils literal notranslate"><span class="pre">viridis</span></code>.</p></li>
+<li><p><strong>style</strong> ((<code class="code docutils literal notranslate"><span class="pre">'middle'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'ends'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'source'</span></code>,     <code class="code docutils literal notranslate"><span class="pre">'destination'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'set_length'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'frequency'</span></code>,     <code class="code docutils literal notranslate"><span class="pre">'off'</span></code>), optional.) – The length and positioning style of the striped area.     <code class="code docutils literal notranslate"><span class="pre">'middle'</span></code> generates a striped area centred on the line/edge where     with length of striped area 1/3 of edge length. <code class="code docutils literal notranslate"><span class="pre">'ends'</span></code>     generates a striped area at each end of the line/edge with length of     striped area 1/4 of total edge length. <code class="code docutils literal notranslate"><span class="pre">'source'</span></code>     generates a striped area at the source of the line, 1/2 of the total edge     length. <code class="code docutils literal notranslate"><span class="pre">'destination'</span></code> generates a striped area at the line     destination, where the striped area is 1/2 of the total edge length.     <code class="code docutils literal notranslate"><span class="pre">'set_length'</span></code> generates a striped area at the centre of the line,     with the length specified by user via the <code class="code docutils literal notranslate"><span class="pre">striped_length</span></code> parameter,    <code class="code docutils literal notranslate"><span class="pre">'frequency'</span></code> generates a striped area at the centre of the line,     1/3 edge length. Instead of a set number of stripes, this uses the number     of stripes per unit length, matched to the legend. <code class="code docutils literal notranslate"><span class="pre">'off'</span></code> turns off     the striped area. Defaults to <code class="code docutils literal notranslate"><span class="pre">'middle'</span></code>.</p></li>
+<li><p><strong>color_max</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum color value in the legend.</p></li>
+<li><p><strong>color_min</strong> (<em>float</em><em>, </em><em>optional</em>) – The minimum color value in the legend.</p></li>
+<li><p><strong>color_n</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of color values to show in the legend.</p></li>
+<li><p><strong>color_spread</strong> (<em>float</em><em>, </em><em>optional</em>) – Range of color values in key. Only used if not     specifying both max and min.</p></li>
+<li><p><strong>freq_max</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum frequency value in the legend.</p></li>
+<li><p><strong>freq_min</strong> (<em>float</em><em>, </em><em>optional</em>) – The minimum frequency value in the legend.</p></li>
+<li><p><strong>freq_n</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of frequency values to show in the legend.</p></li>
+<li><p><strong>freq_spread</strong> (<em>float</em><em>, </em><em>optional</em>) – Range of frequency values in key. Only used if not     specifying both max and min.</p></li>
+<li><p><strong>color_label</strong> (<em>str</em><em>, </em><em>optional</em>) – The title for the color component of the legend.     Defaults to <code class="code docutils literal notranslate"><span class="pre">'color'</span></code>.</p></li>
+<li><p><strong>freq_label</strong> – The title for the frequency component of the legend.     Defaults to <code class="code docutils literal notranslate"><span class="pre">'frequency'</span></code>.</p></li>
+<li><p><strong>legend_title</strong> (<em>str</em><em>, </em><em>optional</em>) – The main title for the glyph legend. Defaults to     <code class="code docutils literal notranslate"><span class="pre">'lines'</span></code>.</p></li>
+<li><p><strong>scale_dp</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of decimal places to round to for legend     values. Defaults to <code class="code docutils literal notranslate"><span class="pre">2</span></code>.</p></li>
+<li><p><strong>interval_type</strong> ((<code class="code docutils literal notranslate"><span class="pre">'closest'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'limit'</span></code>)) – Defines how the frequency of each line is determined     from its value. <code class="code docutils literal notranslate"><span class="pre">'closest'</span></code> uses the closest scale value,     <code class="code docutils literal notranslate"><span class="pre">limit</span></code> uses the highest scale value that the frequency value is greater    than or equal to (using absolute values for negative values). Defaults to     <code class="code docutils literal notranslate"><span class="pre">'closest'</span></code>.</p></li>
+<li><p><strong>legend_marker_size</strong> ((<code class="code docutils literal notranslate"><span class="pre">'auto'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'mean'</span></code>)) – This controls the width of the legend line     markers. <code class="code docutils literal notranslate"><span class="pre">'auto'</span></code> means the width is calculated automatically to     fit. <code class="code docutils literal notranslate"><span class="pre">'mean'</span></code> uses the mean width value of the plotted lines.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of length n, containing the artist objects that constitute    the plotted lines.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of artists</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="vizent.create_plot">
+<span class="sig-prename descclassname"><span class="pre">vizent.</span></span><span class="sig-name descname"><span class="pre">create_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_glyphs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cartopy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cartopy_projection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vizent.create_plot" title="Permalink to this definition">#</a></dt>
+<dd><p>Create the figure used to plot glyphs and/or lines. This function
+must be executed first, and the output is used as an input to all
+other functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>use_glyphs</strong> (<em>boolean</em><em>, </em><em>optional</em>) – Set True if glyphs are to be plotted, defaults to True.</p></li>
+<li><p><strong>use_lines</strong> (<em>boolean</em><em>, </em><em>optional</em>) – Set True if lines are to be plotted, defaults to True.</p></li>
+<li><p><strong>show_legend</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If True, show legends for glyphs/lines as included,         defaults to True.</p></li>
+<li><p><strong>show_axes</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If True, show axis labels, defaults to True</p></li>
+<li><p><strong>use_cartopy</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If True, use Cartopy to generate a map background.         Must specify extent if used. Defaults to False.</p></li>
+<li><p><strong>use_image</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If True, use an image as a background. Must specify         extent if used. Defaults to False.</p></li>
+<li><p><strong>image_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Use either pre-packaged images or a user supplied image        as a background, defaults to None. <code class="code docutils literal notranslate"><span class="pre">newcastle</span></code> provides a         detailed 3D rendered image of Newcastle Upon Tyne (available for         limited coordinates). <code class="code docutils literal notranslate"><span class="pre">england</span></code> provides a map of England from         OpenStreetMap. <code class="code docutils literal notranslate"><span class="pre">filepath</span></code> can also be provided for any user         supplied image.</p></li>
+<li><p><strong>extent</strong> (<em>list</em><em>, </em><em>optional</em>) – Axis limits or extent of coordinates for Cartopy. A list of         four values in the form: <code class="code docutils literal notranslate"><span class="pre">[xmin,</span> <span class="pre">xmax,</span> <span class="pre">ymin,</span> <span class="pre">ymax]</span></code>.</p></li>
+<li><p><strong>scale_x</strong> (<em>int</em><em>, </em><em>optional</em>) – Width of plot window in inches</p></li>
+<li><p><strong>scale_y</strong> (<em>int</em><em>, </em><em>optional</em>) – Height of plot window in inches</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple containing:
+<code class="code docutils literal notranslate"><span class="pre">fig</span></code> Matplotlib figure object which will contain the axes.        <code class="code docutils literal notranslate"><span class="pre">ax1</span></code> The matplotlib axes object for the main plot.        <code class="code docutils literal notranslate"><span class="pre">ax2</span></code> The matplotlib axes object used for the glyph legend.        <code class="code docutils literal notranslate"><span class="pre">ax3</span></code> The matplotlib axes object used for the line legend.        <code class="code docutils literal notranslate"><span class="pre">asp</span></code> The aspect ratio of the main plot area (necessary to         ensure the legends display correctly when using image or map        backgrounds).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(matplotlib.figure, matplotlib.axes.Axes, matplotlib.axes.Axes,         matplotlib.axes.Axes, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="vizent.return_figure">
+<span class="sig-prename descclassname"><span class="pre">vizent.</span></span><span class="sig-name descname"><span class="pre">return_figure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'vizent_plot_save'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vizent.return_figure" title="Permalink to this definition">#</a></dt>
+<dd><p>Return the created figure by your chosen method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fig</strong> – The tuple of matplotlib figure and axes objects returned by     <code class="code docutils literal notranslate"><span class="pre">create_plot()</span></code>.</p></li>
+<li><p><strong>return_type</strong> (<code class="code docutils literal notranslate"><span class="pre">'show'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'save'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'return'</span></code>) – The method for return the created plot. <code class="code docutils literal notranslate"><span class="pre">'show'</span></code>    displays the figure, <code class="code docutils literal notranslate"><span class="pre">'save'</span></code> saves the figure without displaying,     <code class="code docutils literal notranslate"><span class="pre">'return'</span></code> returns the axes for use with Matplotlib.</p></li>
+<li><p><strong>file_name</strong> (<em>str</em><em>, </em><em>optional</em>) – if return_type is “save”, the file name for your saved     file. This can be any format supported by Matplotlib. If no file     extension is included, .png is used by default. Default is     <code class="code docutils literal notranslate"><span class="pre">'vizent_plot_save'</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Matplotlib figure, if specified</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>maptlotlib.figure or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="vizent.vizent_plot">
+<span class="sig-prename descclassname"><span class="pre">vizent.</span></span><span class="sig-name descname"><span class="pre">vizent_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_start_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_end_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_frequencies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_widths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cartopy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cartopy_projection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colormap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_diverges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sine'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sine'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_neg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'square'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_spread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_spread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'closest'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'color'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shape'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glyph_legend_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'glyphs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_striped_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_length_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'units'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_colormap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'middle'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_color_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_color_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_color_n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_color_spread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_freq_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_freq_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_freq_n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_freq_spread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_interval_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'closest'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_color_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'color'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_frequency_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'frequency'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_legend_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lines'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_dp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_fontsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_spread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vizent.vizent_plot" title="Permalink to this definition">#</a></dt>
+<dd><p>Convenience function for implementing the vizent pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_values</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em><em>, </em><em>optional</em>) – Positions of glyphs on the x-axis</p></li>
+<li><p><strong>y_values</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em><em>, </em><em>optional</em>) – Positions of glyphs on the y-axis</p></li>
+<li><p><strong>color_values</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em><em>, </em><em>optional</em>) – The values to be represented by the color of each     glyph</p></li>
+<li><p><strong>shape_values</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em><em>, </em><em>optional</em>) – the list of values to be represented by the outer     shape of each glyph</p></li>
+<li><p><strong>size_values</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em>(</em><em>n</em><em>,</em><em>)</em><em>, </em><em>optional</em>) – the list of values in points for the diameter of each     glyph</p></li>
+<li><p><strong>edge_start_points</strong> (<em>array-like</em><em>, </em><em>shape</em><em>(</em><em>n</em><em>,</em><em>2</em><em>)</em><em>, </em><em>optional</em>) – (x,y) coordinates for each line origin</p></li>
+<li><p><strong>edge_end_points</strong> (<em>array-like</em><em>, </em><em>shape</em><em>(</em><em>n</em><em>,</em><em>2</em><em>)</em><em>, </em><em>optional</em>) – (x,y) coordinates for each line end point</p></li>
+<li><p><strong>edge_colors</strong> – The values to be represented by the color of each     line.</p></li>
+<li><p><strong>edge_frequencies</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em><em>, </em><em>optional</em>) – The list of values to be represented by the central     stripe frequency.</p></li>
+<li><p><strong>edge_widths</strong> (<em>float</em><em> or </em><em>array-like</em><em>, </em><em>shape</em><em>(</em><em>n</em><em>,</em><em>)</em><em>, </em><em>optional</em>) – The list of values in points for the width of each     line.</p></li>
+<li><p><strong>image_file</strong> (<em>str</em><em>, </em><em>optional.</em>) – filepath to a user-supplied image-file to be used as a     background image for the plot.</p></li>
+<li><p><strong>use_cartopy</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If True, use Cartopy to generate a map background.     Must specify extent if used. Defaults to False.</p></li>
+<li><p><strong>extent</strong> – Axis limits or extent of coordinates for Cartopy. A list of    four values in the form: <code class="code docutils literal notranslate"><span class="pre">[xmin,</span> <span class="pre">xmax,</span> <span class="pre">ymin,</span> <span class="pre">ymax]</span></code>.</p></li>
+<li><p><strong>colormap</strong> (<em>matplotlib.colors.Colormap</em><em> or </em><em>str</em><em>, </em><em>optional</em>) – the matplotlib colormap to be used for the glyphs.     The default is <code class="code docutils literal notranslate"><span class="pre">viridis</span></code>.</p></li>
+<li><p><strong>scale_diverges</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If <code class="code docutils literal notranslate"><span class="pre">True</span></code>, diverging sets of glyphs are used     for positive and negative values. If not specified, your scale will diverge    if both positive and negative values are included for the shape variable.</p></li>
+<li><p><strong>shape</strong> (<code class="code docutils literal notranslate"><span class="pre">'sine'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'saw'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'reverse_saw'</span></code>,     <code class="code docutils literal notranslate"><span class="pre">'square'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'triangular'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'concave'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'star'</span></code>.) – Glyph shape design to use for non-divergent scales. Default     <code class="code docutils literal notranslate"><span class="pre">'sine'</span></code>.</p></li>
+<li><p><strong>shape_pos</strong> (<code class="code docutils literal notranslate"><span class="pre">'sine'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'saw'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'reverse_saw'</span></code>,     <code class="code docutils literal notranslate"><span class="pre">'square'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'triangular'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'concave'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'star'</span></code>) – When using divergent scale, glyph shape design to use     for positive values. Options as for shape. Default <code class="code docutils literal notranslate"><span class="pre">'sine'</span></code>.</p></li>
+<li><p><strong>shape_neg</strong> (<code class="code docutils literal notranslate"><span class="pre">'sine'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'saw'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'reverse_saw'</span></code>,     <code class="code docutils literal notranslate"><span class="pre">'square'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'triangular'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'concave'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'star'</span></code>) – When using divergent scale, glyph shape design to use for     negative values. Options as for shape. Default <code class="code docutils literal notranslate"><span class="pre">'square'</span></code>.</p></li>
+<li><p><strong>color_max</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum color value in the glyph legend.</p></li>
+<li><p><strong>color_min</strong> (<em>float</em><em>, </em><em>optional</em>) – The minimum color value in the glyph legend.</p></li>
+<li><p><strong>color_n</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of color values to show in the glyph legend.</p></li>
+<li><p><strong>color_spread</strong> (<em>float</em><em>, </em><em>optional</em>) – Range of color values in glyph legend. Only used if not     specifying both max and min.</p></li>
+<li><p><strong>shape_max</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum shape value in the glyph legend.</p></li>
+<li><p><strong>shape_min</strong> (<em>float</em><em>, </em><em>optional</em>) – The minimum shape value in the glyph legend.</p></li>
+<li><p><strong>shape_n</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of shape values to show in the glyph  legend.</p></li>
+<li><p><strong>shape_spread</strong> (<em>float</em><em>, </em><em>optional</em>) – Range of shape values in glyph legend. Only used if not     specifying both max and min.</p></li>
+<li><p><strong>color_label</strong> (<em>str</em><em>, </em><em>optional</em>) – The title for the color component of the glyph legend.     Defaults to <code class="code docutils literal notranslate"><span class="pre">'color'</span></code>.</p></li>
+<li><p><strong>shape_label</strong> (<em>str</em><em>, </em><em>optional</em>) – The title for the shape component of the glyph legend.     Defaults to <code class="code docutils literal notranslate"><span class="pre">'shape'</span></code>.</p></li>
+<li><p><strong>glyph_legend_title</strong> (<em>str</em><em>, </em><em>optional</em>) – The main title for the glyph legend. Defaults to     <code class="code docutils literal notranslate"><span class="pre">'glyphs'</span></code>.</p></li>
+<li><p><strong>edge_striped_length</strong> (<em>float</em><em>, </em><em>optional</em>) – if using the style <code class="code docutils literal notranslate"><span class="pre">'set_length'</span></code>, the     length of the central stripe. Units determined by <code class="code docutils literal notranslate"><span class="pre">length_type</span></code>.     Defaults to <code class="code docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+<li><p><strong>edge_length_type</strong> ((<code class="code docutils literal notranslate"><span class="pre">'units'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'pixels'</span></code>,     <code class="code docutils literal notranslate"><span class="pre">'proportion'</span></code>), optional) – The units to be used for stripe length.     <code class="code docutils literal notranslate"><span class="pre">'units'</span></code> uses axes units, <code class="code docutils literal notranslate"><span class="pre">'pixels'</span></code> uses the number of     pixels and <code class="code docutils literal notranslate"><span class="pre">'proportion'</span></code> uses the proportion of the line.</p></li>
+<li><p><strong>edge_colormap</strong> (<em>matplotlib.colors.Colormap</em><em> or </em><em>str</em><em>, </em><em>optional</em>) – the matplotlib colormap to be used. Defaults to     <code class="code docutils literal notranslate"><span class="pre">viridis</span></code>.</p></li>
+<li><p><strong>edge_style</strong> ((<code class="code docutils literal notranslate"><span class="pre">'middle'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'ends'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'source'</span></code>,     <code class="code docutils literal notranslate"><span class="pre">'destination'</span></code>), optional.) – The length and positioning style of the striped area.     <code class="code docutils literal notranslate"><span class="pre">'middle'</span></code> generates a striped area centred on the line/edge where     with length of striped area 1/3 of edge length. <code class="code docutils literal notranslate"><span class="pre">'ends'</span></code>     generates a striped area at each end of the line/edge with length of     striped area 1/4 of total edge length. <code class="code docutils literal notranslate"><span class="pre">'source'</span></code>     generates a striped area at the source of the line, 1/2 of the total edge     length. <code class="code docutils literal notranslate"><span class="pre">'destination'</span></code> generates a striped area at the line     destination, where the striped area is 1/2 of the total edge length.     <code class="code docutils literal notranslate"><span class="pre">'set_length'</span></code> generates a striped area at the centre of the line,     with the length specified by user via the <code class="code docutils literal notranslate"><span class="pre">edge_striped_length</span></code> parameter,    <code class="code docutils literal notranslate"><span class="pre">'frequency'</span></code> generates a striped area at the centre of the line,     1/3 edge length. Instead of a set number of stripes, this uses the number     of stripes per unit length, matched to the legend. Defaults to     <code class="code docutils literal notranslate"><span class="pre">'middle'</span></code>.</p></li>
+<li><p><strong>edge_color_max</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum color value in the legend.</p></li>
+<li><p><strong>edge_color_min</strong> (<em>float</em><em>, </em><em>optional</em>) – The minimum color value in the legend.</p></li>
+<li><p><strong>edge_color_n</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of color values to show in the legend.</p></li>
+<li><p><strong>edge_color_spread</strong> (<em>float</em><em>, </em><em>optional</em>) – Range of color values in key. Only used if not     specifying both max and min.</p></li>
+<li><p><strong>edge_freq_max</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum frequency value in the legend.</p></li>
+<li><p><strong>edge_freq_min</strong> (<em>float</em><em>, </em><em>optional</em>) – The minimum frequency value in the legend.</p></li>
+<li><p><strong>edge_freq_n</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of frequency values to show in the legend.</p></li>
+<li><p><strong>edge_freq_spread</strong> (<em>float</em><em>, </em><em>optional</em>) – Range of frequency values in key. Only used if not     specifying both max and min.</p></li>
+<li><p><strong>edge_color_label</strong> (<em>str</em><em>, </em><em>optional</em>) – The title for the color component of the legend.     Defaults to <code class="code docutils literal notranslate"><span class="pre">'color'</span></code>.</p></li>
+<li><p><strong>edge_frequency_label</strong> (<em>str</em><em>, </em><em>optional</em>) – The title for the frequency component of the legend.     Defaults to <code class="code docutils literal notranslate"><span class="pre">'frequency'</span></code>.</p></li>
+<li><p><strong>edge_legend_title</strong> (<em>str</em><em>, </em><em>optional</em>) – The main title for the glyph legend. Defaults to     <code class="code docutils literal notranslate"><span class="pre">'lines'</span></code>.</p></li>
+<li><p><strong>scale_dp</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of decimal places to round to for legend     values. Defaults to <code class="code docutils literal notranslate"><span class="pre">2</span></code>.</p></li>
+<li><p><strong>label_fontsize</strong> – If set, will set all legend labels to this     fontsize. Otherwise, the fontsize will be estimated automatically based on    the length of the labels.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Matplotlib figure</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>maptlotlib.figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vizent.add_glyphs"><code class="docutils literal notranslate"><span class="pre">add_glyphs()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vizent.add_lines"><code class="docutils literal notranslate"><span class="pre">add_lines()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vizent.create_plot"><code class="docutils literal notranslate"><span class="pre">create_plot()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vizent.return_figure"><code class="docutils literal notranslate"><span class="pre">return_figure()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vizent.vizent_plot"><code class="docutils literal notranslate"><span class="pre">vizent_plot()</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="_sources/vizent.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  <p class="copyright">
+    
+      © Copyright 2023, CUSP London, Lucy McLaughlin.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
