@@ -218,7 +218,7 @@ plt.close()
 ## Release History
 
 * 1.0 First release 24/02/2021
-* 1.1 Added vizent network edges 31/07/2023
+* 1.1 Added vizent network edges 13/09/2023
 
 ## Meta
 
