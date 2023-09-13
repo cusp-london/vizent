@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 
-from vizent.vizent_plot import create_plot, add_point, add_line, \
+from vizent.vizent_plot import create_plot, add_point, add_line_frequency, \
     add_glyph_legend, add_line_legend, add_glyphs, add_lines, return_figure, \
     vizent_plot
 from vizent.scales import get_color_scale, get_shape_scale, \
@@ -88,8 +88,7 @@ def test_add_point():
                             frequency=10,
                             color='y',
                             size=200,
-                            ax=ax, 
-                            transform_to_figure_coords=False)
+                            ax=ax)
 
     ax.axis('off')
 
@@ -113,31 +112,31 @@ def test_add_point():
     os.remove(tmp_file_add_point)
 
 
-def test_add_line():
+def test_add_line_frequency():
 
     fig = plt.Figure(figsize=(6.4,4.8))
     ax = fig.add_subplot(111)
 
-    return_dict = add_line(x_origin=0,
-                           y_origin=0,
-                           x_end=1,
-                           y_end=1,
-                           frequency=10,
-                           color='r',
-                           width=5,
-                           ax=ax,
-                           style='middle',
-                           freq_n=None,
-                           color_n=None,
-                           striped_length=None,
-                           length_type=None,
-                           ax_w=ax.bbox.width,
-                           ax_h=ax.bbox.height,
-                           zorder=1)
+    ax.plot([0, 1], [0, 1], color='r', linewidth=5, solid_capstyle='butt', zorder=1)
+    
+    return_dict = add_line_frequency(x_origin=0,
+                                    y_origin=0,
+                                    x_end=1,
+                                    y_end=1,
+                                    frequency=10,
+                                    width=5,
+                                    ax=ax,
+                                    style='middle',
+                                    freq_n=None,
+                                    color_n=None,
+                                    striped_length=None,
+                                    length_type=None,
+                                    ax_w=ax.bbox.width,
+                                    ax_h=ax.bbox.height,
+                                    zorder=1)
     
     ax.axis('off')
 
-    assert type(return_dict['main_line']) == matplotlib.lines.Line2D
     for line in return_dict['striped_base_lines']:
         assert type(line) == matplotlib.lines.Line2D
     for line in return_dict['striped_white_lines']:
@@ -164,25 +163,28 @@ def test_add_line_pixel_length():
     fig = plt.Figure(figsize=(4,2))
     ax = fig.add_subplot(111)
     ax.axis([-0.2,1.2,-0.2,1.2])
+    ax.set_aspect('equal', 'datalim')
+    
+    ax.plot([0, 1], [0, 1], color='r', linewidth=5, solid_capstyle='butt', zorder=1)
+    ax.apply_aspect()
+    
+    return_dict = add_line_frequency(x_origin=0,
+                                    y_origin=0,
+                                    x_end=1,
+                                    y_end=1,
+                                    frequency=2,
+                                    width=5,
+                                    ax=ax,
+                                    style='set_length',
+                                    freq_n=None,
+                                    color_n=None,
+                                    striped_length=20,
+                                    length_type='pixels',
+                                    ax_w=ax.bbox.width,
+                                    ax_h=ax.bbox.height,
+                                    zorder=1)
+    ax.axis('off')
 
-    return_dict = add_line(x_origin=0,
-                           y_origin=0,
-                           x_end=1,
-                           y_end=1,
-                           frequency=2,
-                           color='r',
-                           width=5,
-                           ax=ax,
-                           style='set_length',
-                           freq_n=None,
-                           color_n=None,
-                           striped_length=20,
-                           length_type='pixels',
-                           ax_w=ax.bbox.width,
-                           ax_h=ax.bbox.height,
-                           zorder=1)
-
-    assert type(return_dict['main_line']) == matplotlib.lines.Line2D
     for line in return_dict['striped_base_lines']:
         assert type(line) == matplotlib.lines.Line2D
     for line in return_dict['striped_white_lines']:
