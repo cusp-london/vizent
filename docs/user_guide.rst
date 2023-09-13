@@ -156,3 +156,10 @@ star
   :alt: star glyphs
 
 
+Line Samples
+************
+
+Default sample lines for a variety of frequency values are shown below. The left-most line is used when the data contains numpy.nan (i.e. for missing data).
+
+.. image:: _static/lines_sample.png
+  :alt: default lines
