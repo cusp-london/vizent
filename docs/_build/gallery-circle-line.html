@@ -512,7 +512,13 @@ document.write(`
 <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;London Tube, Circle Line, Annual Performance.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span>
              <span class="s2">&quot;Total passenger numbers 2018, and </span><span class="si">% c</span><span class="s2">hange from 2017,&quot;</span><span class="o">+</span><span class="s2">&quot; normal line running time (min) and % peak delay, 2011&quot;</span><span class="p">,</span>
                <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-</pre></div>
+
+
+<span class="c1"># When saving this image, a DPI of 192 generates a file of 3,840 x 2,160 pixels (i.e. UHD quality).</span>
+<span class="c1"># This can be done with the following lines:</span>
+<span class="c1"># fileDPI = 192</span>
+<span class="c1"># plt.savefig( fileName, dpi=fileDPI )</span>
+<br/></pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
