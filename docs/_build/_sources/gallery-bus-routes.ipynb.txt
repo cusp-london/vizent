@@ -141,7 +141,9 @@
    "source": [
     "© [Mapbox](https://www.mapbox.com/about/maps/) © [OpenStreetMap](http://www.openstreetmap.org/copyright) [Improve this map](https://www.mapbox.com/map-feedback/)\n",
     "\n",
-    "Powered by TfL Open Data. Contains OS data © Crown copyright and database rights 2016 and Geomni UK Map data © and database rights [2019]  "
+    "Powered by TfL Open Data. Contains OS data © Crown copyright and database rights 2016 and Geomni UK Map data © and database rights [2019]  \n",
+    "\n",
+    "[Link to image](_images/gallery-bus-routes_1_1.png)"
    ]
   }
  ],

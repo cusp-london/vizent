@@ -29,9 +29,7 @@
     "                  image_file=\"../vizent/images/england_map.png\", \n",
     "                  extent=[-6, 2, 49.9, 56])\n",
     "\n",
-    "fig.subplots_adjust(top=0.9)\n",
-    "\n",
-    "title= fig.suptitle(\"COVID19 daily case count and 7 day difference \\n English regions, 5th January 2021\", y=0.94)"
+    "title= fig.suptitle(\"COVID19 daily case count and 7 day difference. English regions, 5th January 2021\", y=0.94)"
    ]
   },
   {
