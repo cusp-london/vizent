@@ -1,4 +1,4 @@
-<img align="left" width="100" height="100" src="docs/_static/vizent_logo_thumbnail.png">
+<img align="left" width="100" height="100" src="https://github.com/cusp-london/vizent/raw/main/docs/_static/vizent_logo_thumbnail.png">
 
 # vizent
 
@@ -6,7 +6,7 @@
  
 ![build](https://github.com/cusp-london/vizent/actions/workflows/unit-tests-minimal.yml/badge.svg)
 
-> A python library for bivariate glyphs integrated with matplotlib
+> A python library for visualising bivariate data using glyphs and node-link diagrams with matplotlib
 
 This library allows the user to create scatter plots and node-link diagrams using Visual Entropy Glyphs[1] and network edges [2]. Vizent glyphs and network edges are designed to help when you need to add an extra variable to a scatter plot, map, or graph.
 
@@ -47,26 +47,32 @@ Optional dependencies:
 
 ## Using vizent
 
-Library documentation is available at: [TODO: Add readthedocs link]
+Library documentation is available at at: https://cusplondon.ac.uk/vizent
 
 ## Glyph Designs
 
 The available glyph shape designs are shown here in full. Value increases with frequency from left (lowest) to right (highest).
 
 ### sine
-![sine glyphs](docs/_static/glyphs/sine.png "sine glyphs")
+![sine glyphs](https://github.com/cusp-london/vizent/raw/main/docs/_static/glyphs/sine.png "sine glyphs")
 ### saw
-![saw glyphs](docs/_static/glyphs/saw.png "saw glyphs")
+![saw glyphs](https://github.com/cusp-london/vizent/raw/main/docs/_static/glyphs/saw.png "saw glyphs")
 ### reverse_saw
-![reverse_saw glyphs](docs/_static/glyphs/reverse_saw.png "reverse_saw glyphs")
+![reverse_saw glyphs](https://github.com/cusp-london/vizent/raw/main/docs/_static/glyphs/reverse_saw.png "reverse_saw glyphs")
 ### square
-![square glyphs](docs/_static/glyphs/square.png "square glyphs")
+![square glyphs](https://github.com/cusp-london/vizent/raw/main/docs/_static/glyphs/square.png "square glyphs")
 ### triangular
-![triangular glyphs](docs/_static/glyphs/triangular.png "triangular glyphs")
+![triangular glyphs](https://github.com/cusp-london/vizent/raw/main/docs/_static/glyphs/triangular.png "triangular glyphs")
 ### concave
-![concave glyphs](docs/_static/glyphs/concave.png "concave glyphs")
+![concave glyphs](https://github.com/cusp-london/vizent/raw/main/docs/_static/glyphs/concave.png "concave glyphs")
 ### star
-![star glyphs](docs/_static/glyphs/star.png "star glyphs")
+![star glyphs](https://github.com/cusp-london/vizent/raw/main/docs/_static/glyphs/star.png "star glyphs")
+
+## Edge Designs
+
+Default sample lines for a variety of frequency values are shown below. The left-most line is used when the data contains numpy.nan (i.e. for missing data).
+
+![Sample lines](https://github.com/cusp-london/vizent/raw/main/docs/_static/lines_sample.png)
 
 
 ## Examples
@@ -82,138 +88,67 @@ color_values = [0,3,6,9,12,15,18]
 shape_values= [0,1,2,3,4,5,6]
 size_values = [30,60,30,45,60,30,45]
 
-vizent_plot(x_values, y_values, color_values, shape_values, size_values,
-            color_label="color", shape_label="shape",
-            title="A plot with a title", x_label="This is the x axis",
-            y_label="This is the y axis")
-```
-![scatterplot image](examples/basic_example.png "scatterplot image")
+extent = [0, 9, 0, 9]
 
-### Create a map using Cartopy:
+fig = vizent_plot(x_values, y_values, color_values, shape_values, size_values,
+                  color_label="color", shape_label="shape", glyph_legend_title='Legend',
+                  extent=extent)
+
+fig.axes[1].set_xlabel('x')
+fig.axes[1].set_ylabel('y')
+```
+![scatterplot image](https://github.com/cusp-london/vizent/raw/main/docs/_build/_images/gallery-basic-scatterplot_1_1.png "scatterplot image")
+
+
+### Create a vizent plot with edges:
 
 ```python
-from vizent import vizent_plot
-import pandas as pd
-
-data = pd.read_csv("englandRegions.csv")
-x = data['long'].tolist()
-y = data['lat'].tolist()
-cases = data['dailyCases'].tolist()
-accel = data['accel'].tolist()
-
-size = [30]*len(x)
-extent = [-6, 2, 49.9, 56]
-
-vizent_plot(x, y, cases, accel, size, shape_label="Acceleration", 
-            color_label="Daily cases", use_cartopy=True, extent=extent, 
-            title='COVID19 daily case count and one day acceleration \n'
-            'English regions, 30th October 2020') 
-```
-![cartopy image](examples/cartopy_example.png "cartopy image")
-
-### Create a map of england using an image background:
-
-```python
-from vizent import vizent_plot
-import pandas as pd
-
-data = pd.read_csv("englandRegions.csv")
-x = data['long'].tolist()
-y = data['lat'].tolist()
-cases = data['dailyCases'].tolist()
-accel = data['accel'].tolist()
-
-size = [30]*len(x)
-
-vizent_plot(x, y, cases, accel, size, shape_label="Acceleration",
-            color_label="Daily cases", use_image=True,
-            image_type="england", title="COVID19 daily case count and one "
-            "day acceleration \n English regions, 30th October 2020")
-```
-
-![map image](examples/england_example.png "map image")
-
-Map © [OpenStreetMap](https://www.openstreetmap.org/) contributors
-
-### Use detailed background images of Newcastle Upon Tyne:
-
-```python
-from vizent import vizent_plot
-import pandas as pd
-
-data = pd.read_csv("cleaned_temp_data.csv")
-eastings = data['easting'].tolist()
-northings = data['northing'].tolist()
-average = data['Average of Value'].tolist()
-variance = data['Variance of Value'].tolist()
-
-size = [20]*len(eastings)
-
-vizent_plot(eastings, northings, average, variance, size, 
-            "metoffice", shape_label="variance", 
-            color_label="temperature", use_image=True, 
-            image_type="newcastle", color_spread=20,
-            title="Newcastle Upon Tyne Temperature Data",
-            show_axes=False)
-```
-![newcastle image](examples/newcastle_example.png "newcastle image")
-
-### Add your own MatPlotLib elements to the plot:
-
-```python
-from vizent import vizent_plot
 import numpy as np
+from vizent import vizent_plot
 
-# Let's take an example of a vizent plot and add to it
+x_values = [0, 0, 1, 1, 0.5]
+y_values = [0, 1, 0, 1, 0.5]
 
-x = [0.05,0.35,0.75,0.9,1.35,1.55,1.85]
-y = [(1 + np.sin(2 * np.pi * i)) for i in x]
-color_values = [0,3,7,2,-1,10,6]
-shape_values = [1,2,3,2.3,0,3,2]
-size = [30,30,30,30,30,30,30]
+color_values = [-100, -10, 0.01, 100, 1000]
+shape_values = [2, 1, 0, -2, -1]
 
-# Assign the output of the function to fig, ax as shown
+edge_color_values = [-10, -5, -3, 1, 2, 4]
+edge_freq_values = range(6)
+color_values = [-100, -10, 0.01, 100, 1000]
+shape_values = [2, 1, 0, -2, -1]
 
-fig, ax = vizent_plot(x, y, color_values, shape_values, size, 
-                      colormap="rainbow", shape_label="shape", 
-                      color_label="color", return_axes=True, 
-                      title="An example of adding to your plot")
+# Build a sample network based on these points
+x_start = []
+x_end = []
+y_start = []
+y_end = []
+for x1,y1 in zip(x_values, y_values):
+    for x2,y2 in zip(x_values, y_values):
+        if x1 <= x2 and y1 <= y2:
+            line_distance =  np.sqrt((x1 - x2)**2 + (y1 - y2)**2)
+            if line_distance <= 1 and line_distance > 10e-5:
+                x_start.append(x1)
+                y_start.append(y1)
+                x_end.append(x2)
+                y_end.append(y2)
 
-# Let's add a line to the plot
-
-t = np.arange(0.0, 2.0, 0.01)
-s = 1 + np.sin(2 * np.pi * t)
-
-# Adjust zorder to control whether line is behind or in front of points, 
-# background image etc. In this case, zorder=0 places the line behind the 
-# points while zorder=1 would place it in front. If using a background
-# image, zorder=0.5 places the line in front of the background image, 
-# but behind the points.
-
-ax.plot(t, s, zorder=0)
-
-# Let's also add a text box with some additional information, such as the 
-# data source
-
-props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-text = "Source: Some Official Data Source"
-
-# Text box position can be adjusted
-
-ax.text(0.05, -0.1, text, transform=ax.transAxes, fontsize=14,
-        verticalalignment='top', bbox=props)
-
-# And you can adjust the space around the subplot to ensure the text box
-# is shown if it is outside of the axes
-
-plt.subplots_adjust(bottom=0.15)
-
-plt.show()
-plt.close()  
+fig = vizent_plot(x_values=x_values,
+                  y_values=y_values,
+                  colour_values=color_values,
+                  shape_values=shape_values,
+                  size_values=[20 for i in range(len(x_values))],
+                  edge_start_points=[(x,y) for x,y in zip(x_start, y_start)],
+                  edge_end_points=[(x,y) for x,y in zip(x_end, y_end)],
+                  edge_colors=edge_color_values,
+                  edge_frequencies=edge_freq_values,
+                  edge_widths=[5 for i in range(len(x_start))],
+                  edge_color_n=4,
+                  scale_x=15)
 ```
+![vizent plot](https://github.com/cusp-london/vizent/raw/main/docs/_build/_images/vizent_plot_with_edges_test.png "vizent plot")
 
-![custom plot example](examples/custom_example.png "custom plot example")
-  
+
+Other examples, including those using background maps for geospatial data can be found at https://cusplondon.ac.uk/vizent/gallery.
 
 ## Release History
 

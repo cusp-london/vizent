@@ -10,8 +10,13 @@ Getting Started
 Installation
 ------------
 
-vizent can be installed using `pip <https://pip.pypa.io/en/stable/>`__:
+vizent (current version in beta) can be installed using `pip <https://pip.pypa.io/en/stable/>`__, either from PyPI:
 
+.. code-block::
+
+    pip install vizent==1.1.0b2
+
+Or from the latest version on GitHub:
 
 .. code-block:: 
 

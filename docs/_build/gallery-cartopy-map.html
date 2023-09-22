@@ -376,7 +376,7 @@ document.write(`
   <section id="Create-a-map-with-Cartopy">
 <h1>Create a map with Cartopy<a class="headerlink" href="#Create-a-map-with-Cartopy" title="Permalink to this heading">#</a></h1>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">vizent</span> <span class="kn">import</span> <span class="n">vizent_plot</span>
@@ -390,26 +390,21 @@ document.write(`
 <span class="n">cases</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Cases&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 <span class="n">accel</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Diff7Day&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
-<span class="c1"># Project lon lats to web mercator using Cartopy</span>
-<span class="n">crs</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">epsg</span><span class="p">(</span><span class="mi">3857</span><span class="p">)</span>
-<span class="n">projected_points</span> <span class="o">=</span> <span class="p">[</span><span class="n">crs</span><span class="o">.</span><span class="n">transform_point</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">src_crs</span><span class="o">=</span><span class="mi">4326</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)]</span>
-
 <span class="n">size</span> <span class="o">=</span> <span class="p">[</span><span class="mi">25</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="n">extent</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">49.9</span><span class="p">,</span> <span class="mi">56</span><span class="p">]</span>
 
-<span class="n">fig</span> <span class="o">=</span> <span class="n">vizent_plot</span><span class="p">(</span><span class="n">x_values</span><span class="o">=</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">projected_points</span><span class="p">],</span>
-                  <span class="n">y_values</span><span class="o">=</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">projected_points</span><span class="p">],</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">vizent_plot</span><span class="p">(</span><span class="n">x_values</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                  <span class="n">y_values</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
                   <span class="n">colour_values</span><span class="o">=</span><span class="n">cases</span><span class="p">,</span>
                   <span class="n">shape_values</span><span class="o">=</span><span class="n">accel</span><span class="p">,</span>
                   <span class="n">size_values</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
-                  <span class="n">shape_label</span><span class="o">=</span><span class="s2">&quot;7-day difference&quot;</span><span class="p">,</span>
+                  <span class="n">shape_label</span><span class="o">=</span><span class="s2">&quot;7-day diff&quot;</span><span class="p">,</span>
                   <span class="n">color_label</span><span class="o">=</span><span class="s2">&quot;Daily cases&quot;</span><span class="p">,</span>
                   <span class="n">use_cartopy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                  <span class="n">cartopy_projection</span><span class="o">=</span><span class="n">crs</span><span class="p">,</span>
-                  <span class="n">extent</span><span class="o">=</span><span class="n">extent</span>
-                  <span class="p">)</span>
+                  <span class="n">extent</span><span class="o">=</span><span class="n">extent</span><span class="p">,</span>
+                  <span class="n">label_fontsize</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 
-<span class="n">title</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;COVID-19 daily case count and difference from 7-day average</span><span class="se">\n</span><span class="s1">English regions, 5th January 2021&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.94</span><span class="p">)</span>
+<span class="n">title</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;COVID-19 daily case count and difference from 7-day average</span><span class="se">\n</span><span class="s1">English regions, 5th January 2021&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.96</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
