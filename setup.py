@@ -8,7 +8,7 @@ setuptools.setup(
     packages = ['vizent'],
     package_data={'vizent': ['images/*.png']},
     include_package_data = True,
-    version = '1.1.0b1',
+    version = '1.1.0b2',
     license='MIT',
     description = 'A python library for visualising bivariate data using glyphs and node-link diagrams with matplotlib.',
     author = 'CUSP London and Lucy McLaughlin',
