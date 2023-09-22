@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name = 'vizent-beta',
+    name = 'vizent',
     packages = ['vizent'],
     package_data={'vizent': ['images/*.png']},
     include_package_data = True,
