@@ -163,7 +163,7 @@ Other examples, including those using background maps for geospatial data can be
 
 Distributed under the MIT license. See ``LICENSE`` for more information.
 
-Acknowledgments: The Alan Turing Institute for funding the Newcastle Seedcorn project "Automating visualization", under the EPSRC grant EP/N510129/1 and for Nick Holliman's Turing Fellowship.
+Acknowledgments:  The Alan Turing Institute for funding the Newcastle Seedcorn project "Automating visualization", under the EPSRC grant EP/N510129/1 and for Nick Holliman's Turing Fellowship 2018-2024. For supporting Lucy McLaughlin's PhD, the EPSRC Centre for Doctoral Training in Cloud Computing for Big Data EP/L015358/1. For Osman Akbulut's PhD support the Turkish Government. CUSP London, the Department of Informatics and the Faculty of NMES at King's College for supporting Dr Peter Baudains' time.  A Department of Informatics Impact Acceleration Award for summer 2023 funding to develop new Vizent test cases for Kabir Chhabra.
 
 [1] "Visual Entropy and the Visualization of Uncertainty", Holliman et al, arXiv:1907.12879
 
