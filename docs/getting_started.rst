@@ -22,8 +22,16 @@ Or from the latest version on GitHub:
 
     pip install git+https://github.com/cusp-london/vizent
 
-
 `vizent on PyPI <https://pypi.org/project/vizent>`__
+
+Alternatively, vizent can be installed via conda with:
+
+.. code-block::
+
+    conda install -c conda-forge vizent
+
+`vizent on conda-forge <https://anaconda.org/conda-forge/vizent>`__
+
 
 Required Dependencies:
 
