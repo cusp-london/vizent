@@ -24,7 +24,7 @@ The vizent library provides an interface to matplotlib axes and figures that sup
 
 The library also provides functionality to plot vizent glyphs and networks edges with a map background (requires [Cartopy](https://scitools.org.uk/cartopy/docs/latest/)) or using an image provided by the user (requires [pillow](https://pillow.readthedocs.io/en/stable/)).
 
-The [gallery](docs/_build/gallery.html) gives example plots demonstrating the library capability. A more detailed tutorial is also available [here](https://medium.com/nightingale/rising-or-falling-visualizing-the-trends-in-the-daily-covid-19-situation-e5ae3044fcef).
+The [gallery](https://cusplondon.ac.uk/vizent/gallery) gives example plots demonstrating the library capability. A more detailed tutorial is also available [here](https://medium.com/nightingale/rising-or-falling-visualizing-the-trends-in-the-daily-covid-19-situation-e5ae3044fcef).
 
 ## Installation
 
